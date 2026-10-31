@@ -5,9 +5,84 @@ import { PrismaService } from '../../database/prisma.service';
 export class DashboardService {
   constructor(private prisma: PrismaService) {}
 
-  async getSummary(orgId: string) {
+  async getSummary(orgId: string, userRole?: string, userEmail?: string) {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    if (userRole === 'CUSTOMER' && userEmail) {
+      const customer = await this.prisma.customer.findFirst({
+        where: { organizationId: orgId, email: userEmail.toLowerCase() },
+      });
+
+      if (!customer) {
+        return {
+          stats: {
+            totalCustomers: 1,
+            activeSubscriptions: 0,
+            quotationsPending: 0,
+            invoicesDue: 0,
+            invoicesOverdue: 0,
+            paymentsCollectedThisMonth: 0,
+            mrr: 0,
+            totalMembers: 1,
+            systemHealth: '100% Operational',
+          },
+          charts: { trendData: [], statusDistribution: [] },
+          recentActivity: [],
+          recentNotifications: [],
+        };
+      }
+
+      const [activeSubs, invoicesDue, invoicesOverdue, paymentsThisMonth, mySubs] =
+        await Promise.all([
+          this.prisma.subscription.count({
+            where: { organizationId: orgId, customerId: customer.id, status: 'ACTIVE' },
+          }),
+          this.prisma.invoice.count({
+            where: { organizationId: orgId, customerId: customer.id, status: 'CONFIRMED' },
+          }),
+          this.prisma.invoice.count({
+            where: {
+              organizationId: orgId,
+              customerId: customer.id,
+              status: 'CONFIRMED',
+              dueDate: { lt: now },
+            },
+          }),
+          this.prisma.payment.findMany({
+            where: {
+              organizationId: orgId,
+              customerId: customer.id,
+              paymentDate: { gte: startOfMonth },
+            },
+            select: { amount: true },
+          }),
+          this.prisma.subscription.findMany({
+            where: { organizationId: orgId, customerId: customer.id, status: 'ACTIVE' },
+            select: { billingFrequency: true, totalAmount: true },
+          }),
+        ]);
+
+      const paymentsCollectedThisMonth = paymentsThisMonth.reduce((sum, p) => sum + p.amount, 0);
+      const calculatedSpend = mySubs.reduce((sum, s) => sum + s.totalAmount, 0);
+
+      return {
+        stats: {
+          totalCustomers: 1,
+          activeSubscriptions: activeSubs,
+          quotationsPending: 0,
+          invoicesDue,
+          invoicesOverdue,
+          paymentsCollectedThisMonth,
+          mrr: calculatedSpend,
+          totalMembers: 1,
+          systemHealth: '100% Operational',
+        },
+        charts: { trendData: [], statusDistribution: [] },
+        recentActivity: [],
+        recentNotifications: [],
+      };
+    }
 
     const [
       totalCustomers,

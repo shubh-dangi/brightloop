@@ -27,9 +27,10 @@ export class PaymentsController {
   @ApiOperation({ summary: 'List all recorded payments' })
   async findAll(
     @CurrentTenant() tenant: TenantContext,
+    @CurrentUser() user: any,
     @Query('search') search?: string,
   ) {
-    return this.paymentsService.findAll(tenant.id, search);
+    return this.paymentsService.findAll(tenant.id, tenant.role, user?.email, search);
   }
 
   @Get(':id')
@@ -37,9 +38,10 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Get payment details by ID' })
   async findOne(
     @CurrentTenant() tenant: TenantContext,
+    @CurrentUser() user: any,
     @Param('id') id: string,
   ) {
-    return this.paymentsService.findOne(tenant.id, id);
+    return this.paymentsService.findOne(tenant.id, id, tenant.role, user?.email);
   }
 
   @Post()

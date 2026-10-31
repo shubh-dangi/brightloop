@@ -6,8 +6,19 @@ import { RecordPaymentInput } from '@brightloop/contracts';
 export class PaymentsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(orgId: string, search?: string) {
+  async findAll(orgId: string, userRole?: string, userEmail?: string, search?: string) {
     const where: any = { organizationId: orgId };
+
+    // Enforce Customer Portal IDOR isolation
+    if (userRole === 'CUSTOMER' && userEmail) {
+      const customer = await this.prisma.customer.findFirst({
+        where: { organizationId: orgId, email: userEmail.toLowerCase() },
+      });
+      if (!customer) {
+        return [];
+      }
+      where.customerId = customer.id;
+    }
 
     if (search) {
       where.OR = [
@@ -30,9 +41,21 @@ export class PaymentsService {
     });
   }
 
-  async findOne(orgId: string, id: string) {
+  async findOne(orgId: string, id: string, userRole?: string, userEmail?: string) {
+    const where: any = { id, organizationId: orgId };
+
+    if (userRole === 'CUSTOMER' && userEmail) {
+      const customer = await this.prisma.customer.findFirst({
+        where: { organizationId: orgId, email: userEmail.toLowerCase() },
+      });
+      if (!customer) {
+        throw new NotFoundException('Payment record not found');
+      }
+      where.customerId = customer.id;
+    }
+
     const payment = await this.prisma.payment.findFirst({
-      where: { id, organizationId: orgId },
+      where,
       include: {
         customer: true,
         invoice: {
@@ -52,27 +75,38 @@ export class PaymentsService {
   }
 
   async record(orgId: string, userId: string, data: RecordPaymentInput) {
-    const invoice = await this.prisma.invoice.findFirst({
-      where: { id: data.invoiceId, organizationId: orgId },
-      include: { customer: true },
-    });
-
-    if (!invoice) {
-      throw new NotFoundException('Invoice not found');
-    }
-
-    if (invoice.status === 'CANCELLED') {
-      throw new BadRequestException('Cannot record payment against a cancelled invoice');
-    }
-
     if (data.amount <= 0) {
       throw new BadRequestException('Payment amount must be greater than zero');
     }
 
-    const count = await this.prisma.payment.count({ where: { organizationId: orgId } });
-    const paymentReference = `PAY-${new Date().getFullYear()}-${String(count + 1).padStart(3, '0')}`;
-
     return this.prisma.$transaction(async (tx) => {
+      // Concurrency lock & verification inside transaction
+      const invoice = await tx.invoice.findFirst({
+        where: { id: data.invoiceId, organizationId: orgId },
+        include: { customer: true },
+      });
+
+      if (!invoice) {
+        throw new NotFoundException('Invoice not found');
+      }
+
+      if (invoice.status === 'CANCELLED') {
+        throw new BadRequestException('Cannot record payment against a cancelled invoice');
+      }
+
+      if (invoice.status === 'PAID' || invoice.outstandingAmount <= 0) {
+        throw new BadRequestException('Invoice is already fully paid');
+      }
+
+      if (data.amount > invoice.outstandingAmount) {
+        throw new BadRequestException(
+          `Payment amount (${data.amount}) cannot exceed remaining outstanding balance (${invoice.outstandingAmount})`,
+        );
+      }
+
+      const count = await tx.payment.count({ where: { organizationId: orgId } });
+      const paymentReference = `PAY-${new Date().getFullYear()}-${String(count + 1).padStart(3, '0')}`;
+
       // 1. Create payment record
       const payment = await tx.payment.create({
         data: {

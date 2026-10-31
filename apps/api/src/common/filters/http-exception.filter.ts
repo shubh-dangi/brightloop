@@ -43,6 +43,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message = exception.message;
     }
 
+    // Mask internal error details in production to avoid leaking database schema/stack
+    if (status >= 500 && process.env.NODE_ENV === 'production') {
+      message = 'An unexpected internal server error occurred';
+      details = null;
+    }
+
     // Structured logging for debugging
     if (status >= 500) {
       this.logger.error(

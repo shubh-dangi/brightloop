@@ -16,20 +16,56 @@ async function bootstrap() {
   const port = configService.get<number>('port', 4000);
   const frontendUrl = configService.get<string>('frontendUrl', 'http://localhost:5173');
 
-  // Security Middleware
+  // Security Middleware: Helmet with HSTS, CSP, and Anti-Sniffing
   app.use(
     helmet({
       crossOriginResourcePolicy: { policy: 'cross-origin' },
-      contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false,
+      hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true,
+      },
+      referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+      contentSecurityPolicy:
+        process.env.NODE_ENV === 'production'
+          ? {
+              directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: ["'self'"],
+                styleSrc: ["'self'", "'unsafe-inline'"],
+                imgSrc: ["'self'", 'data:', 'https:'],
+                connectSrc: ["'self'", frontendUrl, 'https://*.vercel.app'],
+              },
+            }
+          : false,
     }),
   );
 
   // Cookie Parser
   app.use(cookieParser());
 
-  // CORS Configuration
+  // CORS Configuration: Whitelist validation with credential support
+  const allowedOrigins = [
+    frontendUrl,
+    'https://brightloop-chi.vercel.app',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+  ].filter(Boolean);
+
   app.enableCors({
-    origin: [frontendUrl, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      const isAllowed =
+        allowedOrigins.includes(origin) ||
+        /^https:\/\/brightloop-[a-z0-9-]+-.*\.vercel\.app$/.test(origin) ||
+        /^https:\/\/brightloop.*\.vercel\.app$/.test(origin);
+
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error('Blocked by CORS policy: Origin not allowed'), false);
+      }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
