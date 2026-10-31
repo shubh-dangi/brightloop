@@ -51,9 +51,10 @@ export function LoginPage() {
     }
   };
 
-  const fillDemo = (email: string) => {
+  const fillDemo = async (email: string) => {
     setValue('email', email, { shouldValidate: true });
     setValue('password', 'Password123!', { shouldValidate: true });
+    await onSubmit({ email, password: 'Password123!' });
   };
 
   return (

@@ -37,6 +37,7 @@
   --color-strong-border: var(--strong-border);
   --color-divider: var(--divider);
   --color-input: var(--input);
+  --color-input-bg: var(--input-bg);
   --color-ring: var(--ring);
 
   /* Semantic Status Tokens */
@@ -100,6 +101,7 @@
     --strong-border: #CEDCED;
     --divider: #EAF0F8;
     --input: #E1EAF6;
+    --input-bg: #FFFFFF;
     --ring: #356FF6;
     --radius: 8px;
 
@@ -157,6 +159,7 @@
     --strong-border: #2B4263;
     --divider: #162438;
     --input: #1C2D44;
+    --input-bg: #0E1626;
     --ring: #3B82F6;
 
     /* Semantic Status Tokens - Dark (Calibrated Soft Tints & High Contrast) */
