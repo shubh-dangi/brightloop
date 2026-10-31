@@ -30,6 +30,22 @@ interface AuthState {
 
 const SESSION_HINT_KEY = 'brightloop.session';
 
+const DEMO_USER: UserDto = {
+  id: 'usr-demo-owner',
+  name: 'Taylor Reed (Owner)',
+  email: 'owner@brightloop.local',
+  isEmailVerified: true,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+};
+
+const DEMO_ORG: OrganizationDto = {
+  id: 'org-demo-workspace',
+  name: 'Brightloop Primary Workspace',
+  slug: 'brightloop-primary-workspace',
+  createdAt: new Date().toISOString(),
+};
+
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   currentOrganization: null,

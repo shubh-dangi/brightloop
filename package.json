@@ -9,23 +9,24 @@
     "node": ">=22.0.0 <=24.x"
   },
   "scripts": {
-    "dev": "turbo run dev",
-    "dev:web": "turbo run dev --filter=@brightloop/web",
-    "dev:api": "turbo run dev --filter=@brightloop/api",
-    "build": "turbo run build",
-    "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck",
-    "test": "turbo run test",
-    "test:e2e": "turbo run test:e2e",
+    "dev": "pnpm dev:web",
+    "dev:web": "pnpm --filter=@brightloop/web dev",
+    "dev:api": "pnpm --filter=@brightloop/api dev",
+    "build": "pnpm --filter=@brightloop/web build && pnpm --filter=@brightloop/api build",
+    "lint": "pnpm --filter=@brightloop/web lint && pnpm --filter=@brightloop/api lint",
+    "typecheck": "pnpm --filter=@brightloop/web typecheck && pnpm --filter=@brightloop/api typecheck",
+    "test": "pnpm --filter=@brightloop/web test && pnpm --filter=@brightloop/api test",
+    "test:e2e": "pnpm --filter=@brightloop/api test:e2e",
     "db:generate": "pnpm --filter=@brightloop/api db:generate",
     "db:migrate": "pnpm --filter=@brightloop/api db:migrate",
     "db:seed": "pnpm --filter=@brightloop/api db:seed",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
-    "clean": "turbo run clean && rimraf node_modules"
+    "clean": "rimraf node_modules"
   },
   "devDependencies": {
     "@rollup/wasm-node": "^4.67.2",
+    "esbuild-wasm": "^0.28.2",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
     "turbo": "^2.4.4",

@@ -12,3 +12,6 @@ allowBuilds:
   prisma: true
 minimumReleaseAgeExclude:
   - '@rollup/wasm-node@4.67.2'
+overrides:
+  rollup: npm:@rollup/wasm-node@^4.67.2
+  esbuild: npm:esbuild-wasm@0.28.2

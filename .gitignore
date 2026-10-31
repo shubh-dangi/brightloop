@@ -45,3 +45,5 @@ prisma/*.db
 logs/
 *.log
 .vercel
+*(2)*
+*(1)*
