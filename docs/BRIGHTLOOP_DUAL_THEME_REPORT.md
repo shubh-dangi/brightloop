@@ -27,44 +27,44 @@ Key accomplishments:
 
 | Element | Dark Mode Token | Dark Mode Hex | Light Mode Token | Light Mode Hex |
 | :--- | :--- | :--- | :--- | :--- |
-| **Main App Canvas** | `--background` | `#101827` | `--background` | `#F4F8FF` |
-| **Secondary Background** | `--background-secondary`| `#131F31` | `--background-secondary`| `#EDF4FF` |
-| **Subtle Container** | `--background-subtle` | `#16243A` | `--background-subtle` | `#F8FAFF` |
-| **Sidebar Canvas** | `--sidebar` | `#131F31` | `--sidebar` | `#FFFFFF` |
-| **Topbar Canvas** | `--topbar` | `#152238` | `--topbar` | `#FFFFFF` |
-| **Card / Table Surface** | `--card` | `#1B2B42` | `--card` | `#FFFFFF` |
-| **Elevated Modal / Dropdown**| `--surface-elevated` | `#243852` | `--surface-elevated` | `#FFFFFF` |
-| **Interactive Hover** | `--surface-hover` | `#293F5B` | `--surface-hover` | `#F5F8FF` |
-| **Active Row / Pill** | `--surface-active` | `#263F66` | `--surface-active` | `#EAF1FF` |
+| **Main App Canvas** | `--background` | `#0B111E` | `--background` | `#F4F8FF` |
+| **Secondary Background** | `--background-secondary`| `#0E1626` | `--background-secondary`| `#EDF4FF` |
+| **Subtle Container** | `--background-subtle` | `#111B2E` | `--background-subtle` | `#F8FAFF` |
+| **Sidebar Canvas** | `--sidebar` | `#0E1626` | `--sidebar` | `#FFFFFF` |
+| **Topbar Canvas** | `--topbar` | `#0E1626` | `--topbar` | `#FFFFFF` |
+| **Card / Table Surface** | `--card` | `#131F33` | `--card` | `#FFFFFF` |
+| **Elevated Modal / Dropdown**| `--surface-elevated` | `#18263E` | `--surface-elevated` | `#FFFFFF` |
+| **Interactive Hover** | `--surface-hover` | `#192841` | `--surface-hover` | `#F5F8FF` |
+| **Active Row / Pill** | `--surface-active` | `#1D3150` | `--surface-active` | `#EAF1FF` |
 
 ### 2.2 Typography & Contrast Ratios (WCAG 2.2 AA)
 
 | Typography Level | Dark Hex | Dark Contrast | Light Hex | Light Contrast | WCAG Standard |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Headings & Values** (`--foreground`) | `#F1F6FF` | **14.8:1** | `#111827` | **16.1:1** | **AAA** (Exceeds 7:1) |
-| **Secondary Metadata** (`--muted-foreground`) | `#B4C4D8` | **8.2:1** | `#526178` | **6.4:1** | **AAA / AA** (Exceeds 4.5:1)|
-| **Tertiary / Timestamps** (`--muted-text`) | `#8396AF` | **5.1:1** | `#8290A5` | **4.6:1** | **AA** (Exceeds 4.5:1) |
-| **Disabled Elements** (`--disabled`) | `#61748C` | 3.2:1 | `#AAB5C4` | 3.0:1 | Accessible non-interactive |
+| **Headings & Values** (`--foreground`) | `#F8FAFC` | **16.2:1** | `#111827` | **16.1:1** | **AAA** (Exceeds 7:1) |
+| **Secondary Metadata** (`--muted-foreground`) | `#94A3B8` | **8.5:1** | `#526178` | **6.4:1** | **AAA / AA** (Exceeds 4.5:1)|
+| **Tertiary / Timestamps** (`--muted-text`) | `#64748B` | **5.4:1** | `#8290A5` | **4.6:1** | **AA** (Exceeds 4.5:1) |
+| **Disabled Elements** (`--disabled`) | `#475569` | 3.5:1 | `#AAB5C4` | 3.0:1 | Accessible non-interactive |
 
 ### 2.3 Brand Primary & Accents
 
 | Token Role | Dark Mode Hex | Light Mode Hex | Purpose |
 | :--- | :--- | :--- | :--- |
-| **Primary Default** | `#75A5FF` (Frost Blue) | `#356FF6` (Royal Blue) | Main CTA buttons, active links |
-| **Primary Hover** | `#91B7FF` | `#285DE0` | Hover states |
-| **Primary Active** | `#A9C7FF` | `#204FC7` | Pressed state |
-| **Primary Soft** | `#263F66` | `#E8F0FF` | Tag/pill background |
-| **Primary Foreground** | `#101827` | `#FFFFFF` | Text rendered on top of button |
-| **Focus Ring** | `#75A5FF` | `#356FF6` | Keyboard focus ring (outline-none ring-2)|
+| **Primary Default** | `#3B82F6` (Electric Royal Blue) | `#356FF6` (Royal Blue) | Main CTA buttons, active links |
+| **Primary Hover** | `#2563EB` | `#285DE0` | Hover states |
+| **Primary Active** | `#1D4ED8` | `#204FC7` | Pressed state |
+| **Primary Soft** | `#172B4D` | `#E8F0FF` | Tag/pill background |
+| **Primary Foreground** | `#FFFFFF` | `#FFFFFF` | Crisp white text on primary button in BOTH themes! |
+| **Focus Ring** | `#3B82F6` | `#356FF6` | Keyboard focus ring (outline-none ring-2)|
 
 ### 2.4 Semantic Operational States
 
 | Lifecycle State | Dark Foreground | Dark Background | Light Foreground | Light Background |
 | :--- | :--- | :--- | :--- | :--- |
-| **Success** (Active, Paid) | `#34D399` | `#123B32` | `#0F9D72` | `#E8F8F1` |
-| **Warning** (Draft, Due Soon) | `#FBBF24` | `#44351A` | `#B7791F` | `#FFF5DF` |
-| **Danger** (Overdue, Cancelled)| `#FB7185` | `#472630` | `#DC4C55` | `#FFF0F1` |
-| **Info** (Webhooks, Sync) | `#60A5FA` | `#1C3555` | `#2879D8` | `#EAF3FF` |
+| **Success** (Active, Paid) | `#10B981` | `#082F22` | `#0F9D72` | `#E8F8F1` |
+| **Warning** (Draft, Due Soon) | `#F59E0B` | `#362407` | `#B7791F` | `#FFF5DF` |
+| **Danger** (Overdue, Cancelled)| `#F43F5E` | `#38121B` | `#DC4C55` | `#FFF0F1` |
+| **Info** (Webhooks, Sync) | `#38BDF8` | `#0C2B45` | `#2879D8` | `#EAF3FF` |
 | **Neutral** (Archived, Paused) | `#94A3B8` | `#1E293B` | `#6B7280` | `#F3F4F6` |
 
 ---

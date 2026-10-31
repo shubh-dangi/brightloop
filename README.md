@@ -126,11 +126,11 @@ Brightloop is designed with an enterprise **Dual-Theme Design System**, meticulo
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │  LIGHT MODE: Icy Blue Canvas                DARK MODE: Midnight Navy Canvas  │
-│  Main Canvas:   #F4F8FF                     Main Canvas:   #101827           │
-│  Cards/Modals:  #FFFFFF                     Cards/Modals:  #1B2B42           │
-│  Primary CTA:   #356FF6 (Royal Blue)        Primary CTA:   #75A5FF (Frost)   │
-│  Text Primary:  #111827 (Dark Navy)         Text Primary:  #F1F6FF (Crisp)   │
-│  Border:        #E1EAF6                     Border:        #2D415B           │
+│  Main Canvas:   #F4F8FF                     Main Canvas:   #0B111E           │
+│  Cards/Modals:  #FFFFFF                     Cards/Modals:  #131F33           │
+│  Primary CTA:   #356FF6 (Royal Blue)        Primary CTA:   #3B82F6 (Royal)   │
+│  Text Primary:  #111827 (Dark Navy)         Text Primary:  #F8FAFC (White)   │
+│  Border:        #E1EAF6                     Border:        #1C2D44           │
 └──────────────────────────────────────────────────────────────────────────────┘
 ```
 

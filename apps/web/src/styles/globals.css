@@ -117,57 +117,57 @@
   }
 
   .dark {
-    /* Nexora-Calibrated Frost Blue × Midnight Dark Theme (Default) */
-    --background: #101827;
-    --background-secondary: #131F31;
-    --background-subtle: #16243A;
-    --foreground: #F1F6FF;
-    --sidebar: #131F31;
-    --sidebar-foreground: #F1F6FF;
-    --sidebar-border: #2D415B;
-    --topbar: #152238;
-    --topbar-border: #2D415B;
-    --card: #1B2B42;
-    --card-foreground: #F1F6FF;
-    --surface-elevated: #243852;
-    --surface-hover: #293F5B;
-    --surface-active: #263F66;
-    --popover: #1B2B42;
-    --popover-foreground: #F1F6FF;
-    --primary: #75A5FF;
-    --primary-foreground: #101827;
-    --primary-hover: #91B7FF;
-    --primary-active: #A9C7FF;
-    --primary-soft: #263F66;
-    --primary-subtle: #1B2E4A;
-    --secondary: #243852;
-    --secondary-foreground: #F1F6FF;
-    --muted: #243852;
-    --muted-foreground: #B4C4D8;
-    --muted-text: #8396AF;
-    --disabled: #61748C;
-    --accent: #263F66;
-    --accent-foreground: #75A5FF;
-    --accent-soft: #263F66;
-    --accent-subtle: #1B2E4A;
-    --destructive: #FB7185;
-    --destructive-foreground: #101827;
-    --destructive-soft: #472630;
-    --border: #2D415B;
-    --strong-border: #405A78;
-    --divider: #263A53;
-    --input: #2D415B;
-    --ring: #75A5FF;
+    /* Precise Dark Mode Mirroring of Light Mode (Depth, Hierarchy & Contrast) */
+    --background: #0B111E;
+    --background-secondary: #0E1626;
+    --background-subtle: #111B2E;
+    --foreground: #F8FAFC;
+    --sidebar: #0E1626;
+    --sidebar-foreground: #F8FAFC;
+    --sidebar-border: #1C2D44;
+    --topbar: #0E1626;
+    --topbar-border: #1C2D44;
+    --card: #131F33;
+    --card-foreground: #F8FAFC;
+    --surface-elevated: #18263E;
+    --surface-hover: #192841;
+    --surface-active: #1D3150;
+    --popover: #18263E;
+    --popover-foreground: #F8FAFC;
+    --primary: #3B82F6;
+    --primary-foreground: #FFFFFF;
+    --primary-hover: #2563EB;
+    --primary-active: #1D4ED8;
+    --primary-soft: #172B4D;
+    --primary-subtle: #101E36;
+    --secondary: #18263E;
+    --secondary-foreground: #F8FAFC;
+    --muted: #18263E;
+    --muted-foreground: #94A3B8;
+    --muted-text: #64748B;
+    --disabled: #475569;
+    --accent: #172B4D;
+    --accent-foreground: #60A5FA;
+    --accent-soft: #172B4D;
+    --accent-subtle: #101E36;
+    --destructive: #F43F5E;
+    --destructive-foreground: #FFFFFF;
+    --destructive-soft: #38121B;
+    --border: #1C2D44;
+    --strong-border: #2B4263;
+    --divider: #162438;
+    --input: #1C2D44;
+    --ring: #3B82F6;
 
-    /* Semantic Status Tokens - Dark */
-    --success: #34D399;
-    --success-soft: #123B32;
-    --warning: #FBBF24;
-    --warning-soft: #44351A;
-    --danger: #FB7185;
-    --danger-soft: #472630;
-    --info: #60A5FA;
-    --info-soft: #1C3555;
+    /* Semantic Status Tokens - Dark (Calibrated Soft Tints & High Contrast) */
+    --success: #10B981;
+    --success-soft: #082F22;
+    --warning: #F59E0B;
+    --warning-soft: #362407;
+    --danger: #F43F5E;
+    --danger-soft: #38121B;
+    --info: #38BDF8;
+    --info-soft: #0C2B45;
     --neutral: #94A3B8;
     --neutral-soft: #1E293B;
   }

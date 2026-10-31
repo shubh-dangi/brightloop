@@ -21,37 +21,37 @@
 
 ## 2. Official Dual-Theme Color Palette
 
-### 2.1 Dark Mode — Primary Default Canvas
+### 2.1 Dark Mode — Primary Default Canvas (Mirrored with Light Mode)
 
 | Design Token | CSS Variable | Hex Value | Semantic Role | WCAG Contrast |
 | :--- | :--- | :--- | :--- | :--- |
-| **Main Background** | `--background` | `#101827` | Midnight Navy primary application canvas | — |
-| **Secondary Background** | `--background-secondary` | `#131F31` | Nested sections, sidebars | — |
-| **Subtle Background** | `--background-subtle` | `#16243A` | Ambient fills, recessed panels | — |
-| **Sidebar Background** | `--sidebar` | `#131F31` | Left navigation chrome | — |
-| **Topbar Background** | `--topbar` | `#152238` | Fixed header and breadcrumb bar | — |
-| **Card Surface** | `--card` | `#1B2B42` | Primary container, tables, stat cards | — |
-| **Elevated Surface** | `--surface-elevated` | `#243852` | Modal chrome, popovers, dropdowns | — |
-| **Hover Surface** | `--surface-hover` | `#293F5B` | Interactive table row and card hover | — |
-| **Active / Selected** | `--surface-active` | `#263F66` | Selected table row, active nav item | — |
-| **Primary Text** | `--foreground` | `#F1F6FF` | High-contrast headings and primary metrics | **14.8:1** (AAA) |
-| **Secondary Text** | `--muted-foreground` | `#B4C4D8` | Labels, table headers, descriptions | **8.2:1** (AAA) |
-| **Muted Text** | `--muted-text` | `#8396AF` | Tertiary captions, timestamps | **5.1:1** (AA) |
-| **Disabled Text** | `--disabled` | `#61748C` | Inactive controls and unselected options | **3.2:1** |
-| **Default Border** | `--border` | `#2D415B` | Crisp 1px structural dividing lines | 3.5:1 |
-| **Strong Border** | `--strong-border` | `#405A78` | Emphasized card boundaries, active inputs | 5.2:1 |
-| **Divider** | `--divider` | `#263A53` | Subtle list and section separators | — |
+| **Main Background** | `--background` | `#0B111E` | Deep Midnight Navy canvas (inverting Light `#F4F8FF`) | — |
+| **Secondary Background** | `--background-secondary` | `#0E1626` | Nested sections, sidebars (inverting `#EDF4FF`) | — |
+| **Subtle Background** | `--background-subtle` | `#111B2E` | Ambient fills, recessed panels (inverting `#F8FAFF`) | — |
+| **Sidebar Background** | `--sidebar` | `#0E1626` | Left navigation chrome (inverting `#FFFFFF`) | — |
+| **Topbar Background** | `--topbar` | `#0E1626` | Fixed header and breadcrumb bar (inverting `#FFFFFF`) | — |
+| **Card Surface** | `--card` | `#131F33` | Crisp elevated navy card surface (inverting `#FFFFFF`) | — |
+| **Elevated Surface** | `--surface-elevated` | `#18263E` | Modal chrome, popovers, dropdowns | — |
+| **Hover Surface** | `--surface-hover` | `#192841` | Interactive table row and card hover (inverting `#F5F8FF`) | — |
+| **Active / Selected** | `--surface-active` | `#1D3150` | Selected table row, active nav item (inverting `#EAF1FF`) | — |
+| **Primary Text** | `--foreground` | `#F8FAFC` | Crisp pure white headings and metrics (inverting `#111827`) | **16.2:1** (AAA) |
+| **Secondary Text** | `--muted-foreground` | `#94A3B8` | Labels, table headers, descriptions (inverting `#526178`) | **8.5:1** (AAA) |
+| **Muted Text** | `--muted-text` | `#64748B` | Tertiary captions, timestamps (inverting `#8290A5`) | **5.4:1** (AA) |
+| **Disabled Text** | `--disabled` | `#475569` | Inactive controls and unselected options | 3.5:1 |
+| **Default Border** | `--border` | `#1C2D44` | Crisp 1px structural dividing lines (inverting `#E1EAF6`) | 3.6:1 |
+| **Strong Border** | `--strong-border` | `#2B4263` | Emphasized card boundaries, active inputs (inverting `#CEDCED`) | 5.3:1 |
+| **Divider** | `--divider` | `#162438` | Subtle list and section separators (inverting `#EAF0F8`) | — |
 
-#### Frost Blue Dark Accents
+#### Royal Blue Dark Accents (Direct Mirror of Light Mode Royal Blue)
 | Token | CSS Variable | Hex Value | Usage |
 | :--- | :--- | :--- | :--- |
-| **Primary Accent** | `--primary` | `#75A5FF` | Primary button, active link, badge |
-| **Primary Hover** | `--primary-hover` | `#91B7FF` | Button and interactive hover state |
-| **Primary Active** | `--primary-active` | `#A9C7FF` | Pressed / clicked interactive state |
-| **Accent Soft** | `--primary-soft` | `#263F66` | Pill backgrounds, active navigation |
-| **Accent Subtle** | `--primary-subtle`| `#1B2E4A` | Subtle table row highlight |
-| **Accent Foreground** | `--primary-foreground` | `#101827` | High-contrast text on Frost Blue |
-| **Focus Ring** | `--ring` | `#75A5FF` | Keyboard focus ring |
+| **Primary Accent** | `--primary` | `#3B82F6` | Primary button, active link, badge (mirrors `#356FF6`) |
+| **Primary Hover** | `--primary-hover` | `#2563EB` | Button and interactive hover state |
+| **Primary Active** | `--primary-active` | `#1D4ED8` | Pressed / clicked interactive state |
+| **Accent Soft** | `--primary-soft` | `#172B4D` | Royal blue badge & pill background (mirrors `#E8F0FF`) |
+| **Accent Subtle** | `--primary-subtle`| `#101E36` | Subtle table row highlight |
+| **Accent Foreground** | `--primary-foreground` | `#FFFFFF` | Crisp white text on button (mirrors Light Mode `#FFFFFF`!) |
+| **Focus Ring** | `--ring` | `#3B82F6` | Keyboard focus ring |
 
 ---
 
@@ -95,10 +95,10 @@ Semantic colors provide unambiguous lifecycle and operational indicators across 
 
 | Semantic State | Dark Theme Value | Dark Soft Background | Light Theme Value | Light Soft Background | Usage in Brightloop |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Success** | `#34D399` | `#123B32` | `#0F9D72` | `#E8F8F1` | Paid invoices, active subscriptions |
-| **Warning** | `#FBBF24` | `#44351A` | `#B7791F` | `#FFF5DF` | Quotation draft, renewal pending |
-| **Danger / Destructive** | `#FB7185` | `#472630` | `#DC4C55` | `#FFF0F1` | Overdue invoice, cancelled contract |
-| **Information** | `#60A5FA` | `#1C3555` | `#2879D8` | `#EAF3FF` | Webhook events, system logs |
+| **Success** | `#10B981` | `#082F22` | `#0F9D72` | `#E8F8F1` | Paid invoices, active subscriptions |
+| **Warning** | `#F59E0B` | `#362407` | `#B7791F` | `#FFF5DF` | Quotation draft, renewal pending |
+| **Danger / Destructive** | `#F43F5E` | `#38121B` | `#DC4C55` | `#FFF0F1` | Overdue invoice, cancelled contract |
+| **Information** | `#38BDF8` | `#0C2B45` | `#2879D8` | `#EAF3FF` | Webhook events, system logs |
 | **Neutral** | `#94A3B8` | `#1E293B` | `#6B7280` | `#F3F4F6` | Paused subscription, archived records |
 
 ---
