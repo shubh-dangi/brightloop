@@ -10,7 +10,7 @@ import { RealtimeModule } from './modules/realtime/realtime.module';
 import { StorageModule } from './modules/storage/storage.module';
 import { EmailModule } from './modules/email/email.module';
 
-// Feature Modules
+// Identity & System Feature Modules
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { OrganizationsModule } from './modules/organizations/organizations.module';
@@ -19,6 +19,17 @@ import { RecordsModule } from './modules/records/records.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { ActivityModule } from './modules/activity/activity.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+
+// Domain Modules
+import { CustomersModule } from './modules/customers/customers.module';
+import { ProductsModule } from './modules/products/products.module';
+import { PlansModule } from './modules/plans/plans.module';
+import { QuotationsModule } from './modules/quotations/quotations.module';
+import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
+import { InvoicesModule } from './modules/invoices/invoices.module';
+import { DiscountsModule } from './modules/discounts/discounts.module';
+import { PaymentsModule } from './modules/payments/payments.module';
+import { ReportsModule } from './modules/reports/reports.module';
 
 // Common Filters, Guards & Interceptors
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
@@ -57,6 +68,16 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
     NotificationsModule,
     ActivityModule,
     DashboardModule,
+    // Domain Modules
+    CustomersModule,
+    ProductsModule,
+    PlansModule,
+    QuotationsModule,
+    SubscriptionsModule,
+    InvoicesModule,
+    DiscountsModule,
+    PaymentsModule,
+    ReportsModule,
   ],
   providers: [
     {

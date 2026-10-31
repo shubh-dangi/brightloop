@@ -2,19 +2,25 @@ import React from 'react';
 import { NavLink, useLocation, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
-  Bell,
-  Clock,
+  UserCheck,
+  Package,
   Layers,
+  FileText,
+  CreditCard,
+  Receipt,
+  Banknote,
+  Percent,
+  BarChart3,
+  Clock,
+  Bell,
   Users,
   Shield,
-  Settings,
+  Building2,
   Paintbrush,
   Sliders,
   ChevronLeft,
   ChevronRight,
   X,
-  CreditCard,
-  Building2,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useThemeStore } from '../../stores/themeStore';
@@ -40,29 +46,58 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
   const { currentOrganization, user, role } = useAuthStore();
   const location = useLocation();
 
+  const isAdmin = role === 'ADMIN' || role === 'OWNER';
+
   const navGroups: NavGroup[] = [
     {
       label: 'Core Workspace',
       items: [
         { title: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-        { title: 'Subscriptions & Items', href: '/records', icon: CreditCard },
+        { title: 'Customers', href: '/customers', icon: UserCheck },
       ],
     },
     {
-      label: 'Operations',
+      label: 'Catalog & Plans',
       items: [
+        { title: 'Products', href: '/products', icon: Package },
+        { title: 'Subscription Plans', href: '/plans', icon: Layers },
+      ],
+    },
+    {
+      label: 'Sales & Subscriptions',
+      items: [
+        { title: 'Quotations', href: '/quotations', icon: FileText },
+        { title: 'Subscriptions', href: '/subscriptions', icon: CreditCard },
+      ],
+    },
+    {
+      label: 'Billing & Finance',
+      items: [
+        { title: 'Invoices', href: '/invoices', icon: Receipt },
+        { title: 'Payments', href: '/payments', icon: Banknote },
+        { title: 'Discounts', href: '/discounts', icon: Percent },
+      ],
+    },
+    {
+      label: 'Analytics & Logs',
+      items: [
+        { title: 'Reports', href: '/reports', icon: BarChart3 },
         { title: 'Activity Ledger', href: '/activity', icon: Clock },
         { title: 'Notifications', href: '/notifications', icon: Bell },
       ],
     },
-    {
-      label: 'Administration',
-      items: [
-        { title: 'Team Members', href: '/settings/team', icon: Users },
-        { title: 'Roles & Access', href: '/settings/roles', icon: Shield },
-        { title: 'Organization Settings', href: '/settings/general', icon: Building2 },
-      ],
-    },
+    ...(isAdmin
+      ? [
+          {
+            label: 'Administration',
+            items: [
+              { title: 'Team Members', href: '/settings/team', icon: Users },
+              { title: 'Roles & Access', href: '/settings/roles', icon: Shield },
+              { title: 'Organization Settings', href: '/settings/general', icon: Building2 },
+            ],
+          },
+        ]
+      : []),
     {
       label: 'Preferences',
       items: [
@@ -210,7 +245,7 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
             {!collapsed && (
               <div className="flex flex-col truncate flex-1 leading-none">
                 <span className="font-semibold text-foreground truncate text-xs">
-                  {user?.name || 'Authenticated User'}
+                  {user?.name || 'Staff User'}
                 </span>
                 <span className="text-[10px] text-muted-foreground truncate pt-0.5 font-mono">
                   {role || 'MEMBER'}

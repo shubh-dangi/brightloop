@@ -6,31 +6,44 @@ export class DashboardService {
   constructor(private prisma: PrismaService) {}
 
   async getSummary(orgId: string) {
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
     const [
-      totalRecords,
-      activeRecords,
-      draftRecords,
-      archivedRecords,
-      highPriorityRecords,
+      totalCustomers,
+      activeSubscriptions,
+      quotationsPending,
+      invoicesDue,
+      invoicesOverdue,
+      paymentsThisMonth,
       totalMembers,
       recentActivity,
       recentNotifications,
+      activeSubsList,
     ] = await Promise.all([
-      this.prisma.genericRecord.count({ where: { organizationId: orgId } }),
-      this.prisma.genericRecord.count({
+      this.prisma.customer.count({ where: { organizationId: orgId } }),
+      this.prisma.subscription.count({
         where: { organizationId: orgId, status: 'ACTIVE' },
       }),
-      this.prisma.genericRecord.count({
-        where: { organizationId: orgId, status: 'DRAFT' },
+      this.prisma.quotation.count({
+        where: { organizationId: orgId, status: 'QUOTATION' },
       }),
-      this.prisma.genericRecord.count({
-        where: { organizationId: orgId, status: 'ARCHIVED' },
+      this.prisma.invoice.count({
+        where: { organizationId: orgId, status: 'CONFIRMED' },
       }),
-      this.prisma.genericRecord.count({
+      this.prisma.invoice.count({
         where: {
           organizationId: orgId,
-          priority: { in: ['HIGH', 'CRITICAL'] },
+          status: 'CONFIRMED',
+          dueDate: { lt: now },
         },
+      }),
+      this.prisma.payment.findMany({
+        where: {
+          organizationId: orgId,
+          paymentDate: { gte: startOfMonth },
+        },
+        select: { amount: true },
       }),
       this.prisma.organizationMember.count({
         where: { organizationId: orgId },
@@ -50,63 +63,70 @@ export class DashboardService {
         orderBy: { createdAt: 'desc' },
         take: 5,
       }),
+      this.prisma.subscription.findMany({
+        where: { organizationId: orgId, status: 'ACTIVE' },
+        select: { billingFrequency: true, totalAmount: true },
+      }),
     ]);
 
-    // Trend chart data (simulated monthly aggregations based on live counts)
+    const paymentsCollectedThisMonth = paymentsThisMonth.reduce(
+      (sum, p) => sum + p.amount,
+      0,
+    );
+
+    // Dynamic Monthly Recurring Revenue calculation
+    const calculatedMRR = activeSubsList.reduce((sum, s) => {
+      if (s.billingFrequency === 'YEARLY') return sum + s.totalAmount / 12;
+      if (s.billingFrequency === 'WEEKLY') return sum + s.totalAmount * 4.33;
+      if (s.billingFrequency === 'DAILY') return sum + s.totalAmount * 30;
+      return sum + s.totalAmount;
+    }, 0);
+
+    // Distribution of active subscriptions by billing frequency
+    const monthlyCount = activeSubsList.filter((s) => s.billingFrequency === 'MONTHLY').length;
+    const yearlyCount = activeSubsList.filter((s) => s.billingFrequency === 'YEARLY').length;
+    const otherCount = activeSubsList.length - monthlyCount - yearlyCount;
+
+    const statusDistribution = [
+      { name: 'Monthly Plan', value: monthlyCount || 1, color: '#8b5cf6' },
+      { name: 'Yearly Plan', value: yearlyCount || 1, color: '#10b981' },
+      { name: 'Custom / Other', value: otherCount || 0, color: '#6366f1' },
+    ];
+
     const months = ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
     const trendData = months.map((month, index) => {
       const multiplier = (index + 1) / months.length;
       return {
         month,
-        records: Math.round(totalRecords * multiplier) || index * 3 + 2,
-        activity: Math.round(15 * multiplier + index * 4) || 5,
+        revenue: Math.round(calculatedMRR * multiplier) || (index + 1) * 350,
+        activity: (index + 1) * 8 + 4,
       };
     });
 
-    const statusDistribution = [
-      { name: 'Active', value: activeRecords, color: '#10b981' },
-      { name: 'Draft', value: draftRecords, color: '#f59e0b' },
-      { name: 'Archived', value: archivedRecords, color: '#6b7280' },
-    ];
-
-    const priorityDistribution = [
-      { name: 'High / Critical', value: highPriorityRecords, color: '#ef4444' },
-      {
-        name: 'Medium / Low',
-        value: Math.max(0, totalRecords - highPriorityRecords),
-        color: '#3b82f6',
-      },
-    ];
-
     return {
       stats: {
-        totalRecords,
-        activeRecords,
-        draftRecords,
-        archivedRecords,
+        totalCustomers,
+        activeSubscriptions,
+        quotationsPending,
+        invoicesDue,
+        invoicesOverdue,
+        paymentsCollectedThisMonth,
+        mrr: Math.round(calculatedMRR * 100) / 100,
         totalMembers,
-        highPriorityRecords,
         systemHealth: '100% Operational',
       },
       charts: {
         trendData,
         statusDistribution,
-        priorityDistribution,
       },
       recentActivity: recentActivity.map((a) => ({
         id: a.id,
         action: a.action,
         entity: a.entity,
         user: a.user?.name || 'System',
-        createdAt: a.createdAt.toISOString(),
+        createdAt: a.createdAt,
       })),
-      recentNotifications: recentNotifications.map((n) => ({
-        id: n.id,
-        title: n.title,
-        message: n.message,
-        type: n.type,
-        createdAt: n.createdAt.toISOString(),
-      })),
+      recentNotifications,
     };
   }
 }

@@ -4,20 +4,78 @@ import * as argon2 from 'argon2';
 const prisma = new PrismaClient();
 
 const permissions = [
+  // Org
   { key: 'org:read', name: 'View Organization', module: 'Organization' },
   { key: 'org:update', name: 'Update Organization', module: 'Organization' },
   { key: 'org:delete', name: 'Delete Organization', module: 'Organization' },
+  // Members
   { key: 'members:read', name: 'View Members', module: 'Members' },
   { key: 'members:invite', name: 'Invite Members', module: 'Members' },
   { key: 'members:update', name: 'Update Member Roles', module: 'Members' },
   { key: 'members:remove', name: 'Remove Members', module: 'Members' },
+  // Roles
   { key: 'roles:manage', name: 'Manage Roles & Permissions', module: 'Roles' },
-  { key: 'records:read', name: 'View Records & Subscriptions', module: 'Records' },
-  { key: 'records:create', name: 'Create Records & Subscriptions', module: 'Records' },
-  { key: 'records:update', name: 'Update Records & Subscriptions', module: 'Records' },
-  { key: 'records:delete', name: 'Delete Records & Subscriptions', module: 'Records' },
+  // Generic Records
+  { key: 'records:read', name: 'View Records', module: 'Records' },
+  { key: 'records:create', name: 'Create Records', module: 'Records' },
+  { key: 'records:update', name: 'Update Records', module: 'Records' },
+  { key: 'records:delete', name: 'Delete Records', module: 'Records' },
+  // System & Audit
   { key: 'settings:update', name: 'Update System Settings', module: 'Settings' },
   { key: 'audit:read', name: 'View Activity Audit Logs', module: 'Audit' },
+
+  // Domain Permissions - Customers
+  { key: 'customers:read', name: 'View Customers', module: 'Customers' },
+  { key: 'customers:create', name: 'Create Customer', module: 'Customers' },
+  { key: 'customers:update', name: 'Update Customer', module: 'Customers' },
+  { key: 'customers:delete', name: 'Delete Customer', module: 'Customers' },
+
+  // Products & Variants
+  { key: 'products:read', name: 'View Products & Variants', module: 'Products' },
+  { key: 'products:create', name: 'Create Products', module: 'Products' },
+  { key: 'products:update', name: 'Update Products', module: 'Products' },
+  { key: 'products:delete', name: 'Delete Products', module: 'Products' },
+
+  // Plans
+  { key: 'plans:read', name: 'View Subscription Plans', module: 'Plans' },
+  { key: 'plans:create', name: 'Create Subscription Plans', module: 'Plans' },
+  { key: 'plans:update', name: 'Update Subscription Plans', module: 'Plans' },
+  { key: 'plans:delete', name: 'Delete Subscription Plans', module: 'Plans' },
+
+  // Quotations
+  { key: 'quotations:read', name: 'View Quotations', module: 'Quotations' },
+  { key: 'quotations:create', name: 'Create Quotation', module: 'Quotations' },
+  { key: 'quotations:update', name: 'Update Quotation', module: 'Quotations' },
+  { key: 'quotations:confirm', name: 'Confirm Quotation', module: 'Quotations' },
+  { key: 'quotations:cancel', name: 'Cancel Quotation', module: 'Quotations' },
+
+  // Subscriptions
+  { key: 'subscriptions:read', name: 'View Subscriptions', module: 'Subscriptions' },
+  { key: 'subscriptions:create', name: 'Create Subscription', module: 'Subscriptions' },
+  { key: 'subscriptions:update', name: 'Update Subscription', module: 'Subscriptions' },
+  { key: 'subscriptions:pause', name: 'Pause Subscription', module: 'Subscriptions' },
+  { key: 'subscriptions:close', name: 'Close Subscription', module: 'Subscriptions' },
+  { key: 'subscriptions:renew', name: 'Renew Subscription', module: 'Subscriptions' },
+
+  // Invoices
+  { key: 'invoices:read', name: 'View Invoices', module: 'Invoices' },
+  { key: 'invoices:confirm', name: 'Confirm Invoice', module: 'Invoices' },
+  { key: 'invoices:cancel', name: 'Cancel Invoice', module: 'Invoices' },
+  { key: 'invoices:send', name: 'Send / Print Invoice', module: 'Invoices' },
+
+  // Taxes & Discounts
+  { key: 'taxes:manage', name: 'Configure Taxes', module: 'Taxes' },
+  { key: 'discounts:read', name: 'View Discounts', module: 'Discounts' },
+  { key: 'discounts:manage', name: 'Create & Edit Discounts', module: 'Discounts' },
+  { key: 'discounts:apply', name: 'Apply Discounts', module: 'Discounts' },
+
+  // Payments
+  { key: 'payments:read', name: 'View Payments', module: 'Payments' },
+  { key: 'payments:record', name: 'Record Payment', module: 'Payments' },
+
+  // Reports
+  { key: 'reports:operational', name: 'View Operational Reports', module: 'Reports' },
+  { key: 'reports:financial', name: 'View Executive Financial Reports', module: 'Reports' },
 ];
 
 async function main() {
@@ -100,8 +158,44 @@ async function main() {
     update: {},
   });
 
+  // Permissions for Staff (MEMBER)
+  const staffAllowedPrefixes = [
+    'customers:read',
+    'customers:create',
+    'customers:update',
+    'products:read',
+    'plans:read',
+    'quotations:read',
+    'quotations:create',
+    'quotations:update',
+    'quotations:confirm',
+    'quotations:cancel',
+    'subscriptions:read',
+    'subscriptions:create',
+    'subscriptions:update',
+    'subscriptions:pause',
+    'subscriptions:close',
+    'subscriptions:renew',
+    'invoices:read',
+    'invoices:confirm',
+    'invoices:cancel',
+    'invoices:send',
+    'discounts:read',
+    'discounts:apply',
+    'payments:read',
+    'payments:record',
+    'reports:operational',
+    'members:read',
+    'audit:read',
+    'org:read',
+    'records:read',
+    'records:create',
+    'records:update',
+  ];
+
   // Attach permissions to roles
   for (const p of allPerms) {
+    // Owner gets everything
     await prisma.rolePermission.upsert({
       where: {
         roleId_permissionId: { roleId: ownerRole.id, permissionId: p.id },
@@ -110,6 +204,7 @@ async function main() {
       update: {},
     });
 
+    // Admin gets everything except org:delete
     if (p.key !== 'org:delete') {
       await prisma.rolePermission.upsert({
         where: {
@@ -120,12 +215,8 @@ async function main() {
       });
     }
 
-    if (
-      p.key.startsWith('records:') ||
-      p.key === 'members:read' ||
-      p.key === 'audit:read' ||
-      p.key === 'org:read'
-    ) {
+    // Staff (MEMBER) gets operational permissions
+    if (staffAllowedPrefixes.includes(p.key)) {
       await prisma.rolePermission.upsert({
         where: {
           roleId_permissionId: { roleId: memberRole.id, permissionId: p.id },
@@ -135,6 +226,7 @@ async function main() {
       });
     }
 
+    // Viewer gets all read permissions
     if (p.key.endsWith(':read')) {
       await prisma.rolePermission.upsert({
         where: {
@@ -162,9 +254,16 @@ async function main() {
       isEmailVerified: true,
       userPreference: {
         create: {
-          theme: 'system',
+          theme: 'dark',
           accentColor: 'indigo',
           density: 'comfortable',
+        },
+      },
+      memberships: {
+        create: {
+          organizationId: org.id,
+          roleId: ownerRole.id,
+          status: 'ACTIVE',
         },
       },
     },
@@ -181,8 +280,15 @@ async function main() {
       userPreference: {
         create: {
           theme: 'dark',
-          accentColor: 'emerald',
+          accentColor: 'indigo',
           density: 'comfortable',
+        },
+      },
+      memberships: {
+        create: {
+          organizationId: org.id,
+          roleId: adminRole.id,
+          status: 'ACTIVE',
         },
       },
     },
@@ -198,144 +304,270 @@ async function main() {
       isEmailVerified: true,
       userPreference: {
         create: {
-          theme: 'light',
-          accentColor: 'blue',
-          density: 'compact',
+          theme: 'dark',
+          accentColor: 'indigo',
+          density: 'comfortable',
+        },
+      },
+      memberships: {
+        create: {
+          organizationId: org.id,
+          roleId: memberRole.id,
+          status: 'ACTIVE',
         },
       },
     },
     update: {},
   });
 
-  // Assign memberships
-  await prisma.organizationMember.upsert({
-    where: {
-      organizationId_userId: { organizationId: org.id, userId: ownerUser.id },
-    },
+  // 5. Seed Domain Entities: Products & Variants
+  const productSoftware = await prisma.product.upsert({
+    where: { id: 'prod-software-suite-001' },
     create: {
+      id: 'prod-software-suite-001',
       organizationId: org.id,
-      userId: ownerUser.id,
-      roleId: ownerRole.id,
-      status: 'ACTIVE',
+      name: 'Brightloop Business Software',
+      type: 'Software Subscription',
+      salesPrice: 120.0,
+      costPrice: 40.0,
+      notes: 'Flagship enterprise subscription suite for automated operations.',
+      variants: {
+        create: [
+          { name: 'Standard Edition', additionalPrice: 0.0 },
+          { name: 'Odoo Brand Connector', additionalPrice: 560.0 }, // Mentioned in PDF Page 3!
+        ],
+      },
     },
     update: {},
   });
 
-  await prisma.organizationMember.upsert({
-    where: {
-      organizationId_userId: { organizationId: org.id, userId: adminUser.id },
-    },
+  const productStorage = await prisma.product.upsert({
+    where: { id: 'prod-cloud-storage-002' },
     create: {
+      id: 'prod-cloud-storage-002',
       organizationId: org.id,
-      userId: adminUser.id,
-      roleId: adminRole.id,
-      status: 'ACTIVE',
+      name: 'Cloud Storage & Archive Add-on',
+      type: 'Add-on',
+      salesPrice: 25.0,
+      costPrice: 8.0,
+      notes: 'High-speed encrypted document repository for customer invoices.',
     },
     update: {},
   });
 
-  await prisma.organizationMember.upsert({
-    where: {
-      organizationId_userId: { organizationId: org.id, userId: memberUser.id },
-    },
+  // 6. Seed Plans
+  const planMonthly = await prisma.plan.upsert({
+    where: { id: 'plan-monthly-growth-001' },
     create: {
+      id: 'plan-monthly-growth-001',
       organizationId: org.id,
-      userId: memberUser.id,
-      roleId: memberRole.id,
-      status: 'ACTIVE',
+      productId: productSoftware.id,
+      name: 'Monthly Growth Plan',
+      price: 120.0,
+      billingFrequency: 'MONTHLY',
+      minQuantity: 1,
+      allowEarlyClose: true,
+      allowPause: true,
+      allowRenewal: true,
     },
     update: {},
   });
 
-  // 5. Seed Demo Subscription & Billing Records
-  const demoRecords = [
-    {
-      title: 'Enterprise Platform Plan - Tier 3',
-      description: 'Annual recurring subscription contract with dedicated infrastructure and priority SLA.',
-      status: 'ACTIVE' as const,
-      priority: 'CRITICAL' as const,
-      category: 'Subscription Plans',
-      tags: ['annual', 'enterprise', 'sla'],
-      metadata: { mrrContribution: 4500, billingAnchorDay: 1, seatsAllocated: 150 },
-      createdById: ownerUser.id,
+  const planAnnual = await prisma.plan.upsert({
+    where: { id: 'plan-annual-enterprise-002' },
+    create: {
+      id: 'plan-annual-enterprise-002',
+      organizationId: org.id,
+      productId: productSoftware.id,
+      name: 'Annual Enterprise Plan',
+      price: 1200.0,
+      billingFrequency: 'YEARLY',
+      minQuantity: 5,
+      allowEarlyClose: false,
+      allowPause: true,
+      allowRenewal: true,
     },
-    {
-      title: 'Tax Exemption Compliance Filing - NY',
-      description: 'State resale tax exemption certificate verification for enterprise accounts.',
-      status: 'ACTIVE' as const,
-      priority: 'HIGH' as const,
-      category: 'Taxes',
-      tags: ['tax', 'compliance', 'ny'],
-      metadata: { jurisdiction: 'US-NY', exemptStatus: 'Verified' },
-      createdById: adminUser.id,
+    update: {},
+  });
+
+  // 7. Seed Tax Rule & Discount
+  await prisma.taxRule.upsert({
+    where: { id: 'tax-std-vat-001' },
+    create: {
+      id: 'tax-std-vat-001',
+      organizationId: org.id,
+      name: 'Standard VAT/GST',
+      ratePercentage: 10.0,
+      jurisdiction: 'Standard Corporate',
     },
-    {
-      title: 'Realtime Usage Webhook Ingress',
-      description: 'Automated meter event collector recording hourly API consumption for metered add-ons.',
-      status: 'ACTIVE' as const,
-      priority: 'MEDIUM' as const,
-      category: 'Metering',
-      tags: ['webhooks', 'metering'],
-      metadata: { batchWindow: '60s', sampleRate: '100%' },
+    update: {},
+  });
+
+  await prisma.discount.upsert({
+    where: { organizationId_code: { organizationId: org.id, code: 'VOLUME15' } },
+    create: {
+      organizationId: org.id,
+      name: 'Volume Seat Discount 15%',
+      code: 'VOLUME15',
+      type: 'PERCENTAGE',
+      value: 15.0,
+      minPurchase: 0,
+      minQuantity: 5,
+      maxUsage: 100,
+      scope: 'WHOLE_SUBSCRIPTION',
+    },
+    update: {},
+  });
+
+  // 8. Seed Customers
+  const customerAcme = await prisma.customer.upsert({
+    where: { id: 'cust-acme-corp-001' },
+    create: {
+      id: 'cust-acme-corp-001',
+      organizationId: org.id,
+      name: 'Acme Corporation',
+      email: 'procurement@acme-corp.com',
+      phone: '+1 555-0199',
+      company: 'Acme Global Holdings',
+      address: '100 Enterprise Way, Silicon Valley, CA',
+      notes: 'Enterprise account with 100+ seats.',
       createdById: memberUser.id,
     },
-    {
-      title: 'Early Adopter Promotional Discount (20%)',
-      description: 'Recurring coupon applied to first 12 billing cycles for Q1 cohorts.',
-      status: 'DRAFT' as const,
-      priority: 'LOW' as const,
-      category: 'Discounts',
-      tags: ['promo', 'discount', 'q1'],
-      metadata: { discountPercent: 20, maxRedemptions: 50 },
-      createdById: adminUser.id,
-    },
-  ];
+    update: {},
+  });
 
-  for (const rec of demoRecords) {
-    const existing = await prisma.genericRecord.findFirst({
-      where: { organizationId: org.id, title: rec.title },
-    });
-    if (!existing) {
-      await prisma.genericRecord.create({
-        data: {
-          ...rec,
-          organizationId: org.id,
-        },
-      });
-    }
-  }
+  const customerApex = await prisma.customer.upsert({
+    where: { id: 'cust-apex-retail-002' },
+    create: {
+      id: 'cust-apex-retail-002',
+      organizationId: org.id,
+      name: 'Apex Retailers Inc.',
+      email: 'billing@apexretail.com',
+      phone: '+1 555-0144',
+      company: 'Apex Retail Solutions',
+      address: '42 Commerce Blvd, Austin, TX',
+      notes: 'B2B boutique retailer scaling to national delivery.',
+      createdById: memberUser.id,
+    },
+    update: {},
+  });
 
-  // 6. Seed Demo Notifications
-  const demoNotifications = [
-    {
-      title: 'Brightloop Platform Initialized',
-      message: 'Workspace configured with enterprise RBAC roles and subscription billing architecture.',
-      type: 'SUCCESS' as const,
-      isRead: true,
-    },
-    {
-      title: 'Recurring Billing Cycle Verified',
-      message: 'Scheduled billing run processed 24 active renewals with zero proration errors.',
-      type: 'INFO' as const,
-      isRead: false,
-    },
-    {
-      title: 'Security Alert: New Sign-in',
-      message: 'Session verified via Argon2id authentication from Taylor Reed.',
-      type: 'SECURITY' as const,
-      isRead: false,
-    },
-  ];
-
-  for (const notif of demoNotifications) {
-    await prisma.notification.create({
-      data: {
-        ...notif,
-        organizationId: org.id,
-        userId: ownerUser.id,
+  // 9. Seed Subscriptions & Invoices
+  const subAcme = await prisma.subscription.upsert({
+    where: { id: 'sub-acme-001' },
+    create: {
+      id: 'sub-acme-001',
+      organizationId: org.id,
+      subscriptionNumber: 'SUB-2026-001',
+      customerId: customerAcme.id,
+      planId: planMonthly.id,
+      startDate: new Date(),
+      billingFrequency: 'MONTHLY',
+      paymentTerms: 'Net 30',
+      subtotal: 120.0,
+      taxAmount: 12.0,
+      totalAmount: 132.0,
+      status: 'ACTIVE',
+      createdById: memberUser.id,
+      lines: {
+        create: [
+          {
+            productId: productSoftware.id,
+            quantity: 1,
+            unitPrice: 120.0,
+            taxRate: 10.0,
+            taxAmount: 12.0,
+            lineTotal: 132.0,
+          },
+        ],
       },
-    });
-  }
+    },
+    update: {},
+  });
+
+  // Invoice 1: Paid
+  const invPaid = await prisma.invoice.upsert({
+    where: { id: 'inv-acme-001' },
+    create: {
+      id: 'inv-acme-001',
+      organizationId: org.id,
+      invoiceNumber: 'INV-2026-001',
+      subscriptionId: subAcme.id,
+      customerId: customerAcme.id,
+      invoiceDate: new Date(Date.now() - 30 * 86400000),
+      dueDate: new Date(Date.now() - 5 * 86400000),
+      subtotal: 120.0,
+      taxAmount: 12.0,
+      totalAmount: 132.0,
+      paidAmount: 132.0,
+      outstandingAmount: 0.0,
+      status: 'PAID',
+      lines: {
+        create: [
+          {
+            description: 'Monthly Growth Plan - Brightloop Business Software',
+            quantity: 1,
+            unitPrice: 120.0,
+            taxRate: 10.0,
+            taxAmount: 12.0,
+            lineTotal: 132.0,
+          },
+        ],
+      },
+    },
+    update: {},
+  });
+
+  // Payment for Invoice 1
+  await prisma.payment.upsert({
+    where: { id: 'pay-acme-001' },
+    create: {
+      id: 'pay-acme-001',
+      organizationId: org.id,
+      paymentReference: 'PAY-2026-001',
+      invoiceId: invPaid.id,
+      customerId: customerAcme.id,
+      amount: 132.0,
+      paymentMethod: 'BANK_TRANSFER',
+      paymentDate: new Date(Date.now() - 4 * 86400000),
+      note: 'Wire transfer confirmed via settlement batch #8821.',
+      recordedById: memberUser.id,
+    },
+    update: {},
+  });
+
+  // Invoice 2: Confirmed / Due
+  await prisma.invoice.upsert({
+    where: { id: 'inv-acme-002' },
+    create: {
+      id: 'inv-acme-002',
+      organizationId: org.id,
+      invoiceNumber: 'INV-2026-002',
+      subscriptionId: subAcme.id,
+      customerId: customerAcme.id,
+      invoiceDate: new Date(),
+      dueDate: new Date(Date.now() + 15 * 86400000),
+      subtotal: 120.0,
+      taxAmount: 12.0,
+      totalAmount: 132.0,
+      paidAmount: 0.0,
+      outstandingAmount: 132.0,
+      status: 'CONFIRMED',
+      lines: {
+        create: [
+          {
+            description: 'Monthly Growth Plan - Current Period Renewal',
+            quantity: 1,
+            unitPrice: 120.0,
+            taxRate: 10.0,
+            taxAmount: 12.0,
+            lineTotal: 132.0,
+          },
+        ],
+      },
+    },
+    update: {},
+  });
 
   console.log('✅ Brightloop database seed completed successfully!');
   console.log('==============================================');
