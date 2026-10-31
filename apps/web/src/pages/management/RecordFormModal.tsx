@@ -95,55 +95,59 @@ export function RecordFormModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-md">
         <form onSubmit={handleSubmit(onFormSubmit)}>
-          <DialogHeader>
-            <DialogTitle>{isEditing ? 'Edit Record' : 'Create New Record'}</DialogTitle>
-            <DialogDescription>
+          <DialogHeader className="pb-2 border-b border-border/60">
+            <DialogTitle className="text-base font-semibold tracking-tight text-foreground">
+              {isEditing ? 'Edit Record' : 'Create New Record'}
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">
               {isEditing
-                ? 'Update the record details and priority settings'
-                : 'Add a new generic item to this multi-tenant workspace'}
+                ? 'Update entity attributes and operational status'
+                : 'Provision a new entity in this multi-tenant workspace'}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <label className="text-xs font-medium" htmlFor="title">
+          <div className="space-y-3.5 py-4 text-xs">
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="title">
                 Record Title
               </label>
               <Input
                 id="title"
                 placeholder="e.g. Ingestion Pipeline Spec"
+                className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
                 {...register('title')}
               />
               {errors.title && (
-                <p className="text-xs text-destructive">{errors.title.message}</p>
+                <p className="text-[11px] text-destructive font-mono">{errors.title.message}</p>
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-xs font-medium">Category</label>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium">Category</label>
                 <Input
                   id="category"
                   placeholder="e.g. Infrastructure, Analytics"
+                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
                   {...register('category')}
                 />
                 {errors.category && (
-                  <p className="text-xs text-destructive">{errors.category.message}</p>
+                  <p className="text-[11px] text-destructive font-mono">{errors.category.message}</p>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-medium">Priority</label>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium">Priority</label>
                 <Select
                   value={currentPriority}
                   onValueChange={(val) => setValue('priority', val as RecordPriority)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="h-8 text-xs font-mono dark:bg-[#1C1C1F]/60 border-border/80">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="text-xs font-mono">
                     <SelectItem value={RecordPriority.LOW}>Low</SelectItem>
                     <SelectItem value={RecordPriority.MEDIUM}>Medium</SelectItem>
                     <SelectItem value={RecordPriority.HIGH}>High</SelectItem>
@@ -153,16 +157,16 @@ export function RecordFormModal({
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-medium">Lifecycle Status</label>
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium">Lifecycle Status</label>
               <Select
                 value={currentStatus}
                 onValueChange={(val) => setValue('status', val as RecordStatus)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-8 text-xs font-mono dark:bg-[#1C1C1F]/60 border-border/80">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="text-xs font-mono">
                   <SelectItem value={RecordStatus.ACTIVE}>Active</SelectItem>
                   <SelectItem value={RecordStatus.DRAFT}>Draft</SelectItem>
                   <SelectItem value={RecordStatus.ARCHIVED}>Archived</SelectItem>
@@ -170,28 +174,30 @@ export function RecordFormModal({
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-medium" htmlFor="description">
-                Description / Details
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="description">
+                Description / Notes
               </label>
               <Textarea
                 id="description"
-                placeholder="Detailed summary or notes for this record..."
-                className="min-h-[90px]"
+                placeholder="Detailed specification or notes for this record..."
+                className="min-h-[85px] text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80 resize-none"
                 {...register('description')}
               />
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="pt-2 border-t border-border/60 gap-2 sm:gap-0">
             <Button
               type="button"
               variant="outline"
+              size="sm"
               onClick={() => onOpenChange(false)}
+              className="h-8 text-xs border-border/80"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" size="sm" disabled={loading} className="h-8 text-xs">
               {loading
                 ? isEditing
                   ? 'Saving...'

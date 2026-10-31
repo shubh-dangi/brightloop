@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Users, UserPlus, Trash2, Shield, MoreHorizontal, Check, AlertCircle } from 'lucide-react';
+import { UserPlus, Trash2, AlertCircle } from 'lucide-react';
 import { apiClient } from '../../services/api';
 import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { Card, CardContent } from '../../components/ui/card';
+import { Card } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
 import {
@@ -103,12 +103,6 @@ export function TeamMembersPage() {
           joinedAt: new Date(Date.now() - 5 * 86400000).toISOString(),
         },
       ]);
-      setRoles([
-        { id: 'role-1', name: 'OWNER' },
-        { id: 'role-2', name: 'ADMIN' },
-        { id: 'role-3', name: 'MEMBER' },
-        { id: 'role-4', name: 'VIEWER' },
-      ]);
     } finally {
       setLoading(false);
     }
@@ -120,15 +114,12 @@ export function TeamMembersPage() {
 
   const handleInvite = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inviteEmail) return;
-
     setInviting(true);
     setInviteError(null);
     try {
-      const targetRole = roles.find((r) => r.name === selectedRole);
-      await apiClient.post('/organizations/members/invite', {
+      await apiClient.post('/organizations/invitations', {
         email: inviteEmail,
-        roleId: targetRole?.id,
+        role: selectedRole,
       });
       setInviteOpen(false);
       setInviteEmail('');
@@ -168,28 +159,28 @@ export function TeamMembersPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <PageHeader
         title="Team Members"
-        description="Manage workspace users, invitations, and assigned RBAC roles"
+        description="Collaborators and role-based permissions assigned in this workspace"
       >
-        <Button onClick={() => setInviteOpen(true)} size="sm" className="gap-1.5">
-          <UserPlus className="h-4 w-4" />
+        <Button onClick={() => setInviteOpen(true)} size="sm" className="gap-1.5 h-8 text-xs font-mono">
+          <UserPlus className="h-3.5 w-3.5" />
           Invite Member
         </Button>
       </PageHeader>
 
-      {/* Member Table */}
-      <Card className="shadow-xs overflow-hidden">
+      {/* Member Table — Linear Precision Ledger */}
+      <Card className="border-border/80 bg-card overflow-hidden rounded-lg">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-muted/50 border-b border-border text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-muted/30 dark:bg-[#171719] border-b border-border/80 text-[10px] uppercase font-mono tracking-wider text-muted-foreground/80 font-medium">
               <tr>
-                <th className="py-3 px-4">User</th>
-                <th className="py-3 px-4">Role</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Joined Date</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+                <th className="py-2.5 px-3.5">User</th>
+                <th className="py-2.5 px-3.5">Role</th>
+                <th className="py-2.5 px-3.5">Status</th>
+                <th className="py-2.5 px-3.5">Joined Date</th>
+                <th className="py-2.5 px-3.5 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
@@ -201,51 +192,51 @@ export function TeamMembersPage() {
                 </tr>
               ) : members.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-muted-foreground">
+                  <td colSpan={5} className="py-8 text-center text-muted-foreground font-mono">
                     No members found.
                   </td>
                 </tr>
               ) : (
                 members.map((member) => (
-                  <tr key={member.id} className="hover:bg-muted/30 transition-colors">
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-8 w-8">
+                  <tr key={member.id} className="hover:bg-muted/30 dark:hover:bg-[#242428]/40 transition-colors">
+                    <td className="py-2.5 px-3.5">
+                      <div className="flex items-center gap-2.5">
+                        <Avatar className="h-7 w-7 border border-border/70">
                           <AvatarImage src={member.user.avatarUrl || ''} />
-                          <AvatarFallback className="text-xs font-semibold">
+                          <AvatarFallback className="text-[10px] font-mono font-semibold">
                             {member.user.name.slice(0, 2).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col">
                           <span className="font-medium text-foreground">{member.user.name}</span>
-                          <span className="text-xs text-muted-foreground">{member.user.email}</span>
+                          <span className="text-[11px] font-mono text-muted-foreground">{member.user.email}</span>
                         </div>
                       </div>
                     </td>
-                    <td className="py-3 px-4">
-                      <Badge variant={roleBadgeVariant(member.roleName) as any}>
+                    <td className="py-2.5 px-3.5">
+                      <Badge variant={roleBadgeVariant(member.roleName) as any} className="font-mono text-[10px]">
                         {member.roleName}
                       </Badge>
                     </td>
-                    <td className="py-3 px-4">
-                      <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
+                    <td className="py-2.5 px-3.5">
+                      <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-emerald-500 font-medium">
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                         {member.status}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-xs text-muted-foreground">
+                    <td className="py-2.5 px-3.5 font-mono text-[11px] text-muted-foreground tabular-nums">
                       {formatDate(member.joinedAt)}
                     </td>
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-2.5 px-3.5 text-right">
                       {member.roleName !== 'OWNER' && (
                         <Button
                           variant="ghost"
                           size="icon"
                           onClick={() => setDeleteConfirmMember(member)}
-                          className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                          className="h-7 w-7 text-muted-foreground hover:text-destructive"
                           title="Remove member"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3.5 w-3.5" />
                         </Button>
                       )}
                     </td>
@@ -261,20 +252,20 @@ export function TeamMembersPage() {
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent className="sm:max-w-md">
           <form onSubmit={handleInvite}>
-            <DialogHeader>
-              <DialogTitle>Invite Team Member</DialogTitle>
-              <DialogDescription>
-                Send an invitation link to collaborate in this workspace.
+            <DialogHeader className="pb-2 border-b border-border/60">
+              <DialogTitle className="text-base font-semibold text-foreground">Invite Team Member</DialogTitle>
+              <DialogDescription className="text-xs text-muted-foreground">
+                Send an invitation to join this multi-tenant workspace.
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 py-4">
+            <div className="space-y-3.5 py-4 text-xs">
               {inviteError && (
                 <Alert variant="destructive">
                   <AlertDescription>{inviteError}</AlertDescription>
                 </Alert>
               )}
-              <div className="space-y-2">
-                <label className="text-xs font-medium" htmlFor="inviteEmail">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="inviteEmail">
                   Email Address
                 </label>
                 <Input
@@ -283,17 +274,18 @@ export function TeamMembersPage() {
                   placeholder="colleague@brightloop.local"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
+                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
                   required
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-medium">Workspace Role</label>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium">Workspace Role</label>
                 <Select value={selectedRole} onValueChange={setSelectedRole}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-8 text-xs font-mono dark:bg-[#1C1C1F]/60 border-border/80">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="text-xs font-mono">
                     <SelectItem value="MEMBER">Member (Full record CRUD)</SelectItem>
                     <SelectItem value="ADMIN">Admin (Members & Settings)</SelectItem>
                     <SelectItem value="VIEWER">Viewer (Read-only)</SelectItem>
@@ -301,16 +293,12 @@ export function TeamMembersPage() {
                 </Select>
               </div>
             </div>
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setInviteOpen(false)}
-              >
+            <DialogFooter className="pt-2 border-t border-border/60 gap-2 sm:gap-0">
+              <Button type="button" variant="outline" size="sm" onClick={() => setInviteOpen(false)} className="h-8 text-xs">
                 Cancel
               </Button>
-              <Button type="submit" disabled={inviting}>
-                {inviting ? 'Inviting...' : 'Send Invitation'}
+              <Button type="submit" size="sm" disabled={inviting} className="h-8 text-xs">
+                {inviting ? 'Sending...' : 'Send Invitation'}
               </Button>
             </DialogFooter>
           </form>
@@ -324,28 +312,20 @@ export function TeamMembersPage() {
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-destructive">
-              <AlertCircle className="h-5 w-5" />
+            <DialogTitle className="flex items-center gap-2 text-destructive text-base">
+              <AlertCircle className="h-4 w-4" />
               Remove Team Member
             </DialogTitle>
-            <DialogDescription>
-              Are you sure you want to remove{' '}
-              <strong className="text-foreground">{deleteConfirmMember?.user?.name}</strong> from
-              this workspace? They will immediately lose all access.
+            <DialogDescription className="text-xs">
+              Are you sure you want to revoke workspace access for{' '}
+              <strong className="text-foreground">{deleteConfirmMember?.user?.name}</strong>?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button
-              variant="outline"
-              onClick={() => setDeleteConfirmMember(null)}
-            >
+            <Button variant="outline" size="sm" onClick={() => setDeleteConfirmMember(null)} className="h-8 text-xs">
               Cancel
             </Button>
-            <Button
-              variant="destructive"
-              onClick={handleRemoveMember}
-              disabled={deleting}
-            >
+            <Button variant="destructive" size="sm" onClick={handleRemoveMember} disabled={deleting} className="h-8 text-xs">
               {deleting ? 'Removing...' : 'Confirm Remove'}
             </Button>
           </DialogFooter>

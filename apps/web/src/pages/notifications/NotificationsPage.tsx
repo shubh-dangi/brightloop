@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Bell, CheckCheck, Trash2, Filter } from 'lucide-react';
 import { apiClient } from '../../services/api';
 import { Button } from '../../components/ui/button';
-import { Card, CardContent } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { EmptyState } from '../../components/feedback/EmptyState';
@@ -110,28 +109,30 @@ export function NotificationsPage() {
     }
   };
 
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <PageHeader
         title="Notifications"
-        description="Review alerts, system events, and security logs for your workspace"
+        description="System alerts, security notifications, and automated workspace alerts"
       >
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={() => setFilterUnread(!filterUnread)}
-            className="gap-1.5"
+            className="gap-1.5 h-8 text-xs font-mono border-border/80"
           >
             <Filter className="h-3.5 w-3.5" />
-            {filterUnread ? 'Showing Unread' : 'Showing All'}
+            {filterUnread ? 'Unread Only' : 'All Alerts'}
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={markAllAsRead}
-            disabled={notifications.length === 0}
-            className="gap-1.5"
+            disabled={unreadCount === 0}
+            className="gap-1.5 h-8 text-xs font-mono border-border/80"
           >
             <CheckCheck className="h-3.5 w-3.5" />
             Mark all read
@@ -140,7 +141,7 @@ export function NotificationsPage() {
       </PageHeader>
 
       {loading ? (
-        <div className="py-12 flex justify-center">
+        <div className="py-16 flex justify-center">
           <Spinner size="lg" />
         </div>
       ) : notifications.length === 0 ? (
@@ -154,60 +155,58 @@ export function NotificationsPage() {
           }
         />
       ) : (
-        <div className="space-y-3">
+        <div className="border border-border/80 bg-card rounded-lg divide-y divide-border/60">
           {notifications.map((item) => (
-            <Card
+            <div
               key={item.id}
-              className={`transition-colors ${
-                !item.isRead ? 'border-primary/30 bg-primary/5' : 'bg-card/70'
+              className={`p-3.5 flex items-start justify-between gap-4 transition-colors ${
+                !item.isRead ? 'bg-primary/5 dark:bg-primary/[0.04]' : 'hover:bg-muted/20'
               }`}
             >
-              <CardContent className="p-4 flex items-start justify-between gap-4">
-                <div className="flex items-start gap-3">
-                  <div
-                    className={`h-2.5 w-2.5 rounded-full mt-1.5 shrink-0 ${
-                      !item.isRead ? 'bg-primary' : 'bg-transparent'
-                    }`}
-                  />
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-sm font-semibold text-foreground">
-                        {item.title}
-                      </h4>
-                      <Badge variant={badgeVariant(item.type) as any} className="text-[10px] uppercase">
-                        {item.type}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{item.message}</p>
-                    <p className="text-xs text-muted-foreground/80 pt-1">
-                      {formatDate(item.createdAt)}
-                    </p>
+              <div className="flex items-start gap-3 min-w-0">
+                <div
+                  className={`h-2 w-2 rounded-full mt-1.5 shrink-0 transition-colors ${
+                    !item.isRead ? 'bg-primary' : 'bg-transparent border border-muted-foreground/30'
+                  }`}
+                />
+                <div className="space-y-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h4 className="text-xs font-semibold text-foreground">
+                      {item.title}
+                    </h4>
+                    <Badge variant={badgeVariant(item.type) as any} className="font-mono text-[9px] uppercase px-1.5 py-0.2">
+                      {item.type}
+                    </Badge>
                   </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{item.message}</p>
+                  <p className="font-mono text-[11px] text-muted-foreground/70 pt-0.5 tabular-nums">
+                    {formatDate(item.createdAt)}
+                  </p>
                 </div>
+              </div>
 
-                <div className="flex items-center gap-1 shrink-0">
-                  {!item.isRead && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => markAsRead(item.id)}
-                      className="h-8 text-xs"
-                    >
-                      Mark read
-                    </Button>
-                  )}
+              <div className="flex items-center gap-1 shrink-0 pt-0.5">
+                {!item.isRead && (
                   <Button
                     variant="ghost"
-                    size="icon"
-                    onClick={() => deleteNotification(item.id)}
-                    className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                    size="sm"
+                    onClick={() => markAsRead(item.id)}
+                    className="h-7 text-xs px-2 text-primary hover:text-primary font-mono"
                   >
-                    <Trash2 className="h-4 w-4" />
-                    <span className="sr-only">Delete</span>
+                    Mark read
                   </Button>
-                </div>
-              </CardContent>
-            </Card>
+                )}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => deleteNotification(item.id)}
+                  className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  <span className="sr-only">Delete</span>
+                </Button>
+              </div>
+            </div>
           ))}
         </div>
       )}

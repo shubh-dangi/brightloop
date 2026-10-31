@@ -11,6 +11,7 @@ import {
   Shield,
   Bell,
   RefreshCw,
+  TrendingUp,
 } from 'lucide-react';
 import {
   AreaChart,
@@ -30,8 +31,40 @@ import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { PageHeader } from '../../components/layout/PageHeader';
-import { Spinner } from '../../components/ui/spinner';
 import { formatDate } from '../../lib/utils';
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  label?: string;
+}
+
+const LinearChartTooltip = ({ active, payload, label }: CustomTooltipProps) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="rounded-lg border border-border/80 bg-[#1C1C1F] p-3 text-xs shadow-xl backdrop-blur-md">
+        <p className="font-mono text-[11px] text-muted-foreground pb-1 border-b border-border/40 mb-1.5">
+          {label}
+        </p>
+        {payload.map((entry: any, index: number) => (
+          <div key={`tooltip-${index}`} className="flex items-center justify-between gap-4 py-0.5">
+            <span className="flex items-center gap-1.5 text-foreground/80">
+              <span
+                className="h-2 w-2 rounded-full"
+                style={{ backgroundColor: entry.color || entry.stroke }}
+              />
+              {entry.name}:
+            </span>
+            <span className="font-mono font-medium text-foreground tabular-nums">
+              {entry.value}
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
 
 export function DashboardPage() {
   const { user, currentOrganization } = useAuthStore();
@@ -70,9 +103,9 @@ export function DashboardPage() {
             { month: 'Oct', records: 24, activity: 45 },
           ],
           statusDistribution: [
-            { name: 'Active', value: 18, color: '#10b981' },
-            { name: 'Draft', value: 4, color: '#f59e0b' },
-            { name: 'Archived', value: 2, color: '#6b7280' },
+            { name: 'Active', value: 18, color: '#22C55E' },
+            { name: 'Draft', value: 4, color: '#F59E0B' },
+            { name: 'Archived', value: 2, color: '#71717A' },
           ],
         },
         recentActivity: [
@@ -135,7 +168,7 @@ export function DashboardPage() {
       >
         <div className="flex items-center gap-2">
           {isDemoData && (
-            <Badge variant="outline" className="border-amber-500/40 text-amber-600 bg-amber-500/10">
+            <Badge variant="outline" className="border-amber-500/30 text-amber-500 bg-amber-500/10 font-mono text-[11px]">
               Demo Data Mode
             </Badge>
           )}
@@ -144,119 +177,148 @@ export function DashboardPage() {
             size="sm"
             onClick={fetchDashboardData}
             disabled={loading}
-            className="gap-1.5"
+            className="gap-1.5 h-8 text-xs border-border/80"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
-          <Button size="sm" onClick={() => navigate('/records')} className="gap-1.5">
+          <Button size="sm" onClick={() => navigate('/records')} className="gap-1.5 h-8 text-xs">
             <Plus className="h-3.5 w-3.5" />
             New Record
           </Button>
         </div>
       </PageHeader>
 
-      {/* Summary KPI Cards */}
+      {/* Summary KPI Cards — Linear Minimalist Style */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="shadow-xs hover:shadow-sm transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        <Card className="border-border/80 bg-card hover:border-primary/40 transition-colors">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5">
+            <CardTitle className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground/80 font-medium">
               Total Records
             </CardTitle>
             <Layers className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalRecords ?? 0}</div>
-            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-              <span className="text-emerald-600 font-medium">{stats.activeRecords ?? 0} active</span>
-              <span>•</span>
+            <div className="text-2xl font-bold font-mono tracking-tight tabular-nums text-foreground">
+              {stats.totalRecords ?? 0}
+            </div>
+            <p className="text-[11px] font-mono text-muted-foreground mt-1 flex items-center gap-1.5 tabular-nums">
+              <span className="text-emerald-500 font-medium">{stats.activeRecords ?? 0} active</span>
+              <span className="text-muted-foreground/40">•</span>
               <span>{stats.draftRecords ?? 0} drafts</span>
             </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-xs hover:shadow-sm transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Workspace Members
+        <Card className="border-border/80 bg-card hover:border-primary/40 transition-colors">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5">
+            <CardTitle className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground/80 font-medium">
+              Collaborators
             </CardTitle>
-            <Users className="h-4 w-4 text-blue-500" />
+            <Users className="h-4 w-4 text-primary/80" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalMembers ?? 1}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Active multi-tenant collaborators
+            <div className="text-2xl font-bold font-mono tracking-tight tabular-nums text-foreground">
+              {stats.totalMembers ?? 1}
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-1">
+              Active tenant members
             </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-xs hover:shadow-sm transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Critical Priority
+        <Card className="border-border/80 bg-card hover:border-primary/40 transition-colors">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5">
+            <CardTitle className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground/80 font-medium">
+              Critical Attention
             </CardTitle>
             <Activity className="h-4 w-4 text-amber-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.highPriorityRecords ?? 0}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Requires administrative attention
+            <div className="text-2xl font-bold font-mono tracking-tight tabular-nums text-foreground">
+              {stats.highPriorityRecords ?? 0}
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-1">
+              High-priority items
             </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-xs hover:shadow-sm transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Infrastructure Status
+        <Card className="border-border/80 bg-card hover:border-primary/40 transition-colors">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5">
+            <CardTitle className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground/80 font-medium">
+              Platform Status
             </CardTitle>
             <CheckCircle2 className="h-4 w-4 text-emerald-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+            <div className="text-2xl font-bold font-mono tracking-tight text-emerald-500">
               {stats.systemHealth || 'Healthy'}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              PostgreSQL & API Operational
+            <p className="text-[11px] text-muted-foreground mt-1">
+              API & DB Operational
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Analytics Charts */}
+      {/* Analytics Charts — Linear Styling */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 shadow-xs">
-          <CardHeader>
-            <CardTitle className="text-base font-semibold">Activity & Record Growth</CardTitle>
-            <CardDescription>
-              Cumulative volume and operational activity over the past 6 months
-            </CardDescription>
+        <Card className="lg:col-span-2 border-border/80 bg-card">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-sm font-semibold tracking-tight text-foreground">
+                  Activity & Growth Trajectory
+                </CardTitle>
+                <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                  Monthly volume and operational throughput over past 6 months
+                </CardDescription>
+              </div>
+              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded border border-border/60 bg-muted/30 text-[11px] font-mono text-muted-foreground">
+                <TrendingUp className="h-3 w-3 text-primary" />
+                <span>+32% MoM</span>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="h-72 w-full">
+            <div className="h-68 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
                   data={charts.trendData || []}
                   margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
                 >
                   <defs>
-                    <linearGradient id="colorRecords" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.0} />
+                    <linearGradient id="linearPrimaryGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#8B7CF6" stopOpacity={0.25} />
+                      <stop offset="95%" stopColor="#8B7CF6" stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                  <XAxis dataKey="month" stroke="#888888" fontSize={12} tickLine={false} />
-                  <YAxis stroke="#888888" fontSize={12} tickLine={false} />
-                  <RechartsTooltip />
+                  <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-border/40" />
+                  <XAxis
+                    dataKey="month"
+                    stroke="#92929B"
+                    fontSize={11}
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fill: '#92929B', fontFamily: 'JetBrains Mono, monospace' }}
+                  />
+                  <YAxis
+                    stroke="#92929B"
+                    fontSize={11}
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ fill: '#92929B', fontFamily: 'JetBrains Mono, monospace' }}
+                  />
+                  <RechartsTooltip content={<LinearChartTooltip />} />
                   <Area
                     type="monotone"
                     dataKey="records"
                     name="Records"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
+                    stroke="#8B7CF6"
+                    strokeWidth={1.75}
                     fillOpacity={1}
-                    fill="url(#colorRecords)"
+                    fill="url(#linearPrimaryGrad)"
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -264,41 +326,48 @@ export function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-xs">
-          <CardHeader>
-            <CardTitle className="text-base font-semibold">Status Breakdown</CardTitle>
-            <CardDescription>Distribution of records across lifecycle stages</CardDescription>
+        <Card className="border-border/80 bg-card">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold tracking-tight text-foreground">
+              Status Allocation
+            </CardTitle>
+            <CardDescription className="text-xs text-muted-foreground mt-0.5">
+              Current state distribution
+            </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center">
-            <div className="h-52 w-full flex items-center justify-center">
+            <div className="h-50 w-full flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={charts.statusDistribution || []}
                     cx="50%"
                     cy="50%"
-                    innerRadius={55}
-                    outerRadius={80}
-                    paddingAngle={4}
+                    innerRadius={52}
+                    outerRadius={76}
+                    paddingAngle={3}
                     dataKey="value"
+                    stroke="none"
                   >
                     {(charts.statusDistribution || []).map((entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <RechartsTooltip />
+                  <RechartsTooltip content={<LinearChartTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="flex gap-4 mt-2 text-xs">
+            <div className="flex gap-4 mt-3 text-xs">
               {(charts.statusDistribution || []).map((entry: any) => (
                 <div key={entry.name} className="flex items-center gap-1.5">
                   <div
-                    className="h-2.5 w-2.5 rounded-full"
+                    className="h-2 w-2 rounded-full"
                     style={{ backgroundColor: entry.color }}
                   />
-                  <span className="text-muted-foreground">{entry.name}:</span>
-                  <span className="font-semibold">{entry.value}</span>
+                  <span className="text-xs text-muted-foreground font-mono">{entry.name}:</span>
+                  <span className="font-mono font-medium tabular-nums text-foreground">
+                    {entry.value}
+                  </span>
                 </div>
               ))}
             </div>
@@ -306,81 +375,91 @@ export function DashboardPage() {
         </Card>
       </div>
 
-      {/* Recent Activity & Recent Notifications */}
+      {/* Recent Activity & Recent Notifications — Ledger Style */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="shadow-xs">
-          <CardHeader className="flex flex-row items-center justify-between pb-3">
+        <Card className="border-border/80 bg-card">
+          <CardHeader className="flex flex-row items-center justify-between pb-2.5">
             <div>
-              <CardTitle className="text-base font-semibold">Recent Workspace Activity</CardTitle>
-              <CardDescription>Audit timeline of actions performed in this organization</CardDescription>
+              <CardTitle className="text-sm font-semibold tracking-tight text-foreground">
+                Recent Workspace Activity
+              </CardTitle>
+              <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                Audit events in this organization
+              </CardDescription>
             </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate('/activity')}
-              className="gap-1 text-xs"
+              className="gap-1 text-xs h-7 px-2 text-muted-foreground hover:text-foreground"
             >
-              View all <ArrowUpRight className="h-3.5 w-3.5" />
+              View ledger <ArrowUpRight className="h-3.5 w-3.5" />
             </Button>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="divide-y divide-border/60">
               {data?.recentActivity?.length > 0 ? (
                 data.recentActivity.map((item: any) => (
-                  <div key={item.id} className="flex items-start gap-3 text-sm">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground mt-0.5">
-                      <Clock className="h-3.5 w-3.5" />
+                  <div key={item.id} className="py-2.5 flex items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-2.5 overflow-hidden">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-mono text-[10px] font-semibold">
+                        {item.user?.slice(0, 2).toUpperCase() || 'OP'}
+                      </div>
+                      <div className="truncate">
+                        <span className="font-medium text-foreground">{item.user}</span>{' '}
+                        <code className="text-[11px] font-mono text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">
+                          {item.action}
+                        </code>
+                      </div>
                     </div>
-                    <div className="flex-1 space-y-0.5 overflow-hidden">
-                      <p className="font-medium text-foreground truncate">
-                        <span className="text-primary font-semibold">{item.user}</span> performed{' '}
-                        <code className="text-xs bg-muted px-1.5 py-0.5 rounded">{item.action}</code>
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {formatDate(item.createdAt)}
-                      </p>
-                    </div>
+                    <span className="font-mono text-[11px] text-muted-foreground shrink-0 tabular-nums">
+                      {formatDate(item.createdAt)}
+                    </span>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground py-4 text-center">No recent activity</p>
+                <p className="text-xs text-muted-foreground py-4 text-center font-mono">No recent activity</p>
               )}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-xs">
-          <CardHeader className="flex flex-row items-center justify-between pb-3">
+        <Card className="border-border/80 bg-card">
+          <CardHeader className="flex flex-row items-center justify-between pb-2.5">
             <div>
-              <CardTitle className="text-base font-semibold">Notifications</CardTitle>
-              <CardDescription>System alerts, security events, and updates</CardDescription>
+              <CardTitle className="text-sm font-semibold tracking-tight text-foreground">
+                Security & System Alerts
+              </CardTitle>
+              <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                Workspace event logs
+              </CardDescription>
             </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate('/notifications')}
-              className="gap-1 text-xs"
+              className="gap-1 text-xs h-7 px-2 text-muted-foreground hover:text-foreground"
             >
               View all <ArrowUpRight className="h-3.5 w-3.5" />
             </Button>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {data?.recentNotifications?.length > 0 ? (
                 data.recentNotifications.map((notif: any) => (
                   <div
                     key={notif.id}
-                    className="flex items-start gap-3 rounded-lg border border-border/60 p-3 bg-card/60"
+                    className="flex items-start gap-2.5 rounded-md border border-border/70 p-2.5 bg-card/60 hover:bg-muted/20 transition-colors"
                   >
-                    <Bell className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-                    <div className="flex-1 space-y-0.5">
-                      <p className="text-sm font-medium text-foreground">{notif.title}</p>
-                      <p className="text-xs text-muted-foreground">{notif.message}</p>
+                    <div className="h-2 w-2 rounded-full bg-primary mt-1.5 shrink-0" />
+                    <div className="flex-1 space-y-0.5 min-w-0">
+                      <p className="text-xs font-medium text-foreground truncate">{notif.title}</p>
+                      <p className="text-[11px] text-muted-foreground line-clamp-1">{notif.message}</p>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground py-4 text-center">No new notifications</p>
+                <p className="text-xs text-muted-foreground py-4 text-center font-mono">No new notifications</p>
               )}
             </div>
           </CardContent>

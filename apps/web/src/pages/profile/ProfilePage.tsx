@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { User, Lock, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { User, Lock, ShieldCheck } from 'lucide-react';
 import { UpdateProfileSchema, ChangePasswordSchema, UpdateProfileInput, ChangePasswordInput } from '@brightloop/contracts';
 import { useAuthStore } from '../../stores/authStore';
 import { apiClient } from '../../services/api';
@@ -75,91 +75,94 @@ export function ProfilePage() {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-5 max-w-4xl">
       <PageHeader
         title="My Profile"
-        description="Manage your personal information, security credentials, and identity"
+        description="Personal workspace credentials, authentication identities, and cryptographic security settings"
       />
 
-      {/* User Card Summary */}
-      <Card className="shadow-xs">
-        <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
-          <Avatar className="h-20 w-20 border-2 border-primary/20">
+      {/* User Card Summary — Linear Precision Header */}
+      <Card className="border-border/80 bg-card">
+        <CardContent className="p-5 flex flex-col sm:flex-row items-center gap-5">
+          <Avatar className="h-16 w-16 border border-border/80">
             <AvatarImage src={user?.avatarUrl || ''} />
-            <AvatarFallback className="text-xl font-bold bg-primary/10 text-primary">
-              {user?.name?.slice(0, 2).toUpperCase() || 'UN'}
+            <AvatarFallback className="text-base font-mono font-bold bg-primary/10 text-primary">
+              {user?.name?.slice(0, 2).toUpperCase() || 'BL'}
             </AvatarFallback>
           </Avatar>
-          <div className="space-y-1.5 text-center sm:text-left flex-1">
+          <div className="space-y-1 text-center sm:text-left flex-1 min-w-0">
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <h2 className="text-xl font-bold text-foreground">{user?.name}</h2>
-              <Badge variant="outline" className="w-fit mx-auto sm:mx-0 gap-1 text-emerald-600 border-emerald-500/30">
+              <h2 className="text-base font-semibold text-foreground truncate">{user?.name}</h2>
+              <Badge variant="outline" className="w-fit mx-auto sm:mx-0 gap-1 text-emerald-500 border-emerald-500/30 font-mono text-[10px]">
                 <ShieldCheck className="h-3 w-3" />
-                Verified Account
+                Verified
               </Badge>
             </div>
-            <p className="text-sm text-muted-foreground">{user?.email}</p>
-            <p className="text-xs text-muted-foreground/80">
+            <p className="text-xs font-mono text-muted-foreground">{user?.email}</p>
+            <p className="text-[11px] font-mono text-muted-foreground/70 tabular-nums">
               Member since {formatDate(user?.createdAt)}
             </p>
           </div>
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Profile Information Form */}
-        <Card className="shadow-xs">
+        <Card className="border-border/80 bg-card">
           <form onSubmit={profileForm.handleSubmit(onUpdateProfile)}>
-            <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <User className="h-4 w-4" /> Personal Details
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-semibold flex items-center gap-1.5 text-foreground">
+                <User className="h-4 w-4 text-primary" /> Personal Details
               </CardTitle>
-              <CardDescription>Update your display name and email address</CardDescription>
+              <CardDescription className="text-xs text-muted-foreground">
+                Display credentials across collaborative records
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3.5 text-xs">
               {profileMsg && (
                 <Alert variant={profileMsg.type === 'error' ? 'destructive' : 'success'}>
                   <AlertDescription>{profileMsg.text}</AlertDescription>
                 </Alert>
               )}
 
-              <div className="space-y-2">
-                <label className="text-xs font-medium" htmlFor="name">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="name">
                   Full Name
                 </label>
-                <Input id="name" {...profileForm.register('name')} />
+                <Input id="name" className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80" {...profileForm.register('name')} />
                 {profileForm.formState.errors.name && (
-                  <p className="text-xs text-destructive">
+                  <p className="text-[11px] text-destructive font-mono">
                     {profileForm.formState.errors.name.message}
                   </p>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-medium" htmlFor="email">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="email">
                   Email Address
                 </label>
-                <Input id="email" type="email" {...profileForm.register('email')} />
+                <Input id="email" type="email" className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80" {...profileForm.register('email')} />
                 {profileForm.formState.errors.email && (
-                  <p className="text-xs text-destructive">
+                  <p className="text-[11px] text-destructive font-mono">
                     {profileForm.formState.errors.email.message}
                   </p>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-medium" htmlFor="avatarUrl">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="avatarUrl">
                   Avatar Image URL
                 </label>
                 <Input
                   id="avatarUrl"
                   placeholder="https://..."
+                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
                   {...profileForm.register('avatarUrl')}
                 />
               </div>
             </CardContent>
-            <CardFooter>
-              <Button type="submit" disabled={updatingProfile} size="sm">
+            <CardFooter className="pt-2 border-t border-border/60">
+              <Button type="submit" disabled={updatingProfile} size="sm" className="h-8 text-xs">
                 {updatingProfile ? 'Saving...' : 'Save Profile'}
               </Button>
             </CardFooter>
@@ -167,59 +170,61 @@ export function ProfilePage() {
         </Card>
 
         {/* Change Password Form */}
-        <Card className="shadow-xs">
+        <Card className="border-border/80 bg-card">
           <form onSubmit={passForm.handleSubmit(onChangePassword)}>
-            <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <Lock className="h-4 w-4" /> Change Password
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-semibold flex items-center gap-1.5 text-foreground">
+                <Lock className="h-4 w-4 text-primary" /> Change Password
               </CardTitle>
-              <CardDescription>
-                Ensure your account uses a strong, unique password
+              <CardDescription className="text-xs text-muted-foreground">
+                Strengthen security with Argon2id-backed authentication
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3.5 text-xs">
               {passMsg && (
                 <Alert variant={passMsg.type === 'error' ? 'destructive' : 'success'}>
                   <AlertDescription>{passMsg.text}</AlertDescription>
                 </Alert>
               )}
 
-              <div className="space-y-2">
-                <label className="text-xs font-medium" htmlFor="currentPassword">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="currentPassword">
                   Current Password
                 </label>
                 <Input
                   id="currentPassword"
                   type="password"
                   placeholder="••••••••"
+                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
                   {...passForm.register('currentPassword')}
                 />
                 {passForm.formState.errors.currentPassword && (
-                  <p className="text-xs text-destructive">
+                  <p className="text-[11px] text-destructive font-mono">
                     {passForm.formState.errors.currentPassword.message}
                   </p>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-medium" htmlFor="newPassword">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="newPassword">
                   New Password
                 </label>
                 <Input
                   id="newPassword"
                   type="password"
                   placeholder="••••••••"
+                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
                   {...passForm.register('newPassword')}
                 />
                 {passForm.formState.errors.newPassword && (
-                  <p className="text-xs text-destructive">
+                  <p className="text-[11px] text-destructive font-mono">
                     {passForm.formState.errors.newPassword.message}
                   </p>
                 )}
               </div>
             </CardContent>
-            <CardFooter>
-              <Button type="submit" disabled={updatingPass} size="sm">
+            <CardFooter className="pt-2 border-t border-border/60">
+              <Button type="submit" disabled={updatingPass} size="sm" className="h-8 text-xs">
                 {updatingPass ? 'Updating...' : 'Update Password'}
               </Button>
             </CardFooter>

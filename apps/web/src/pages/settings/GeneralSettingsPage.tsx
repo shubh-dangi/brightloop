@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Save, Check } from 'lucide-react';
+import { Settings, Save } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { apiClient } from '../../services/api';
 import { Button } from '../../components/ui/button';
@@ -41,32 +41,32 @@ export function GeneralSettingsPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-5 max-w-4xl">
       <PageHeader
         title="General Settings"
-        description="Configure workspace branding, display name, and organizational defaults"
+        description="Workspace identity, branding configuration, and organizational policy controls"
       />
 
-      <form onSubmit={handleSave} className="space-y-6">
+      <form onSubmit={handleSave} className="space-y-5">
         {feedback && (
           <Alert variant={feedback.type === 'error' ? 'destructive' : 'success'}>
             <AlertDescription>{feedback.text}</AlertDescription>
           </Alert>
         )}
 
-        <Card className="shadow-xs">
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <Settings className="h-4 w-4" /> Workspace Identity
+        <Card className="border-border/80 bg-card">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold flex items-center gap-1.5 text-foreground">
+              <Settings className="h-4 w-4 text-primary" /> Workspace Identity
             </CardTitle>
-            <CardDescription>
-              Branding defaults to Brightloop and can be tailored for client deployments
+            <CardDescription className="text-xs text-muted-foreground">
+              Branding defaults to Brightloop and can be customized for enterprise tenants
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-xs font-medium" htmlFor="appName">
+          <CardContent className="space-y-3.5 text-xs">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="appName">
                   Application Identity Name
                 </label>
                 <Input
@@ -74,24 +74,26 @@ export function GeneralSettingsPage() {
                   value={appName}
                   onChange={(e) => setAppName(e.target.value)}
                   placeholder="Brightloop"
+                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
                 />
-                <p className="text-[11px] text-muted-foreground">Default: Brightloop</p>
+                <p className="text-[10px] font-mono text-muted-foreground">Default: Brightloop</p>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-medium" htmlFor="workspaceName">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="workspaceName">
                   Workspace Display Name
                 </label>
                 <Input
                   id="workspaceName"
                   value={workspaceName}
                   onChange={(e) => setWorkspaceName(e.target.value)}
+                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-medium" htmlFor="supportEmail">
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="supportEmail">
                 Support & Contact Email
               </label>
               <Input
@@ -99,41 +101,42 @@ export function GeneralSettingsPage() {
                 type="email"
                 value={supportEmail}
                 onChange={(e) => setSupportEmail(e.target.value)}
+                className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
               />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-xs">
-          <CardHeader>
-            <CardTitle className="text-base">Security & Collaboration Policies</CardTitle>
-            <CardDescription>Workspace-level authorization controls</CardDescription>
+        <Card className="border-border/80 bg-card">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold text-foreground">Security & Collaboration Policies</CardTitle>
+            <CardDescription className="text-xs text-muted-foreground">Tenant-level access and authentication policies</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-3.5 text-xs">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <p className="text-sm font-medium">Allow Member Invitations</p>
-                <p className="text-xs text-muted-foreground">
-                  Permit Admins and Owners to invite new teammates to this workspace
+                <p className="font-medium text-foreground">Allow Member Invitations</p>
+                <p className="text-[11px] text-muted-foreground">
+                  Permit Admins and Owners to invite team members
                 </p>
               </div>
               <Switch checked={allowInvites} onCheckedChange={setAllowInvites} />
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-t border-border/60 pt-3">
               <div className="space-y-0.5">
-                <p className="text-sm font-medium">Enforce Two-Factor Authentication (2FA)</p>
-                <p className="text-xs text-muted-foreground">
-                  Require all workspace members to configure multi-factor authentication
+                <p className="font-medium text-foreground">Enforce Multi-Factor Authentication (2FA)</p>
+                <p className="text-[11px] text-muted-foreground">
+                  Require all workspace members to configure multi-factor auth
                 </p>
               </div>
               <Switch checked={enforce2FA} onCheckedChange={setEnforce2FA} />
             </div>
           </CardContent>
-          <CardFooter className="border-t border-border/60 pt-4">
-            <Button type="submit" disabled={saving} size="sm" className="gap-1.5">
-              <Save className="h-4 w-4" />
-              {saving ? 'Saving Changes...' : 'Save Settings'}
+          <CardFooter className="border-t border-border/60 pt-3">
+            <Button type="submit" disabled={saving} size="sm" className="gap-1.5 h-8 text-xs">
+              <Save className="h-3.5 w-3.5" />
+              {saving ? 'Saving...' : 'Save Settings'}
             </Button>
           </CardFooter>
         </Card>

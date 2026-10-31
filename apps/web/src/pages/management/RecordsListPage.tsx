@@ -11,9 +11,6 @@ import {
   Eye,
   ChevronLeft,
   ChevronRight,
-  MoreVertical,
-  CheckSquare,
-  Square,
   AlertCircle,
 } from 'lucide-react';
 import { apiClient } from '../../services/api';
@@ -25,7 +22,7 @@ import {
 } from '@brightloop/contracts';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { Card, CardContent } from '../../components/ui/card';
+import { Card } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Checkbox } from '../../components/ui/checkbox';
 import {
@@ -101,9 +98,9 @@ export function RecordsListPage() {
       } else {
         setRecords([]);
       }
-    } catch (err: any) {
-      // Offline simulated dataset
-      const demoRecords: GenericRecordDto[] = [
+    } catch {
+      // Fallback demo mock data
+      const mockItems: GenericRecordDto[] = [
         {
           id: 'rec-1',
           organizationId: 'org-demo',
@@ -112,70 +109,70 @@ export function RecordsListPage() {
           status: RecordStatus.ACTIVE,
           priority: RecordPriority.CRITICAL,
           category: 'Infrastructure',
-          tags: ['network', 'gateway', 'core'],
+          tags: ['gateway', 'network'],
+          metadata: { version: '2.4.0', region: 'us-east-1' },
           createdById: 'usr-1',
-          creator: { id: 'usr-1', name: 'Taylor Reed', email: 'owner@brightloop.local' },
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
         {
           id: 'rec-2',
           organizationId: 'org-demo',
-          title: 'Audit Log Retention Policy',
-          description: 'Quarterly compliance policy enforcing cryptographic storage archival.',
+          title: 'PostgreSQL Auto-Vacuum Scheduler',
+          description: 'Background cron job tuning indexing tables for multi-tenant isolation.',
           status: RecordStatus.ACTIVE,
           priority: RecordPriority.HIGH,
-          category: 'Compliance',
-          tags: ['security', 'soc2'],
-          createdById: 'usr-2',
-          creator: { id: 'usr-2', name: 'Morgan Blake', email: 'admin@brightloop.local' },
+          category: 'Database',
+          tags: ['postgres', 'cron'],
+          metadata: { interval: '6h', memoryLimit: '2GB' },
+          createdById: 'usr-1',
           createdAt: new Date(Date.now() - 86400000).toISOString(),
-          updatedAt: new Date(Date.now() - 86400000).toISOString(),
+          updatedAt: new Date().toISOString(),
         },
         {
           id: 'rec-3',
           organizationId: 'org-demo',
-          title: 'Realtime Telemetry Collector',
-          description: 'Aggregates metrics and worker CPU metrics across nodes.',
-          status: RecordStatus.ACTIVE,
+          title: 'Customer Self-Service Onboarding Spec',
+          description: 'Draft specification for customized domain setup and DKIM wizard.',
+          status: RecordStatus.DRAFT,
           priority: RecordPriority.MEDIUM,
-          category: 'Analytics',
-          tags: ['telemetry'],
-          createdById: 'usr-3',
-          creator: { id: 'usr-3', name: 'Jordan Hayes', email: 'member@brightloop.local' },
-          createdAt: new Date(Date.now() - 2 * 86400000).toISOString(),
-          updatedAt: new Date(Date.now() - 2 * 86400000).toISOString(),
+          category: 'Product',
+          tags: ['onboarding', 'ux'],
+          metadata: { stage: 'RFC Review' },
+          createdById: 'usr-2',
+          createdAt: new Date(Date.now() - 172800000).toISOString(),
+          updatedAt: new Date().toISOString(),
         },
         {
           id: 'rec-4',
           organizationId: 'org-demo',
-          title: 'Legacy Export Migration Spec',
-          description: 'Specification draft for deprecating old CSV batch pipelines.',
-          status: RecordStatus.DRAFT,
+          title: 'Legacy REST v1 Deprecation Policy',
+          description: 'Archived reference document detailing end-of-life sunset dates.',
+          status: RecordStatus.ARCHIVED,
           priority: RecordPriority.LOW,
-          category: 'Operations',
-          tags: ['migration'],
-          createdById: 'usr-2',
-          creator: { id: 'usr-2', name: 'Morgan Blake', email: 'admin@brightloop.local' },
-          createdAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-          updatedAt: new Date(Date.now() - 4 * 86400000).toISOString(),
+          category: 'Governance',
+          tags: ['api', 'deprecated'],
+          metadata: { sunsetDate: '2025-12-31' },
+          createdById: 'usr-1',
+          createdAt: new Date(Date.now() - 604800000).toISOString(),
+          updatedAt: new Date().toISOString(),
         },
       ];
 
-      // Filter locally for smooth test experience
-      let filtered = demoRecords;
-      if (statusFilter !== 'ALL') {
-        filtered = filtered.filter((r) => r.status === statusFilter);
-      }
-      if (priorityFilter !== 'ALL') {
-        filtered = filtered.filter((r) => r.priority === priorityFilter);
-      }
+      // Filter locally in fallback mode
+      let filtered = [...mockItems];
       if (search) {
         filtered = filtered.filter(
-          (r) =>
-            r.title.toLowerCase().includes(search.toLowerCase()) ||
-            r.category.toLowerCase().includes(search.toLowerCase()),
+          (i) =>
+            i.title.toLowerCase().includes(search.toLowerCase()) ||
+            i.category.toLowerCase().includes(search.toLowerCase()),
         );
+      }
+      if (statusFilter !== 'ALL') {
+        filtered = filtered.filter((i) => i.status === statusFilter);
+      }
+      if (priorityFilter !== 'ALL') {
+        filtered = filtered.filter((i) => i.priority === priorityFilter);
       }
 
       setRecords(filtered);
@@ -303,13 +300,13 @@ export function RecordsListPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <PageHeader
         title="Records & Items"
-        description="Generic multi-tenant SaaS entity management with pagination, filtering, and bulk operations"
+        description="Multi-tenant entity ledger with real-time filtering, pagination, and bulk batch actions"
       >
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleExport} className="gap-1.5">
+          <Button variant="outline" size="sm" onClick={handleExport} className="gap-1.5 h-8 text-xs border-border/80">
             <Download className="h-3.5 w-3.5" />
             Export
           </Button>
@@ -319,7 +316,7 @@ export function RecordsListPage() {
               setEditingRecord(null);
               setFormModalOpen(true);
             }}
-            className="gap-1.5"
+            className="gap-1.5 h-8 text-xs"
           >
             <Plus className="h-3.5 w-3.5" />
             New Record
@@ -327,15 +324,15 @@ export function RecordsListPage() {
         </div>
       </PageHeader>
 
-      {/* Search & Filter Toolbar */}
-      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
+      {/* Search & Filter Toolbar — Linear Minimalist Controls */}
+      <div className="flex flex-col sm:flex-row gap-2.5 items-center justify-between">
         <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
           <Input
             placeholder="Search records by title or category..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 h-9"
+            className="pl-8.5 h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
           />
         </form>
 
@@ -345,7 +342,7 @@ export function RecordsListPage() {
               variant="destructive"
               size="sm"
               onClick={() => setBulkDeleteOpen(true)}
-              className="gap-1.5 text-xs h-9"
+              className="gap-1.5 text-xs h-8"
             >
               <Trash2 className="h-3.5 w-3.5" />
               Delete ({selectedIds.length})
@@ -353,10 +350,10 @@ export function RecordsListPage() {
           )}
 
           <Select value={statusFilter} onValueChange={(val) => { setStatusFilter(val); setPage(1); }}>
-            <SelectTrigger className="h-9 w-32 text-xs">
+            <SelectTrigger className="h-8 w-32 text-xs font-mono dark:bg-[#1C1C1F]/60 border-border/80">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="text-xs">
               <SelectItem value="ALL">All Statuses</SelectItem>
               <SelectItem value={RecordStatus.ACTIVE}>Active</SelectItem>
               <SelectItem value={RecordStatus.DRAFT}>Draft</SelectItem>
@@ -365,10 +362,10 @@ export function RecordsListPage() {
           </Select>
 
           <Select value={priorityFilter} onValueChange={(val) => { setPriorityFilter(val); setPage(1); }}>
-            <SelectTrigger className="h-9 w-32 text-xs">
+            <SelectTrigger className="h-8 w-32 text-xs font-mono dark:bg-[#1C1C1F]/60 border-border/80">
               <SelectValue placeholder="Priority" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="text-xs">
               <SelectItem value="ALL">All Priorities</SelectItem>
               <SelectItem value={RecordPriority.CRITICAL}>Critical</SelectItem>
               <SelectItem value={RecordPriority.HIGH}>High</SelectItem>
@@ -379,14 +376,14 @@ export function RecordsListPage() {
         </div>
       </div>
 
-      {/* Main Table Card */}
-      <Card className="shadow-xs overflow-hidden">
+      {/* Main Table Card — Linear Precision Ledger */}
+      <Card className="border-border/80 bg-card overflow-hidden rounded-lg">
         {loading ? (
-          <div className="p-6 space-y-4">
-            <Skeleton className="h-8 w-full" />
-            <Skeleton className="h-8 w-full" />
-            <Skeleton className="h-8 w-full" />
-            <Skeleton className="h-8 w-full" />
+          <div className="p-5 space-y-3">
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-full" />
+            <Skeleton className="h-7 w-full" />
           </div>
         ) : error ? (
           <ErrorState message={error} onRetry={fetchRecords} />
@@ -403,10 +400,10 @@ export function RecordsListPage() {
           />
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-muted/40 border-b border-border text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-muted/30 dark:bg-[#171719] border-b border-border/80 text-[10px] uppercase font-mono tracking-wider text-muted-foreground/80 font-medium">
                 <tr>
-                  <th className="py-3 px-4 w-10">
+                  <th className="py-2.5 px-3.5 w-10">
                     <Checkbox
                       checked={
                         records.length > 0 && selectedIds.length === records.length
@@ -414,12 +411,12 @@ export function RecordsListPage() {
                       onCheckedChange={toggleSelectAll}
                     />
                   </th>
-                  <th className="py-3 px-4">Title & Details</th>
-                  <th className="py-3 px-4">Category</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Priority</th>
-                  <th className="py-3 px-4">Created Date</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                  <th className="py-2.5 px-3.5">Title & Details</th>
+                  <th className="py-2.5 px-3.5">Category</th>
+                  <th className="py-2.5 px-3.5">Status</th>
+                  <th className="py-2.5 px-3.5">Priority</th>
+                  <th className="py-2.5 px-3.5">Created Date</th>
+                  <th className="py-2.5 px-3.5 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
@@ -428,57 +425,57 @@ export function RecordsListPage() {
                   return (
                     <tr
                       key={record.id}
-                      className={`hover:bg-muted/30 transition-colors ${
+                      className={`hover:bg-muted/30 dark:hover:bg-[#242428]/40 transition-colors ${
                         isSelected ? 'bg-primary/5' : ''
                       }`}
                     >
-                      <td className="py-3 px-4">
+                      <td className="py-2.5 px-3.5">
                         <Checkbox
                           checked={isSelected}
                           onCheckedChange={() => toggleSelectOne(record.id)}
                         />
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-2.5 px-3.5">
                         <div
                           className="flex flex-col cursor-pointer"
                           onClick={() => navigate(`/records/${record.id}`)}
                         >
-                          <span className="font-semibold text-foreground hover:text-primary transition-colors">
+                          <span className="font-medium text-foreground hover:text-primary transition-colors">
                             {record.title}
                           </span>
-                          <span className="text-xs text-muted-foreground line-clamp-1 max-w-md">
+                          <span className="text-[11px] text-muted-foreground line-clamp-1 max-w-md">
                             {record.description || 'No description provided'}
                           </span>
                         </div>
                       </td>
-                      <td className="py-3 px-4">
-                        <Badge variant="outline" className="text-xs font-normal">
+                      <td className="py-2.5 px-3.5">
+                        <Badge variant="outline" className="font-mono text-[10px]">
                           {record.category}
                         </Badge>
                       </td>
-                      <td className="py-3 px-4">
-                        <Badge variant={statusBadgeVariant(record.status) as any}>
+                      <td className="py-2.5 px-3.5">
+                        <Badge variant={statusBadgeVariant(record.status) as any} className="font-mono text-[10px]">
                           {record.status}
                         </Badge>
                       </td>
-                      <td className="py-3 px-4">
-                        <Badge variant={priorityBadgeVariant(record.priority) as any}>
+                      <td className="py-2.5 px-3.5">
+                        <Badge variant={priorityBadgeVariant(record.priority) as any} className="font-mono text-[10px]">
                           {record.priority}
                         </Badge>
                       </td>
-                      <td className="py-3 px-4 text-xs text-muted-foreground">
+                      <td className="py-2.5 px-3.5 font-mono text-[11px] text-muted-foreground tabular-nums">
                         {formatDate(record.createdAt)}
                       </td>
-                      <td className="py-3 px-4 text-right">
+                      <td className="py-2.5 px-3.5 text-right">
                         <div className="flex items-center justify-end gap-1">
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => navigate(`/records/${record.id}`)}
-                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                            className="h-7 w-7 text-muted-foreground hover:text-foreground"
                             title="View details"
                           >
-                            <Eye className="h-4 w-4" />
+                            <Eye className="h-3.5 w-3.5" />
                           </Button>
                           <Button
                             variant="ghost"
@@ -487,19 +484,19 @@ export function RecordsListPage() {
                               setEditingRecord(record);
                               setFormModalOpen(true);
                             }}
-                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                            className="h-7 w-7 text-muted-foreground hover:text-foreground"
                             title="Edit record"
                           >
-                            <Edit className="h-4 w-4" />
+                            <Edit className="h-3.5 w-3.5" />
                           </Button>
                           <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => setDeleteDialogItem(record)}
-                            className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                            className="h-7 w-7 text-muted-foreground hover:text-destructive"
                             title="Delete record"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                         </div>
                       </td>
@@ -511,34 +508,34 @@ export function RecordsListPage() {
           </div>
         )}
 
-        {/* Pagination Footer */}
+        {/* Pagination Footer — Linear Ledger Style */}
         {records.length > 0 && (
-          <div className="flex items-center justify-between border-t border-border/60 px-4 py-3 text-xs text-muted-foreground">
+          <div className="flex items-center justify-between border-t border-border/60 px-4 py-2.5 text-xs text-muted-foreground font-mono">
             <div>
-              Showing <span className="font-medium text-foreground">{records.length}</span> of{' '}
-              <span className="font-medium text-foreground">{totalCount}</span> records
+              Showing <span className="font-medium text-foreground tabular-nums">{records.length}</span> of{' '}
+              <span className="font-medium text-foreground tabular-nums">{totalCount}</span> records
             </div>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 size="icon"
-                className="h-8 w-8"
+                className="h-7 w-7 border-border/80"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-3.5 w-3.5" />
               </Button>
-              <span>
-                Page {page} of {totalPages}
+              <span className="tabular-nums">
+                {page} / {totalPages}
               </span>
               <Button
                 variant="outline"
                 size="icon"
-                className="h-8 w-8"
+                className="h-7 w-7 border-border/80"
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page >= totalPages}
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-3.5 w-3.5" />
               </Button>
             </div>
           </div>
@@ -561,21 +558,21 @@ export function RecordsListPage() {
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-destructive">
-              <AlertCircle className="h-5 w-5" />
+            <DialogTitle className="flex items-center gap-2 text-destructive text-base">
+              <AlertCircle className="h-4 w-4" />
               Delete Record
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-xs">
               Are you sure you want to delete{' '}
               <strong className="text-foreground">{deleteDialogItem?.title}</strong>? This action
               cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="outline" onClick={() => setDeleteDialogItem(null)}>
+            <Button variant="outline" size="sm" onClick={() => setDeleteDialogItem(null)} className="h-8 text-xs">
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleConfirmDelete} disabled={deleting}>
+            <Button variant="destructive" size="sm" onClick={handleConfirmDelete} disabled={deleting} className="h-8 text-xs">
               {deleting ? 'Deleting...' : 'Confirm Delete'}
             </Button>
           </DialogFooter>
@@ -586,20 +583,20 @@ export function RecordsListPage() {
       <Dialog open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-destructive">
-              <AlertCircle className="h-5 w-5" />
+            <DialogTitle className="flex items-center gap-2 text-destructive text-base">
+              <AlertCircle className="h-4 w-4" />
               Bulk Delete Records
             </DialogTitle>
-            <DialogDescription>
-              You have selected <strong className="text-foreground">{selectedIds.length}</strong>{' '}
+            <DialogDescription className="text-xs">
+              You have selected <strong className="text-foreground font-mono">{selectedIds.length}</strong>{' '}
               records. Are you sure you want to permanently delete them?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="outline" onClick={() => setBulkDeleteOpen(false)}>
+            <Button variant="outline" size="sm" onClick={() => setBulkDeleteOpen(false)} className="h-8 text-xs">
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleConfirmBulkDelete} disabled={deleting}>
+            <Button variant="destructive" size="sm" onClick={handleConfirmBulkDelete} disabled={deleting} className="h-8 text-xs">
               {deleting ? 'Deleting...' : 'Delete Selected Records'}
             </Button>
           </DialogFooter>

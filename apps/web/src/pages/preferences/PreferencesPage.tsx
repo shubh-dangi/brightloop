@@ -18,11 +18,11 @@ export function PreferencesPage() {
   const [savedMsg, setSavedMsg] = useState(false);
 
   const colors = [
-    { name: 'Indigo', value: 'indigo', bg: 'bg-indigo-600' },
-    { name: 'Emerald', value: 'emerald', bg: 'bg-emerald-600' },
-    { name: 'Blue', value: 'blue', bg: 'bg-blue-600' },
-    { name: 'Violet', value: 'violet', bg: 'bg-violet-600' },
-    { name: 'Amber', value: 'amber', bg: 'bg-amber-600' },
+    { name: 'Linear Purple', value: 'indigo', bg: 'bg-[#8B7CF6]' },
+    { name: 'Emerald', value: 'emerald', bg: 'bg-emerald-500' },
+    { name: 'Blue', value: 'blue', bg: 'bg-blue-500' },
+    { name: 'Violet', value: 'violet', bg: 'bg-purple-500' },
+    { name: 'Amber', value: 'amber', bg: 'bg-amber-500' },
   ];
 
   const handleSave = () => {
@@ -31,29 +31,29 @@ export function PreferencesPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-5 max-w-4xl">
       <PageHeader
         title="My Preferences"
-        description="Customize your interface appearance, density, and notification channels"
+        description="Interface theme, density settings, and notification delivery controls"
       >
-        <Button onClick={handleSave} size="sm" className="gap-1.5">
-          {savedMsg ? <Check className="h-4 w-4" /> : null}
-          {savedMsg ? 'Preferences Saved' : 'Save Preferences'}
+        <Button onClick={handleSave} size="sm" className="gap-1.5 h-8 text-xs font-mono">
+          {savedMsg ? <Check className="h-3.5 w-3.5" /> : null}
+          {savedMsg ? 'Saved' : 'Save Preferences'}
         </Button>
       </PageHeader>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Appearance & Themes */}
-        <Card className="shadow-xs">
-          <CardHeader>
-            <CardTitle className="text-base">Theme Mode</CardTitle>
-            <CardDescription>Select your preferred color theme</CardDescription>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {/* Appearance & Themes — Linear Minimalist Selector */}
+        <Card className="border-border/80 bg-card">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold tracking-tight text-foreground">Theme & Interface</CardTitle>
+            <CardDescription className="text-xs text-muted-foreground">Select your visual appearance</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-3 gap-3">
+          <CardContent className="space-y-4 text-xs">
+            <div className="grid grid-cols-3 gap-2.5">
               {[
+                { id: 'dark', label: 'Dark (Default)', icon: Moon },
                 { id: 'light', label: 'Light', icon: Sun },
-                { id: 'dark', label: 'Dark', icon: Moon },
                 { id: 'system', label: 'System', icon: Laptop },
               ].map((item) => {
                 const Icon = item.icon;
@@ -63,48 +63,49 @@ export function PreferencesPage() {
                     key={item.id}
                     onClick={() => setTheme(item.id as any)}
                     className={cn(
-                      'flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all cursor-pointer gap-2',
+                      'flex flex-col items-center justify-center p-3 rounded-lg border transition-all cursor-pointer gap-2',
                       isSelected
-                        ? 'border-primary bg-primary/5 text-primary'
-                        : 'border-border/60 hover:border-border text-muted-foreground',
+                        ? 'border-primary bg-primary/10 text-primary dark:bg-primary/15'
+                        : 'border-border/80 hover:border-border text-muted-foreground hover:bg-muted/20',
                     )}
                   >
-                    <Icon className="h-5 w-5" />
-                    <span className="text-xs font-semibold">{item.label}</span>
+                    <Icon className="h-4 w-4" />
+                    <span className="text-[11px] font-mono font-medium">{item.label}</span>
                   </button>
                 );
               })}
             </div>
 
-            <div className="space-y-2 pt-2">
-              <label className="text-xs font-medium">Accent Color</label>
+            <div className="space-y-2 pt-2 border-t border-border/60">
+              <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium">Accent Palette</label>
               <div className="flex gap-2">
                 {colors.map((c) => (
                   <button
                     key={c.value}
                     onClick={() => setAccentColor(c.value)}
                     className={cn(
-                      'h-7 w-7 rounded-full flex items-center justify-center cursor-pointer transition-transform',
+                      'h-6 w-6 rounded-full flex items-center justify-center cursor-pointer transition-transform',
                       c.bg,
-                      accentColor === c.value && 'ring-2 ring-primary ring-offset-2 scale-110',
+                      accentColor === c.value && 'ring-2 ring-primary ring-offset-2 ring-offset-background scale-110',
                     )}
                     title={c.name}
                   >
                     {accentColor === c.value && (
-                      <Check className="h-3.5 w-3.5 text-white" />
+                      <Check className="h-3 w-3 text-white" />
                     )}
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="space-y-2 pt-2">
-              <label className="text-xs font-medium">Interface Density</label>
+            <div className="space-y-2 pt-2 border-t border-border/60">
+              <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium">Interface Density</label>
               <div className="grid grid-cols-2 gap-2">
                 <Button
                   variant={density === 'comfortable' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setDensity('comfortable')}
+                  className="h-8 text-xs font-mono border-border/80"
                 >
                   Comfortable
                 </Button>
@@ -112,6 +113,7 @@ export function PreferencesPage() {
                   variant={density === 'compact' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setDensity('compact')}
+                  className="h-8 text-xs font-mono border-border/80"
                 >
                   Compact
                 </Button>
@@ -121,40 +123,40 @@ export function PreferencesPage() {
         </Card>
 
         {/* Notifications & Regional */}
-        <div className="space-y-6">
-          <Card className="shadow-xs">
-            <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <Bell className="h-4 w-4" /> Notification Alerts
+        <div className="space-y-5">
+          <Card className="border-border/80 bg-card">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-semibold flex items-center gap-1.5 text-foreground">
+                <Bell className="h-4 w-4 text-primary" /> Notification Delivery
               </CardTitle>
-              <CardDescription>Configure which updates you receive</CardDescription>
+              <CardDescription className="text-xs text-muted-foreground">Configure delivery channels</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3.5 text-xs">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <p className="text-sm font-medium">Email Notifications</p>
-                  <p className="text-xs text-muted-foreground">
-                    Receive summary digests and critical security updates
+                  <p className="font-medium text-foreground">Email Notifications</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Digest summaries & critical alerts
                   </p>
                 </div>
                 <Switch checked={emailAlerts} onCheckedChange={setEmailAlerts} />
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between border-t border-border/60 pt-3">
                 <div className="space-y-0.5">
-                  <p className="text-sm font-medium">In-App Notifications</p>
-                  <p className="text-xs text-muted-foreground">
-                    Display bell indicators for record assignments & mentions
+                  <p className="font-medium text-foreground">In-App Indicators</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Real-time status badges for record updates
                   </p>
                 </div>
                 <Switch checked={inAppAlerts} onCheckedChange={setInAppAlerts} />
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between border-t border-border/60 pt-3">
                 <div className="space-y-0.5">
-                  <p className="text-sm font-medium">Product Announcements</p>
-                  <p className="text-xs text-muted-foreground">
-                    Periodic feature announcements & starter kit updates
+                  <p className="font-medium text-foreground">Product Updates</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Announcements and major releases
                   </p>
                 </div>
                 <Switch checked={marketingEmails} onCheckedChange={setMarketingEmails} />
@@ -162,21 +164,21 @@ export function PreferencesPage() {
             </CardContent>
           </Card>
 
-          <Card className="shadow-xs">
-            <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <Globe className="h-4 w-4" /> Regional & Localization
+          <Card className="border-border/80 bg-card">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-semibold flex items-center gap-1.5 text-foreground">
+                <Globe className="h-4 w-4 text-primary" /> Regional & Formatting
               </CardTitle>
-              <CardDescription>Timezone and locale formatting</CardDescription>
+              <CardDescription className="text-xs text-muted-foreground">Timezone and locale formatting</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-2 text-xs">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">Timezone</label>
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium">Timezone</label>
                 <Select value={timezone} onValueChange={setTimezone}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-8 text-xs font-mono dark:bg-[#1C1C1F]/60 border-border/80">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="text-xs font-mono">
                     <SelectItem value="UTC">UTC (Coordinated Universal Time)</SelectItem>
                     <SelectItem value="America/New_York">Eastern Time (US & Canada)</SelectItem>
                     <SelectItem value="America/Los_Angeles">Pacific Time (US & Canada)</SelectItem>

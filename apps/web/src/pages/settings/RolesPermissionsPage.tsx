@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Plus, Check, Trash2, Key, Info } from 'lucide-react';
+import { Plus, Check, Trash2, Key } from 'lucide-react';
 import { apiClient } from '../../services/api';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -107,14 +107,12 @@ export function RolesPermissionsPage() {
 
   const handleTogglePerm = (key: string) => {
     setSelectedPerms((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
+      prev.includes(key) ? prev.filter((p) => p !== key) : [...prev, key],
     );
   };
 
   const handleCreateRole = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!roleName) return;
-
     setSaving(true);
     setCreateError(null);
     try {
@@ -129,46 +127,46 @@ export function RolesPermissionsPage() {
       setSelectedPerms([]);
       fetchRoles();
     } catch (err: any) {
-      setCreateError(err.response?.data?.message || 'Failed to create custom role');
+      setCreateError(err.response?.data?.message || 'Failed to create role');
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDeleteRole = async (roleId: string) => {
+  const handleDeleteRole = async (id: string) => {
     if (!confirm('Are you sure you want to delete this custom role?')) return;
     try {
-      await apiClient.delete(`/roles/${roleId}`);
-      setRoles((prev) => prev.filter((r) => r.id !== roleId));
+      await apiClient.delete(`/roles/${id}`);
+      setRoles((prev) => prev.filter((r) => r.id !== id));
     } catch (err: any) {
       alert(err.response?.data?.message || 'Could not delete role');
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <PageHeader
         title="Roles & Permissions"
-        description="Enterprise RBAC permission matrix and custom workspace role configuration"
+        description="Role-based access privileges and granular authorization scopes"
       >
-        <Button onClick={() => setCreateOpen(true)} size="sm" className="gap-1.5">
-          <Plus className="h-4 w-4" />
+        <Button onClick={() => setCreateOpen(true)} size="sm" className="gap-1.5 h-8 text-xs font-mono">
+          <Plus className="h-3.5 w-3.5" />
           Create Custom Role
         </Button>
       </PageHeader>
 
-      {/* Role Cards List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Role Cards List — Linear Precision Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
         {loading ? (
           <div className="col-span-full py-8 flex justify-center">
             <Spinner />
           </div>
         ) : (
           roles.map((role) => (
-            <Card key={role.id} className="shadow-xs flex flex-col justify-between">
-              <CardHeader className="pb-3">
+            <Card key={role.id} className="border-border/80 bg-card hover:border-primary/40 transition-colors flex flex-col justify-between">
+              <CardHeader className="p-4 pb-2.5">
                 <div className="flex items-center justify-between">
-                  <Badge variant={role.isSystem ? 'default' : 'secondary'} className="text-[10px]">
+                  <Badge variant={role.isSystem ? 'default' : 'secondary'} className="font-mono text-[9px] uppercase px-1.5 py-0.2">
                     {role.isSystem ? 'System' : 'Custom'}
                   </Badge>
                   {!role.isSystem && (
@@ -181,14 +179,14 @@ export function RolesPermissionsPage() {
                     </button>
                   )}
                 </div>
-                <CardTitle className="text-base font-bold mt-2">{role.name}</CardTitle>
-                <CardDescription className="text-xs line-clamp-2">
+                <CardTitle className="text-sm font-semibold tracking-tight text-foreground mt-2">{role.name}</CardTitle>
+                <CardDescription className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
                   {role.description || 'No description provided'}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="pt-0">
-                <div className="flex items-center justify-between text-xs text-muted-foreground border-t border-border/60 pt-2">
-                  <span>{role.permissions.length} Permissions</span>
+              <CardContent className="p-4 pt-0">
+                <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground border-t border-border/60 pt-2 tabular-nums">
+                  <span>{role.permissions.length} Scopes</span>
                   <span>{role.memberCount} Member(s)</span>
                 </div>
               </CardContent>
@@ -197,24 +195,24 @@ export function RolesPermissionsPage() {
         )}
       </div>
 
-      {/* Permission Matrix */}
-      <Card className="shadow-xs overflow-hidden">
-        <CardHeader className="border-b border-border/60 pb-4">
-          <CardTitle className="text-base flex items-center gap-2">
-            <Key className="h-4 w-4" /> Permission Matrix
+      {/* Permission Matrix — Linear Grid */}
+      <Card className="border-border/80 bg-card overflow-hidden rounded-lg">
+        <CardHeader className="border-b border-border/60 pb-3 p-4">
+          <CardTitle className="text-sm font-semibold flex items-center gap-1.5 text-foreground">
+            <Key className="h-3.5 w-3.5 text-primary" /> System Authorization Matrix
           </CardTitle>
-          <CardDescription>
-            System privileges assigned to roles within this organization
+          <CardDescription className="text-xs text-muted-foreground">
+            Privilege assignments across all workspace roles
           </CardDescription>
         </CardHeader>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-muted/40 border-b border-border text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-muted/30 dark:bg-[#171719] border-b border-border/80 text-[10px] uppercase font-mono tracking-wider text-muted-foreground/80 font-medium">
               <tr>
-                <th className="py-3 px-4">Permission Key</th>
-                <th className="py-3 px-4">Module</th>
+                <th className="py-2.5 px-3.5">Permission Scope</th>
+                <th className="py-2.5 px-3.5">Module</th>
                 {roles.map((r) => (
-                  <th key={r.id} className="py-3 px-4 text-center">
+                  <th key={r.id} className="py-2.5 px-3.5 text-center font-mono">
                     {r.name}
                   </th>
                 ))}
@@ -222,15 +220,15 @@ export function RolesPermissionsPage() {
             </thead>
             <tbody className="divide-y divide-border/60">
               {ALL_SYSTEM_PERMISSIONS.map((perm) => (
-                <tr key={perm.key} className="hover:bg-muted/20 transition-colors">
-                  <td className="py-3 px-4">
+                <tr key={perm.key} className="hover:bg-muted/30 dark:hover:bg-[#242428]/40 transition-colors">
+                  <td className="py-2.5 px-3.5">
                     <div className="flex flex-col">
                       <span className="font-medium text-foreground">{perm.name}</span>
-                      <code className="text-[11px] text-muted-foreground">{perm.key}</code>
+                      <code className="text-[10px] font-mono text-muted-foreground">{perm.key}</code>
                     </div>
                   </td>
-                  <td className="py-3 px-4">
-                    <Badge variant="outline" className="text-[10px]">
+                  <td className="py-2.5 px-3.5">
+                    <Badge variant="outline" className="font-mono text-[10px]">
                       {perm.module}
                     </Badge>
                   </td>
@@ -238,13 +236,13 @@ export function RolesPermissionsPage() {
                     const hasPerm =
                       r.name === 'OWNER' || r.permissions.includes(perm.key);
                     return (
-                      <td key={r.id} className="py-3 px-4 text-center">
+                      <td key={r.id} className="py-2.5 px-3.5 text-center">
                         {hasPerm ? (
-                          <div className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600">
-                            <Check className="h-3.5 w-3.5" />
+                          <div className="inline-flex h-4.5 w-4.5 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-500">
+                            <Check className="h-3 w-3" />
                           </div>
                         ) : (
-                          <span className="text-muted-foreground/30 text-xs">—</span>
+                          <span className="text-muted-foreground/30 font-mono text-xs">—</span>
                         )}
                       </td>
                     );
@@ -258,35 +256,36 @@ export function RolesPermissionsPage() {
 
       {/* Create Role Modal */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
           <form onSubmit={handleCreateRole}>
-            <DialogHeader>
-              <DialogTitle>Create Custom Workspace Role</DialogTitle>
-              <DialogDescription>
-                Define a tailored role with specific permission access flags.
+            <DialogHeader className="pb-2 border-b border-border/60">
+              <DialogTitle className="text-base font-semibold text-foreground">Create Custom Workspace Role</DialogTitle>
+              <DialogDescription className="text-xs text-muted-foreground">
+                Define a tailored role with fine-grained permission flags.
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 py-4">
+            <div className="space-y-3.5 py-4 text-xs">
               {createError && (
                 <Alert variant="destructive">
                   <AlertDescription>{createError}</AlertDescription>
                 </Alert>
               )}
-              <div className="space-y-2">
-                <label className="text-xs font-medium" htmlFor="roleName">
-                  Role Identifier Name
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="roleName">
+                  Role Identifier
                 </label>
                 <Input
                   id="roleName"
                   placeholder="ANALYST"
                   value={roleName}
                   onChange={(e) => setRoleName(e.target.value)}
+                  className="h-8 text-xs font-mono bg-background dark:bg-[#1C1C1F]/60 border-border/80"
                   required
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-medium" htmlFor="roleDesc">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="roleDesc">
                   Description
                 </label>
                 <Textarea
@@ -294,17 +293,18 @@ export function RolesPermissionsPage() {
                   placeholder="Can view analytics and read workspace records..."
                   value={roleDesc}
                   onChange={(e) => setRoleDesc(e.target.value)}
+                  className="h-16 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80 resize-none"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-medium">Select Permissions</label>
-                <div className="border border-border/80 rounded-lg p-3 space-y-2 max-h-60 overflow-y-auto">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium">Select Permissions</label>
+                <div className="border border-border/80 rounded-md p-2 space-y-1 max-h-52 overflow-y-auto bg-muted/20 dark:bg-[#171719]/50">
                   {ALL_SYSTEM_PERMISSIONS.map((perm) => (
                     <div
                       key={perm.key}
                       onClick={() => handleTogglePerm(perm.key)}
-                      className="flex items-center justify-between p-2 rounded hover:bg-muted/40 cursor-pointer"
+                      className="flex items-center justify-between p-1.5 rounded hover:bg-muted/40 cursor-pointer"
                     >
                       <div className="flex items-center gap-2">
                         <Checkbox
@@ -312,11 +312,11 @@ export function RolesPermissionsPage() {
                           onCheckedChange={() => handleTogglePerm(perm.key)}
                         />
                         <div className="flex flex-col">
-                          <span className="text-xs font-medium">{perm.name}</span>
-                          <span className="text-[10px] text-muted-foreground">{perm.key}</span>
+                          <span className="text-xs font-medium text-foreground">{perm.name}</span>
+                          <span className="text-[10px] font-mono text-muted-foreground">{perm.key}</span>
                         </div>
                       </div>
-                      <Badge variant="outline" className="text-[10px]">
+                      <Badge variant="outline" className="font-mono text-[9px]">
                         {perm.module}
                       </Badge>
                     </div>
@@ -324,11 +324,11 @@ export function RolesPermissionsPage() {
                 </div>
               </div>
             </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setCreateOpen(false)}>
+            <DialogFooter className="pt-2 border-t border-border/60 gap-2 sm:gap-0">
+              <Button type="button" variant="outline" size="sm" onClick={() => setCreateOpen(false)} className="h-8 text-xs">
                 Cancel
               </Button>
-              <Button type="submit" disabled={saving}>
+              <Button type="submit" size="sm" disabled={saving} className="h-8 text-xs">
                 {saving ? 'Creating...' : 'Create Role'}
               </Button>
             </DialogFooter>

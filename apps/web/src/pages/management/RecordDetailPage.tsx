@@ -7,9 +7,9 @@ import {
   Calendar,
   User,
   Tag,
-  Layers,
   Clock,
   AlertCircle,
+  FileCode,
 } from 'lucide-react';
 import { apiClient } from '../../services/api';
 import {
@@ -21,7 +21,6 @@ import {
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
-import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
 import { ErrorState } from '../../components/feedback/ErrorState';
 import {
@@ -53,7 +52,7 @@ export function RecordDetailPage() {
     try {
       const res = await apiClient.get(`/records/${id}`);
       setRecord(res.data?.data);
-    } catch (err: any) {
+    } catch {
       // Fallback demo item
       setRecord({
         id: id || 'rec-1',
@@ -91,7 +90,6 @@ export function RecordDetailPage() {
       await apiClient.patch(`/records/${id}`, data);
       fetchRecord();
     } catch {
-      // Offline fallback
       fetchRecord();
     } finally {
       setSubmitting(false);
@@ -118,7 +116,7 @@ export function RecordDetailPage() {
   if (error || !record) {
     return (
       <div className="space-y-4">
-        <Button variant="ghost" size="sm" asChild className="gap-2">
+        <Button variant="ghost" size="sm" asChild className="gap-2 h-8 text-xs">
           <Link to="/records">
             <ArrowLeft className="h-4 w-4" /> Back to records
           </Link>
@@ -133,12 +131,12 @@ export function RecordDetailPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-5 max-w-5xl">
       {/* Back Button & Top Navigation */}
       <div className="flex items-center justify-between">
-        <Button variant="ghost" size="sm" asChild className="gap-2 text-xs">
+        <Button variant="ghost" size="sm" asChild className="gap-1.5 text-xs h-8 text-muted-foreground hover:text-foreground">
           <Link to="/records">
-            <ArrowLeft className="h-4 w-4" /> Back to Records
+            <ArrowLeft className="h-3.5 w-3.5" /> Back to Records
           </Link>
         </Button>
         <div className="flex items-center gap-2">
@@ -146,7 +144,7 @@ export function RecordDetailPage() {
             variant="outline"
             size="sm"
             onClick={() => setEditModalOpen(true)}
-            className="gap-1.5"
+            className="gap-1.5 h-8 text-xs border-border/80"
           >
             <Edit className="h-3.5 w-3.5" />
             Edit
@@ -155,7 +153,7 @@ export function RecordDetailPage() {
             variant="destructive"
             size="sm"
             onClick={() => setDeleteConfirmOpen(true)}
-            className="gap-1.5"
+            className="gap-1.5 h-8 text-xs"
           >
             <Trash2 className="h-3.5 w-3.5" />
             Delete
@@ -163,11 +161,11 @@ export function RecordDetailPage() {
         </div>
       </div>
 
-      {/* Record Hero Header */}
-      <Card className="shadow-xs border-border/80">
-        <CardHeader className="space-y-3">
+      {/* Record Hero Header — Linear Precision Surface */}
+      <Card className="border-border/80 bg-card">
+        <CardHeader className="space-y-2.5 p-5">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="outline" className="font-mono text-[10px]">
               {record.category}
             </Badge>
             <Badge
@@ -178,6 +176,7 @@ export function RecordDetailPage() {
                     ? 'warning'
                     : 'secondary'
               }
+              className="font-mono text-[10px]"
             >
               {record.status}
             </Badge>
@@ -189,95 +188,105 @@ export function RecordDetailPage() {
                     ? 'warning'
                     : 'info'
               }
+              className="font-mono text-[10px]"
             >
               Priority: {record.priority}
             </Badge>
           </div>
-          <CardTitle className="text-2xl font-bold">{record.title}</CardTitle>
-          <CardDescription className="text-base text-foreground/80">
+          <CardTitle className="text-xl font-bold tracking-tight text-foreground">{record.title}</CardTitle>
+          <CardDescription className="text-sm text-muted-foreground leading-relaxed">
             {record.description || 'No detailed description provided.'}
           </CardDescription>
         </CardHeader>
       </Card>
 
       {/* Detail Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Left 2 Cols: Details & Metadata */}
-        <div className="md:col-span-2 space-y-6">
+        <div className="md:col-span-2 space-y-5">
           {/* Metadata Card */}
-          <Card className="shadow-xs">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-semibold">Structured Metadata</CardTitle>
-              <CardDescription>Key-value properties stored for this item</CardDescription>
+          <Card className="border-border/80 bg-card">
+            <CardHeader className="pb-2.5">
+              <CardTitle className="text-xs font-mono uppercase tracking-wider text-muted-foreground/80 flex items-center gap-1.5">
+                <FileCode className="h-3.5 w-3.5 text-primary" /> Structured Properties
+              </CardTitle>
             </CardHeader>
             <CardContent>
               {record.metadata && Object.keys(record.metadata).length > 0 ? (
-                <pre className="text-xs font-mono bg-muted/50 p-4 rounded-lg overflow-x-auto text-foreground/90 border border-border/60">
+                <pre className="text-xs font-mono bg-muted/30 dark:bg-[#171719] p-3.5 rounded-md overflow-x-auto text-foreground/90 border border-border/80 leading-relaxed">
                   {JSON.stringify(record.metadata, null, 2)}
                 </pre>
               ) : (
-                <p className="text-sm text-muted-foreground italic">No custom metadata defined.</p>
+                <p className="text-xs text-muted-foreground italic font-mono">No custom metadata defined.</p>
               )}
             </CardContent>
           </Card>
 
           {/* Tags */}
-          <Card className="shadow-xs">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <Tag className="h-4 w-4" /> Associated Tags
+          <Card className="border-border/80 bg-card">
+            <CardHeader className="pb-2.5">
+              <CardTitle className="text-xs font-mono uppercase tracking-wider text-muted-foreground/80 flex items-center gap-1.5">
+                <Tag className="h-3.5 w-3.5 text-primary" /> Associated Tags
               </CardTitle>
             </CardHeader>
             <CardContent>
               {record.tags && record.tags.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {record.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="text-xs px-2.5 py-1">
+                    <Badge key={tag} variant="secondary" className="font-mono text-[10px] px-2 py-0.5">
                       #{tag}
                     </Badge>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">No tags assigned</p>
+                <p className="text-xs text-muted-foreground font-mono">No tags assigned</p>
               )}
             </CardContent>
           </Card>
         </div>
 
         {/* Right Col: Record Metadata & Audit Info */}
-        <div className="space-y-6">
-          <Card className="shadow-xs">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-semibold">Record Information</CardTitle>
+        <div className="space-y-5">
+          <Card className="border-border/80 bg-card">
+            <CardHeader className="pb-2.5">
+              <CardTitle className="text-xs font-mono uppercase tracking-wider text-muted-foreground/80">
+                Audit & Record Provenance
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm">
+            <CardContent className="space-y-3.5 text-xs">
               <div className="space-y-1">
-                <span className="text-xs text-muted-foreground">Record ID</span>
-                <p className="font-mono text-xs bg-muted p-1.5 rounded truncate">{record.id}</p>
+                <span className="text-[11px] font-mono text-muted-foreground">Entity Identifier</span>
+                <p className="font-mono text-[11px] bg-muted/40 dark:bg-[#171719] p-1.5 rounded border border-border/60 truncate text-foreground/90">
+                  {record.id}
+                </p>
               </div>
 
               <div className="space-y-1">
-                <span className="text-xs text-muted-foreground flex items-center gap-1">
-                  <User className="h-3.5 w-3.5" /> Created By
+                <span className="text-[11px] font-mono text-muted-foreground flex items-center gap-1">
+                  <User className="h-3 w-3" /> Author
                 </span>
                 <p className="font-medium text-foreground">
                   {record.creator?.name || 'Unknown User'}
                 </p>
-                <p className="text-xs text-muted-foreground">{record.creator?.email}</p>
+                <p className="font-mono text-[11px] text-muted-foreground">{record.creator?.email}</p>
               </div>
 
-              <div className="space-y-1 border-t border-border/60 pt-3">
-                <span className="text-xs text-muted-foreground flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5" /> Created At
+              <div className="space-y-1 border-t border-border/60 pt-2.5">
+                <span className="text-[11px] font-mono text-muted-foreground flex items-center gap-1">
+                  <Calendar className="h-3 w-3" /> Timestamp Created
                 </span>
-                <p className="text-xs">{formatDateTime(record.createdAt)}</p>
+                <p className="font-mono text-[11px] tabular-nums text-foreground/80">
+                  {formatDateTime(record.createdAt)}
+                </p>
               </div>
 
               <div className="space-y-1">
-                <span className="text-xs text-muted-foreground flex items-center gap-1">
-                  <Clock className="h-3.5 w-3.5" /> Last Updated
+                <span className="text-[11px] font-mono text-muted-foreground flex items-center gap-1">
+                  <Clock className="h-3 w-3" /> Last Modified
                 </span>
-                <p className="text-xs">{formatDateTime(record.updatedAt)}</p>
+                <p className="font-mono text-[11px] tabular-nums text-foreground/80">
+                  {formatDateTime(record.updatedAt)}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -297,21 +306,21 @@ export function RecordDetailPage() {
       <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-destructive">
-              <AlertCircle className="h-5 w-5" />
+            <DialogTitle className="flex items-center gap-2 text-destructive text-base">
+              <AlertCircle className="h-4 w-4" />
               Delete Record
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-xs">
               Are you sure you want to permanently delete{' '}
               <strong className="text-foreground">{record.title}</strong>? This action cannot be
               reversed.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="outline" onClick={() => setDeleteConfirmOpen(false)}>
+            <Button variant="outline" size="sm" onClick={() => setDeleteConfirmOpen(false)} className="h-8 text-xs">
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleDelete}>
+            <Button variant="destructive" size="sm" onClick={handleDelete} className="h-8 text-xs">
               Confirm Delete
             </Button>
           </DialogFooter>

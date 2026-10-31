@@ -1,28 +1,29 @@
 import React from 'react';
-import { Wrench, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 
 export function MaintenancePage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
-      <Card className="w-full max-w-md border-border/80 shadow-lg text-center">
-        <CardHeader className="space-y-3">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/10 text-amber-600">
-            <Wrench className="h-8 w-8" />
+      <Card className="w-full max-w-sm border-amber-500/30 bg-card text-center p-2">
+        <CardHeader className="space-y-2">
+          <div className="mx-auto inline-flex items-center justify-center px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/20 font-mono text-[11px] text-amber-500">
+            503 // MAINTENANCE_ACTIVE
           </div>
-          <CardTitle className="text-2xl font-bold">Scheduled Maintenance</CardTitle>
-          <CardDescription>
-            Brightloop is undergoing planned database optimizations. We expect to be fully operational shortly.
+          <CardTitle className="text-lg font-bold tracking-tight text-foreground">Scheduled Maintenance</CardTitle>
+          <CardDescription className="text-xs text-muted-foreground leading-relaxed">
+            Database indexing and migration jobs are currently running. Operations will resume immediately.
           </CardDescription>
         </CardHeader>
-        <CardContent className="pt-2">
+        <CardContent className="pt-2 flex justify-center">
           <Button
             variant="outline"
+            size="sm"
             onClick={() => window.location.reload()}
-            className="gap-2"
+            className="gap-1.5 h-8 text-xs border-border/80"
           >
-            <RefreshCw className="h-4 w-4" /> Check Status
+            <RefreshCw className="h-3.5 w-3.5" /> Verify Status
           </Button>
         </CardContent>
       </Card>

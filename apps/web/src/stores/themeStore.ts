@@ -18,36 +18,44 @@ interface ThemeState {
   setMobileMenuOpen: (open: boolean) => void;
 }
 
-export const useThemeStore = create<ThemeState>((set, get) => ({
-  theme: (localStorage.getItem('brightloop-theme') as Theme) || 'system',
-  accentColor: localStorage.getItem('brightloop-accent') || 'indigo',
-  density: (localStorage.getItem('brightloop-density') as Density) || 'comfortable',
-  sidebarCollapsed: false,
-  mobileMenuOpen: false,
+export const useThemeStore = create<ThemeState>((set) => {
+  const savedTheme = (typeof window !== 'undefined' ? localStorage.getItem('brightloop-theme') : null) as Theme | null;
+  const initialTheme: Theme = savedTheme || 'dark';
 
-  setTheme: (theme: Theme) => {
-    localStorage.setItem('brightloop-theme', theme);
-    set({ theme });
+  return {
+    theme: initialTheme,
+    accentColor: (typeof window !== 'undefined' ? localStorage.getItem('brightloop-accent') : null) || 'indigo',
+    density: (typeof window !== 'undefined' ? (localStorage.getItem('brightloop-density') as Density) : null) || 'comfortable',
+    sidebarCollapsed: false,
+    mobileMenuOpen: false,
 
-    const root = document.documentElement;
-    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  },
+    setTheme: (theme: Theme) => {
+      localStorage.setItem('brightloop-theme', theme);
+      set({ theme });
 
-  setAccentColor: (color: string) => {
-    localStorage.setItem('brightloop-accent', color);
-    set({ accentColor: color });
-  },
+      const root = document.documentElement;
+      if (
+        theme === 'dark' ||
+        (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+    },
 
-  setDensity: (density: Density) => {
-    localStorage.setItem('brightloop-density', density);
-    set({ density });
-  },
+    setAccentColor: (color: string) => {
+      localStorage.setItem('brightloop-accent', color);
+      set({ accentColor: color });
+    },
 
-  toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
-  setSidebarCollapsed: (collapsed: boolean) => set({ sidebarCollapsed: collapsed }),
-  setMobileMenuOpen: (open: boolean) => set({ mobileMenuOpen: open }),
-}));
+    setDensity: (density: Density) => {
+      localStorage.setItem('brightloop-density', density);
+      set({ density });
+    },
+
+    toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
+    setSidebarCollapsed: (collapsed: boolean) => set({ sidebarCollapsed: collapsed }),
+    setMobileMenuOpen: (open: boolean) => set({ mobileMenuOpen: open }),
+  };
+});

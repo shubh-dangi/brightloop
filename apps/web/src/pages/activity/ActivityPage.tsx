@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Search, Filter, ShieldCheck, UserCheck, Layers } from 'lucide-react';
+import { Clock, Search, ShieldCheck, UserCheck, Layers, Terminal } from 'lucide-react';
 import { apiClient } from '../../services/api';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
@@ -84,89 +84,95 @@ export function ActivityPage() {
       case 'GenericRecord':
         return Layers;
       default:
-        return Clock;
+        return Terminal;
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <PageHeader
         title="Activity Audit Log"
-        description="Immutable record of user events, updates, and administrative operations"
+        description="Immutable cryptographic operational ledger tracking workspace events and administrative mutations"
       />
 
-      {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <form onSubmit={handleSearchSubmit} className="relative flex-1">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+      {/* Filter and Search Bar — Linear Minimalist Filter Bar */}
+      <div className="flex flex-col sm:flex-row gap-2.5 items-center justify-between">
+        <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80">
+          <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
           <Input
             placeholder="Search by action or keyword..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
+            className="pl-8.5 h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
           />
         </form>
-        <div className="flex gap-2">
-          {['', 'Organization', 'GenericRecord', 'OrganizationMember'].map((entity) => (
+        <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+          {[
+            { id: '', label: 'All Entities' },
+            { id: 'Organization', label: 'Organization' },
+            { id: 'GenericRecord', label: 'Records' },
+            { id: 'OrganizationMember', label: 'Members' },
+          ].map((entity) => (
             <Button
-              key={entity}
-              variant={selectedEntity === entity ? 'default' : 'outline'}
+              key={entity.id}
+              variant={selectedEntity === entity.id ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setSelectedEntity(entity)}
+              onClick={() => setSelectedEntity(entity.id)}
+              className="h-8 text-xs font-mono border-border/80"
             >
-              {entity === '' ? 'All Entities' : entity}
+              {entity.label}
             </Button>
           ))}
         </div>
       </div>
 
-      {/* Timeline List */}
+      {/* Timeline List — Linear Ledger */}
       {loading ? (
-        <div className="py-12 flex justify-center">
+        <div className="py-16 flex justify-center">
           <Spinner size="lg" />
         </div>
       ) : logs.length === 0 ? (
         <EmptyState
           icon={Clock}
           title="No activity recorded"
-          description="Actions performed by team members will automatically appear here."
+          description="Operational actions performed by workspace collaborators will automatically stream here."
         />
       ) : (
-        <div className="relative border-l border-border/80 ml-4 pl-6 space-y-6">
+        <div className="border border-border/80 bg-card rounded-lg divide-y divide-border/60">
           {logs.map((log) => {
             const Icon = getEntityIcon(log.entity);
             return (
-              <div key={log.id} className="relative group">
-                {/* Dot / Icon indicator */}
-                <div className="absolute -left-[35px] top-1 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background shadow-xs text-muted-foreground group-hover:text-primary transition-colors">
-                  <Icon className="h-4 w-4" />
-                </div>
-
-                <Card className="shadow-xs hover:shadow-sm transition-shadow">
-                  <CardContent className="p-4 space-y-2">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs text-muted-foreground">
-                      <span className="font-semibold text-foreground text-sm">
+              <div
+                key={log.id}
+                className="p-3.5 hover:bg-muted/30 dark:hover:bg-[#242428]/40 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+              >
+                <div className="flex items-start sm:items-center gap-3 min-w-0">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border/70 bg-muted/30 dark:bg-[#171719] text-muted-foreground">
+                    <Icon className="h-3.5 w-3.5 text-primary" />
+                  </div>
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-medium text-foreground text-xs">
                         {log.user?.name || 'System Operator'}
                       </span>
-                      <span>{formatDateTime(log.createdAt)}</span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <code className="text-xs font-semibold bg-muted px-2 py-0.5 rounded text-foreground">
+                      <code className="text-[11px] font-mono text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.5 rounded">
                         {log.action}
                       </code>
-                      <Badge variant="outline" className="text-[10px]">
+                      <Badge variant="outline" className="font-mono text-[10px] text-muted-foreground">
                         {log.entity}
                       </Badge>
                     </div>
-
                     {log.details && (
-                      <pre className="text-[11px] font-mono bg-muted/40 p-2 rounded-md overflow-x-auto text-muted-foreground">
-                        {JSON.stringify(log.details, null, 2)}
-                      </pre>
+                      <p className="font-mono text-[11px] text-muted-foreground truncate">
+                        {JSON.stringify(log.details)}
+                      </p>
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
+
+                <div className="font-mono text-[11px] text-muted-foreground/80 tabular-nums shrink-0 sm:text-right pl-10 sm:pl-0">
+                  {formatDateTime(log.createdAt)}
+                </div>
               </div>
             );
           })}
