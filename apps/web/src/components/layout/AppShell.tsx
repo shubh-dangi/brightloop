@@ -1,12 +1,14 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { CommandPalette } from './CommandPalette';
 import { useThemeStore } from '../../stores/themeStore';
+import { PageMotion } from '../../lib/motion';
 
 export function AppShell() {
   const { mobileMenuOpen, setMobileMenuOpen } = useThemeStore();
+  const location = useLocation();
 
   return (
     <div className="min-h-screen bg-background text-foreground flex">
@@ -30,7 +32,9 @@ export function AppShell() {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <Header />
         <main className="flex-1 overflow-y-auto p-4 md:p-8 max-w-7xl w-full mx-auto">
-          <Outlet />
+          <PageMotion key={location.pathname}>
+            <Outlet />
+          </PageMotion>
         </main>
       </div>
 

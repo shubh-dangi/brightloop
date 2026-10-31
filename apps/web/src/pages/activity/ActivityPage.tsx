@@ -103,7 +103,7 @@ export function ActivityPage() {
             placeholder="Search by action or keyword..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-8.5 h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
+            className="pl-8.5 h-8 text-xs bg-card border-border"
           />
         </form>
         <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
@@ -144,10 +144,10 @@ export function ActivityPage() {
             return (
               <div
                 key={log.id}
-                className="p-3.5 hover:bg-muted/30 dark:hover:bg-[#242428]/40 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                className="p-3.5 hover:bg-surface-hover/60 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
               >
                 <div className="flex items-start sm:items-center gap-3 min-w-0">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border/70 bg-muted/30 dark:bg-[#171719] text-muted-foreground">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border/70 bg-surface-elevated text-muted-foreground">
                     <Icon className="h-3.5 w-3.5 text-primary" />
                   </div>
                   <div className="space-y-1 min-w-0">

@@ -18,10 +18,10 @@ export function PreferencesPage() {
   const [savedMsg, setSavedMsg] = useState(false);
 
   const colors = [
-    { name: 'Linear Purple', value: 'indigo', bg: 'bg-[#8B7CF6]' },
+    { name: 'Frost Blue (Official)', value: 'frost-blue', bg: 'bg-[#A5D8FF]' },
     { name: 'Emerald', value: 'emerald', bg: 'bg-emerald-500' },
-    { name: 'Blue', value: 'blue', bg: 'bg-blue-500' },
-    { name: 'Violet', value: 'violet', bg: 'bg-purple-500' },
+    { name: 'Sky Blue', value: 'blue', bg: 'bg-blue-500' },
+    { name: 'Cyan', value: 'cyan', bg: 'bg-cyan-500' },
     { name: 'Amber', value: 'amber', bg: 'bg-amber-500' },
   ];
 
@@ -175,7 +175,7 @@ export function PreferencesPage() {
               <div className="space-y-1.5">
                 <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium">Timezone</label>
                 <Select value={timezone} onValueChange={setTimezone}>
-                  <SelectTrigger className="h-8 text-xs font-mono dark:bg-[#1C1C1F]/60 border-border/80">
+                  <SelectTrigger className="h-8 text-xs font-mono bg-card border-border">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="text-xs font-mono">

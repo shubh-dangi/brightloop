@@ -332,7 +332,7 @@ export function RecordsListPage() {
             placeholder="Search records by title or category..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-8.5 h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
+            className="pl-8.5 h-8 text-xs bg-card border-border"
           />
         </form>
 
@@ -350,7 +350,7 @@ export function RecordsListPage() {
           )}
 
           <Select value={statusFilter} onValueChange={(val) => { setStatusFilter(val); setPage(1); }}>
-            <SelectTrigger className="h-8 w-32 text-xs font-mono dark:bg-[#1C1C1F]/60 border-border/80">
+            <SelectTrigger className="h-8 w-32 text-xs font-mono bg-card border-border">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent className="text-xs">
@@ -362,7 +362,7 @@ export function RecordsListPage() {
           </Select>
 
           <Select value={priorityFilter} onValueChange={(val) => { setPriorityFilter(val); setPage(1); }}>
-            <SelectTrigger className="h-8 w-32 text-xs font-mono dark:bg-[#1C1C1F]/60 border-border/80">
+            <SelectTrigger className="h-8 w-32 text-xs font-mono bg-card border-border">
               <SelectValue placeholder="Priority" />
             </SelectTrigger>
             <SelectContent className="text-xs">
@@ -401,7 +401,7 @@ export function RecordsListPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-muted/30 dark:bg-[#171719] border-b border-border/80 text-[10px] uppercase font-mono tracking-wider text-muted-foreground/80 font-medium">
+              <thead className="bg-surface-elevated/70 border-b border-border text-[10px] uppercase font-mono tracking-wider text-muted-foreground font-medium">
                 <tr>
                   <th className="py-2.5 px-3.5 w-10">
                     <Checkbox
@@ -425,7 +425,7 @@ export function RecordsListPage() {
                   return (
                     <tr
                       key={record.id}
-                      className={`hover:bg-muted/30 dark:hover:bg-[#242428]/40 transition-colors ${
+                      className={`hover:bg-surface-hover/60 transition-colors ${
                         isSelected ? 'bg-primary/5' : ''
                       }`}
                     >

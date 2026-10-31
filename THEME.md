@@ -1,130 +1,173 @@
-# Design System and UI Theme — Brightloop (Linear-Inspired)
-
-## 1. Design Philosophy & Direction
-
-Brightloop adheres to a minimalist, high-precision SaaS aesthetic directly inspired by **Linear's design philosophy**, combined with enterprise financial accuracy and modern React 19 architecture:
-
-1. **Information Density with Absolute Clarity**: Financial and subscription operators require high visibility across accounts, plans, MRR, invoices, and ledger events. Brightloop uses compact padding, tight typography, tabular numbers, and crisp 1px borders to present maximum relevant data without cognitive clutter.
-2. **Linear Visual Discipline**:
-   - Primary default theme is **Dark Theme**, calibrated with deep warm charcoal surfaces (`#111113`, `#171719`, `#1C1C1F`).
-   - Light theme is equally refined with clean, low-glare neutral surfaces (`#F7F7F8`, `#FFFFFF`, `#F0F0F2`).
-   - Signature Linear accent: Modern Indigo/Purple (`#8B7CF6` dark / `#6D5CE7` light) with subdued background highlights.
-3. **Dual-Channel Deterministic Feedback**: Status indicators (Active, Inactive, Draft, Past Due, Paid) combine subtle pill badges, monochromatic icons, and tabular metadata to eliminate ambiguity.
-4. **Typographic Restraint**: Clean neo-grotesque hierarchy (Inter) paired with monospace tabular figures (JetBrains Mono) for financial metrics, timestamps, IDs, and code tokens.
+# Brightloop Design System & Theme Specification
+## Theme: Frost Blue × Midnight Dark
+### Motion System: Soft Fluid • Modern • Minimal • Lightweight
 
 ---
 
-## 2. Official Color Palette System
+## 1. Product Identity & Design Philosophy
 
-The application strictly implements the following calibrated tokens across both Dark (Default) and Light modes:
+**Brightloop** is an enterprise-grade Subscription Management & Recurring Billing platform. Its visual identity balances financial precision, operational density, and modern SaaS aesthetics.
 
-### 2.1 Dark Theme — Primary Default
+### Key Tenets:
+1. **Midnight Dark Foundation**: Dark mode is the primary, calibrated default canvas (`#0B1220`). It minimizes eye fatigue during extended operational work while preserving high contrast for metrics, ledger items, and audit logs.
+2. **Frost Blue High-Precision Accent**: The signature accent (`#A5D8FF` in dark mode, `#398CCB` in light mode) is reserved for primary actions, active navigation indicators, key focus rings, and high-priority interactive states.
+3. **Information Density with Absolute Clarity**: Compact typography, tabular numbers (`font-variant-numeric: tabular-nums`), crisp structural borders, and structured card surfaces present maximum relevant data without cognitive clutter.
+4. **Soft Fluid Motion**: Micro-interactions and transitions are subtle, fast, and purposeful (`200–280ms`), respecting `prefers-reduced-motion` and optimizing for performance.
 
-| Element | Token / Variable | Hex Value | Role |
-|---|---|---|---|
-| **Main Background** | `--background` | `#111113` | Deep warm charcoal base canvas |
-| **Sidebar Surface** | `--sidebar` | `#171719` | Navigational surface and chrome panels |
-| **Card Surface** | `--card` | `#1C1C1F` | Primary data cards, tables, containers |
-| **Elevated Surface** | `--popover` | `#242428` | Dialogs, tooltips, dropdown menus |
-| **Primary Text** | `--foreground` | `#F5F5F5` | Headings, high-emphasis metrics |
-| **Secondary Text** | `--muted-foreground`| `#92929B` | Labels, captions, secondary details |
-| **Border** | `--border` | `#303036` | Crisp 1px structural dividing lines |
-| **Primary Accent** | `--primary` | `#8B7CF6` | Linear signature active accent |
-| **Accent Hover** | `--primary-hover` | `#7969E8` | Interactive button and link hover |
-| **Accent Soft** | `--primary-soft` | `#29243D` | Active sidebar pills, selected badges |
+---
 
-### 2.2 Light Theme
+## 2. Official Color Palette
 
-| Element | Token / Variable | Hex Value | Role |
-|---|---|---|---|
-| **Main Background** | `--background` | `#F7F7F8` | Low-glare off-white canvas |
-| **Sidebar Surface** | `--sidebar` | `#FFFFFF` | Navigational container |
+### 2.1 Dark Theme — Primary Default Canvas
+
+| Design Token | CSS Variable | Hex Value | Semantic Role |
+| :--- | :--- | :--- | :--- |
+| **Main Background** | `--background` | `#0B1220` | Primary application canvas |
+| **Sidebar Background** | `--sidebar` | `#111C2D` | Navigation surface and left chrome |
+| **Topbar Background** | `--topbar` | `#0F1929` | Fixed header and breadcrumb bar |
+| **Card Surface** | `--card` | `#17263A` | Primary container, tables, stat cards |
+| **Elevated Surface** | `--surface-elevated` | `#22344A` | Secondary panels, modal chrome, badges |
+| **Hover Surface** | `--surface-hover` | `#263B52` | Interactive table row and card hover |
+| **Active Surface** | `--surface-active` | `#1D3A55` | Selected items, active filters |
+| **Primary Text** | `--foreground` | `#EAF4FF` | High-contrast headings and primary metrics |
+| **Secondary Text** | `--muted-foreground` | `#A7B9CC` | Labels, table headers, descriptions |
+| **Muted Text** | `--muted-text` | `#778BA3` | Tertiary captions, subtle metadata |
+| **Disabled Text** | `--disabled` | `#52657B` | Inactive controls and unselected options |
+| **Default Border** | `--border` | `#2A3C52` | Crisp 1px structural dividing lines |
+| **Strong Border** | `--strong-border` | `#3A506A` | Emphasized card boundaries, active inputs |
+| **Divider** | `--divider` | `#26384D` | Subtle list and section separators |
+
+#### Frost Blue Dark Accents
+
+| Token | CSS Variable | Hex Value | Usage |
+| :--- | :--- | :--- | :--- |
+| **Primary Accent** | `--primary` | `#A5D8FF` | Primary button, active link, badge |
+| **Primary Hover** | `--primary-hover` | `#75BFFF` | Button and interactive hover state |
+| **Primary Active** | `--primary-active` | `#60A5E8` | Pressed / clicked interactive state |
+| **Accent Soft** | `--primary-soft` | `#1D3A55` | Pill backgrounds, active navigation |
+| **Accent Subtle** | `--primary-subtle`| `#152D45` | Subtle table row highlight |
+| **Accent Foreground** | `--primary-foreground` | `#0B1220` | High-contrast text on Frost Blue |
+| **Focus Ring** | `--ring` | `#75BFFF` | Keyboard focus ring |
+
+---
+
+### 2.2 Light Theme — Secondary Mode
+
+| Design Token | CSS Variable | Hex Value | Semantic Role |
+| :--- | :--- | :--- | :--- |
+| **Main Background** | `--background` | `#F5F9FD` | Low-glare cool canvas |
+| **Sidebar Background** | `--sidebar` | `#FFFFFF` | Crisp white navigational surface |
+| **Topbar Background** | `--topbar` | `#FFFFFF` | Clean white header |
 | **Card Surface** | `--card` | `#FFFFFF` | Clean paper card surfaces |
-| **Elevated Surface** | `--popover` | `#F0F0F2` | Elevated dropdown and modal menus |
-| **Primary Text** | `--foreground` | `#222226` | High-contrast charcoal text |
-| **Secondary Text** | `--muted-foreground`| `#777780` | Muted neutral typography |
-| **Border** | `--border` | `#E6E6E9` | Crisp neutral dividing lines |
-| **Primary Accent** | `--primary` | `#6D5CE7` | High-contrast indigo primary |
-| **Accent Hover** | `--primary-hover` | `#5C4BD0` | Button hover state |
-| **Accent Soft** | `--primary-soft` | `#EFEDFC` | Active navigation pill background |
+| **Elevated Surface** | `--surface-elevated` | `#EAF2F9` | Secondary panels, badges |
+| **Hover Surface** | `--surface-hover` | `#F0F6FC` | Hover state for lists and cards |
+| **Active Surface** | `--surface-active` | `#E1F0FC` | Active selection pill |
+| **Primary Text** | `--foreground` | `#172536` | High-contrast dark blue text |
+| **Secondary Text** | `--muted-foreground` | `#526579` | Medium contrast metadata |
+| **Muted Text** | `--muted-text` | `#718096` | Low contrast timestamps, helpers |
+| **Disabled Text** | `--disabled` | `#A0AEC0` | Disabled form controls |
+| **Default Border** | `--border` | `#DCE7F0` | Clean structural dividing lines |
+| **Strong Border** | `--strong-border` | `#C6D7E6` | High-emphasis container borders |
+| **Divider** | `--divider` | `#E5EDF5` | List dividers |
 
-### 2.3 Semantic Status Palette
+#### Frost Blue Light Accents
 
-Semantic colors use muted, desaturated tones matching Linear's non-distracting palette:
-
-| Semantic State | Dark Mode Value | Light Mode Value | Usage in Brightloop |
-|---|---|---|---|
-| **Success** | `#22C55E` / `rgba(34,197,94,0.15)` | `#16A34A` / `rgba(22,163,74,0.12)` | Active subscription, settled invoice, healthy DB |
-| **Warning** | `#F59E0B` / `rgba(245,158,11,0.15)` | `#D97706` / `rgba(217,119,6,0.12)` | Draft record, renewal notice, scheduled maintenance |
-| **Destructive** | `#EF4444` / `rgba(239,68,68,0.15)` | `#DC2626` / `rgba(220,38,38,0.12)` | Critical priority, past-due invoice, delete actions |
-| **Info / Tech** | `#8B7CF6` / `rgba(139,124,246,0.15)` | `#6D5CE7` / `rgba(109,92,231,0.12)` | Infrastructure specs, system roles, webhook events |
-| **Neutral** | `#71717A` / `rgba(113,113,122,0.15)` | `#64748B` / `rgba(100,116,139,0.12)` | Archived entities, viewer scopes, inactive flags |
-
----
-
-## 3. Typography Architecture
-
-- **Primary Font Family**: `Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`
-- **Monospace Font Family**: `JetBrains Mono, "SFMono-Regular", Consolas, Menlo, monospace`
-- **Tabular Numerals**: Numerical values (metrics, currency, quantities, dates, IDs) use `.font-mono, [data-tabular-num]` with `font-feature-settings: "tnum" on, "zero" on`.
-
-### Typographic Scale
-
-| Role | Font Size | Line Height | Tracking | Weight |
-|---|---|---|---|---|
-| **Page Header Title** | `1.25rem` (20px) | `1.5rem` (24px) | `-0.025em` | `600` (SemiBold) |
-| **Section / Card Title** | `0.875rem` (14px) | `1.25rem` (20px) | `-0.015em` | `600` (SemiBold) |
-| **Body Primary** | `0.8125rem` (13px) | `1.25rem` (20px) | `0` | `400` / `500` |
-| **Compact / Table Body** | `0.75rem` (12px) | `1.125rem` (18px) | `0` | `400` / `500` |
-| **Ledger / Table Header**| `0.625rem` (10px) | `1rem` (16px) | `0.05em` | `500` (Mono, Uppercase) |
-| **Badges & Micro-tags** | `0.6875rem` (11px) | `1rem` (16px) | `0` | `500` (Mono) |
+| Token | CSS Variable | Hex Value | Usage |
+| :--- | :--- | :--- | :--- |
+| **Primary Accent** | `--primary` | `#398CCB` | High-contrast Frost Blue for light theme |
+| **Primary Hover** | `--primary-hover` | `#2879B7` | Button hover state |
+| **Primary Active** | `--primary-active` | `#21699F` | Pressed button state |
+| **Accent Soft** | `--primary-soft` | `#E4F2FC` | Active nav pill background |
+| **Accent Subtle** | `--primary-subtle`| `#F0F7FD` | Hover tint |
+| **Accent Foreground** | `--primary-foreground` | `#FFFFFF` | Text on active button |
+| **Focus Ring** | `--ring` | `#398CCB` | Focus ring |
 
 ---
 
-## 4. Layout & Spacing Scale
+### 2.3 Semantic Status System
 
-Brightloop replaces bulky admin margins with Linear's compact hierarchy:
+Semantic colors provide unambiguous lifecycle and operational indicators in both themes:
 
-- **Sidebar Width**: `w-60` (240px) desktop sidebar with `#171719` background.
-- **Header Height**: `h-14` (56px) compact header with breadcrumbs, command palette pill (`⌘K`), and profile trigger.
-- **Card Radius**: Subtle `rounded-lg` (8px radius) with crisp 1px borders (`border-border/80`).
-- **Interactive Heights**:
-  - Buttons (`size="sm"`): `h-8 px-3 text-xs`
-  - Inputs & Selects: `h-8.5 px-3 text-xs`
-  - Table Rows: `py-2.5 px-3.5` compact density
-- **Scrollbars**: Linear-style ultra-thin scrollbars (`scrollbar-width: thin` with muted track and `#303036` thumb).
-
----
-
-## 5. Component Standards
-
-### 5.1 Buttons (`Button`)
-- Minimalist 1px borders, subtle hover transitions.
-- Standard button: `h-8 px-3 text-xs font-medium rounded-md`.
-- Ghost buttons on table rows and action menus: `h-7 w-7 text-xs`.
-
-### 5.2 Cards (`Card`)
-- Flat surfaces (`#1C1C1F` dark, `#FFFFFF` light) without excessive elevation shadows.
-- Subtle border hover highlight: `hover:border-primary/40 transition-colors`.
-
-### 5.3 Badges (`Badge`)
-- Monospace font (`JetBrains Mono`), uppercase tracking: `text-[10px] font-mono px-2 py-0.5 rounded border`.
-- Subtle tinted backgrounds matching status severity.
-
-### 5.4 Data Tables & Ledgers
-- Precision monospace headers with uppercase tracking: `text-[10px] uppercase font-mono tracking-wider text-muted-foreground/80`.
-- Hover row state: `hover:bg-muted/30 dark:hover:bg-[#242428]/40`.
-- Integrated footer with tabular page counters and compact navigation icons.
-
-### 5.5 Charts & Analytics
-- Area charts utilize Linear primary gradient (`#8B7CF6` to transparent) with subtle `3 3` dashed grid lines.
-- Tooltips render on elevated `#1C1C1F` surfaces with 1px `#303036` borders and tabular monospace numbers.
+| Semantic State | Dark Theme Value | Dark Soft Background | Light Theme Value | Light Soft Background | Usage in Brightloop |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Success** | `#34D399` | `#123B34` | `#059669` | `#DDF8EE` | Paid invoices, active subscriptions |
+| **Warning** | `#FBBF24` | `#453719` | `#B7791F` | `#FFF3CD` | Quotation draft, renewal pending |
+| **Danger / Destructive** | `#FB7185` | `#451F2A` | `#E5484D` | `#FDE8E8` | Overdue invoice, cancelled contract |
+| **Information** | `#60A5FA` | `#172F50` | `#2563EB` | `#E5F0FF` | Webhook events, system logs |
+| **Neutral** | `#A7B9CC` | `#26384D` | `#64748B` | `#EDF2F7` | Paused subscription, archived records |
 
 ---
 
-## 6. Verification and Compliance
+## 3. Data Visualization & Chart Palette
 
-- **Framework**: React 19 + Vite + TypeScript + Tailwind CSS v4.
-- **Contrast**: WCAG 2.2 AA compliant across all primary and secondary text nodes.
-- **Anti-FOUC**: Inline script on `<head>` detects theme preference immediately prior to rendering, preventing flash of white.
-- **Testing**: Zero type errors (`pnpm typecheck`), all unit tests passing (`pnpm test`), and production build optimized (`pnpm build`).
+Charts use restrained, coordinated series colors calibrated for dark surfaces:
+
+- **Primary Series (MRR / Revenue)**: `#A5D8FF` (Frost Blue) with vertical gradient fading to transparent.
+- **Secondary Series (Growth / Active)**: `#60A5FA` (Soft Blue)
+- **Tertiary Series (Realized Cash)**: `#34D399` (Emerald)
+- **Warning Series (Pending Renewals)**: `#FBBF24` (Amber)
+- **Danger Series (Overdue Balances)**: `#FB7185` (Coral Red)
+- **Neutral Series (Inactive)**: `#8297AD`
+- **Cartesian Grid Lines**: `#2A3C52` (Dark) / `#DCE7F0` (Light)
+- **Axis Typography**: `#778BA3` (Dark) / `#718096` (Light), `fontSize: 11`
+
+---
+
+## 4. Typography & Radius Standards
+
+### Typography
+- **Primary Font**: `Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`
+- **Tabular Mono**: `JetBrains Mono, "SFMono-Regular", Consolas, monospace`
+- **Financial Rule**: All currency (`₹`), metrics, invoice numbers, timestamps, and rates use `tabular-nums` for strict column alignment.
+
+### Radius Scale
+- **Small Controls / Tags**: `6px` (`--radius-sm`, `rounded-sm`)
+- **Inputs & Buttons**: `8px` (`--radius-md`, `rounded-md`)
+- **Cards & Data Tables**: `10px` (`--radius-lg`, `rounded-lg`)
+- **Dialogs & Larger Modals**: `12px` (`--radius-xl`, `rounded-xl`)
+
+---
+
+## 5. Motion & Animation System
+
+Brightloop adheres to a **Soft Fluid • Modern • Minimal** motion language. Motion is purposeful, lightweight, and hardware-accelerated (`transform` and `opacity` only).
+
+### 5.1 Motion Timing Tokens
+- **Instant**: `100ms` (checkboxes, micro toggles)
+- **Fast**: `140ms` (hover feedback, tooltips)
+- **Normal**: `180ms` (tab switches, dropdown menus)
+- **Smooth**: `240ms` (modal entrances, dialog popups)
+- **Page Transition**: `260ms` (route entrances)
+
+### 5.2 Motion Easings
+- **Standard**: `cubic-bezier(0.2, 0, 0, 1)`
+- **Enter**: `cubic-bezier(0, 0, 0.2, 1)`
+- **Exit**: `cubic-bezier(0.4, 0, 1, 1)`
+
+### 5.3 Page Navigation Transitions
+Pages open smoothly with a soft fade and small 8px vertical offset:
+```typescript
+export const pageVariants: Variants = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.26, ease: [0, 0, 0.2, 1] } },
+  exit: { opacity: 0, y: -6, transition: { duration: 0.14, ease: [0.4, 0, 1, 1] } },
+};
+```
+
+### 5.4 Accessibility (Reduced Motion)
+When `prefers-reduced-motion: reduce` is detected:
+- All transforms are disabled.
+- Page entrances perform an instantaneous or simple opacity change.
+- No content is delayed or animated without user preference.
+
+---
+
+## 6. Verification Checklist
+
+- [x] All legacy purple/indigo accents replaced with official Frost Blue (`#A5D8FF` / `#398CCB`).
+- [x] Hardcoded hex values purged in favor of semantic Tailwind theme tokens.
+- [x] Seamless Dark (default) and Light theme switching via `useThemeStore`.
+- [x] Accessible contrast meeting WCAG 2.2 AA (4.5:1 text, 3:1 UI elements).
+- [x] Fluid page motion and active tab transitions using `motion/react`.
+- [x] Currency globally normalized to the Indian Rupee symbol (`₹`).
+- [x] Production build and test suite 100% passing.

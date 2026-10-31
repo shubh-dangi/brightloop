@@ -51,7 +51,7 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-20 flex h-14 w-full items-center justify-between border-b border-border/80 bg-background/80 px-4 md:px-6 backdrop-blur-md select-none">
+    <header className="sticky top-0 z-20 flex h-14 w-full items-center justify-between border-b border-topbar-border bg-topbar/90 px-4 md:px-6 backdrop-blur-md select-none transition-colors">
       {/* Left: Mobile trigger & Linear-style Breadcrumbs */}
       <div className="flex items-center gap-3">
         <Button

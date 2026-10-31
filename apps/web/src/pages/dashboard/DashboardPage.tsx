@@ -39,7 +39,7 @@ import { Spinner } from '../../components/ui/spinner';
 const LinearChartTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="rounded-lg border border-border/80 bg-[#1C1C1F] p-3 text-xs shadow-xl backdrop-blur-md">
+      <div className="rounded-lg border border-border bg-card p-3 text-xs shadow-xl backdrop-blur-md">
         <p className="font-mono text-[11px] text-muted-foreground pb-1 border-b border-border/40 mb-1.5">
           {label}
         </p>
@@ -98,8 +98,8 @@ export function DashboardPage() {
             { month: 'Oct', revenue: 748, activity: 45 },
           ],
           statusDistribution: [
-            { name: 'Monthly Plan', value: 1, color: '#8b5cf6' },
-            { name: 'Yearly Plan', value: 1, color: '#10b981' },
+            { name: 'Monthly Plan', value: 1, color: '#A5D8FF' },
+            { name: 'Yearly Plan', value: 1, color: '#34D399' },
           ],
         },
         recentActivity: [
@@ -340,15 +340,15 @@ export function DashboardPage() {
                 <AreaChart data={charts.trendData || []} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="linearPrimaryGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#8B7CF6" stopOpacity={0.25} />
-                      <stop offset="95%" stopColor="#8B7CF6" stopOpacity={0.0} />
+                      <stop offset="5%" stopColor="#A5D8FF" stopOpacity={0.25} />
+                      <stop offset="95%" stopColor="#A5D8FF" stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#303036" vertical={false} />
-                  <XAxis dataKey="month" stroke="#92929B" fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#92929B" fontSize={11} tickLine={false} axisLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#2A3C52" vertical={false} />
+                  <XAxis dataKey="month" stroke="#778BA3" fontSize={11} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#778BA3" fontSize={11} tickLine={false} axisLine={false} />
                   <RechartsTooltip content={<LinearChartTooltip />} />
-                  <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#8B7CF6" strokeWidth={2} fill="url(#linearPrimaryGrad)" />
+                  <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#A5D8FF" strokeWidth={2} fill="url(#linearPrimaryGrad)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

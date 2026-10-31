@@ -213,7 +213,7 @@ export function RecordDetailPage() {
             </CardHeader>
             <CardContent>
               {record.metadata && Object.keys(record.metadata).length > 0 ? (
-                <pre className="text-xs font-mono bg-muted/30 dark:bg-[#171719] p-3.5 rounded-md overflow-x-auto text-foreground/90 border border-border/80 leading-relaxed">
+                <pre className="text-xs font-mono bg-surface-elevated/80 p-3.5 rounded-md overflow-x-auto text-foreground/90 border border-border leading-relaxed">
                   {JSON.stringify(record.metadata, null, 2)}
                 </pre>
               ) : (
@@ -256,7 +256,7 @@ export function RecordDetailPage() {
             <CardContent className="space-y-3.5 text-xs">
               <div className="space-y-1">
                 <span className="text-[11px] font-mono text-muted-foreground">Entity Identifier</span>
-                <p className="font-mono text-[11px] bg-muted/40 dark:bg-[#171719] p-1.5 rounded border border-border/60 truncate text-foreground/90">
+                <p className="font-mono text-[11px] bg-surface-elevated/80 p-1.5 rounded border border-border/60 truncate text-foreground/90">
                   {record.id}
                 </p>
               </div>

@@ -155,9 +155,9 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
     <TooltipProvider delayDuration={80}>
       <aside
         className={cn(
-          'relative flex flex-col border-r border-border bg-[#FFFFFF] dark:bg-[#171719] text-foreground transition-all duration-200 z-30 select-none h-screen',
+          'relative flex flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-all duration-200 z-30 select-none h-screen',
           isMobile
-            ? 'w-64 fixed inset-y-0 left-0 shadow-2xl bg-[#FFFFFF] dark:bg-[#171719]'
+            ? 'w-64 fixed inset-y-0 left-0 shadow-2xl bg-sidebar'
             : collapsed
               ? 'w-[60px]'
               : 'w-60',
@@ -287,7 +287,7 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
                   'px-1.5 py-1 text-[10px] font-medium rounded transition-colors text-center cursor-pointer',
                   role === 'ADMIN' || role === 'OWNER'
                     ? 'bg-primary text-primary-foreground font-bold shadow-xs'
-                    : 'bg-background hover:bg-muted text-muted-foreground'
+                    : 'bg-surface-elevated hover:bg-surface-hover text-muted-foreground'
                 )}
                 title="Full Admin privileges"
               >
@@ -300,7 +300,7 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
                   'px-1.5 py-1 text-[10px] font-medium rounded transition-colors text-center cursor-pointer',
                   role === 'MEMBER'
                     ? 'bg-primary text-primary-foreground font-bold shadow-xs'
-                    : 'bg-background hover:bg-muted text-muted-foreground'
+                    : 'bg-surface-elevated hover:bg-surface-hover text-muted-foreground'
                 )}
                 title="Internal Staff (Cost prices hidden)"
               >
@@ -313,7 +313,7 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
                   'px-1.5 py-1 text-[10px] font-medium rounded transition-colors text-center cursor-pointer',
                   role === 'CUSTOMER'
                     ? 'bg-primary text-primary-foreground font-bold shadow-xs'
-                    : 'bg-background hover:bg-muted text-muted-foreground'
+                    : 'bg-surface-elevated hover:bg-surface-hover text-muted-foreground'
                 )}
                 title="Customer Portal Self-Service"
               >

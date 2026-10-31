@@ -116,7 +116,7 @@ export function RecordFormModal({
               <Input
                 id="title"
                 placeholder="e.g. Ingestion Pipeline Spec"
-                className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
+                className="h-8 text-xs bg-card border-border"
                 {...register('title')}
               />
               {errors.title && (
@@ -130,7 +130,7 @@ export function RecordFormModal({
                 <Input
                   id="category"
                   placeholder="e.g. Infrastructure, Analytics"
-                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
+                  className="h-8 text-xs bg-card border-border"
                   {...register('category')}
                 />
                 {errors.category && (
@@ -144,7 +144,7 @@ export function RecordFormModal({
                   value={currentPriority}
                   onValueChange={(val) => setValue('priority', val as RecordPriority)}
                 >
-                  <SelectTrigger className="h-8 text-xs font-mono dark:bg-[#1C1C1F]/60 border-border/80">
+                  <SelectTrigger className="h-8 text-xs font-mono bg-card border-border">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="text-xs font-mono">
@@ -163,7 +163,7 @@ export function RecordFormModal({
                 value={currentStatus}
                 onValueChange={(val) => setValue('status', val as RecordStatus)}
               >
-                <SelectTrigger className="h-8 text-xs font-mono dark:bg-[#1C1C1F]/60 border-border/80">
+                <SelectTrigger className="h-8 text-xs font-mono bg-card border-border">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="text-xs font-mono">
@@ -181,7 +181,7 @@ export function RecordFormModal({
               <Textarea
                 id="description"
                 placeholder="Detailed specification or notes for this record..."
-                className="min-h-[85px] text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80 resize-none"
+                className="min-h-[85px] text-xs bg-card border-border resize-none"
                 {...register('description')}
               />
             </div>

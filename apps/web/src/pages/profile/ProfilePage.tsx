@@ -129,7 +129,7 @@ export function ProfilePage() {
                 <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="name">
                   Full Name
                 </label>
-                <Input id="name" className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80" {...profileForm.register('name')} />
+                <Input id="name" className="h-8 text-xs bg-card border-border" {...profileForm.register('name')} />
                 {profileForm.formState.errors.name && (
                   <p className="text-[11px] text-destructive font-mono">
                     {profileForm.formState.errors.name.message}
@@ -141,7 +141,7 @@ export function ProfilePage() {
                 <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium" htmlFor="email">
                   Email Address
                 </label>
-                <Input id="email" type="email" className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80" {...profileForm.register('email')} />
+                <Input id="email" type="email" className="h-8 text-xs bg-card border-border" {...profileForm.register('email')} />
                 {profileForm.formState.errors.email && (
                   <p className="text-[11px] text-destructive font-mono">
                     {profileForm.formState.errors.email.message}
@@ -156,7 +156,7 @@ export function ProfilePage() {
                 <Input
                   id="avatarUrl"
                   placeholder="https://..."
-                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
+                  className="h-8 text-xs bg-card border-border"
                   {...profileForm.register('avatarUrl')}
                 />
               </div>
@@ -195,7 +195,7 @@ export function ProfilePage() {
                   id="currentPassword"
                   type="password"
                   placeholder="••••••••"
-                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
+                  className="h-8 text-xs bg-card border-border"
                   {...passForm.register('currentPassword')}
                 />
                 {passForm.formState.errors.currentPassword && (
@@ -213,7 +213,7 @@ export function ProfilePage() {
                   id="newPassword"
                   type="password"
                   placeholder="••••••••"
-                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
+                  className="h-8 text-xs bg-card border-border"
                   {...passForm.register('newPassword')}
                 />
                 {passForm.formState.errors.newPassword && (

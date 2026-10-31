@@ -74,7 +74,7 @@ export function GeneralSettingsPage() {
                   value={appName}
                   onChange={(e) => setAppName(e.target.value)}
                   placeholder="Brightloop"
-                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
+                  className="h-8 text-xs bg-card border-border"
                 />
                 <p className="text-[10px] font-mono text-muted-foreground">Default: Brightloop</p>
               </div>
@@ -87,7 +87,7 @@ export function GeneralSettingsPage() {
                   id="workspaceName"
                   value={workspaceName}
                   onChange={(e) => setWorkspaceName(e.target.value)}
-                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
+                  className="h-8 text-xs bg-card border-border"
                 />
               </div>
             </div>
@@ -101,7 +101,7 @@ export function GeneralSettingsPage() {
                 type="email"
                 value={supportEmail}
                 onChange={(e) => setSupportEmail(e.target.value)}
-                className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
+                className="h-8 text-xs bg-card border-border"
               />
             </div>
           </CardContent>

@@ -207,7 +207,7 @@ export function RolesPermissionsPage() {
         </CardHeader>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-muted/30 dark:bg-[#171719] border-b border-border/80 text-[10px] uppercase font-mono tracking-wider text-muted-foreground/80 font-medium">
+            <thead className="bg-surface-elevated/70 border-b border-border text-[10px] uppercase font-mono tracking-wider text-muted-foreground font-medium">
               <tr>
                 <th className="py-2.5 px-3.5">Permission Scope</th>
                 <th className="py-2.5 px-3.5">Module</th>
@@ -220,7 +220,7 @@ export function RolesPermissionsPage() {
             </thead>
             <tbody className="divide-y divide-border/60">
               {ALL_SYSTEM_PERMISSIONS.map((perm) => (
-                <tr key={perm.key} className="hover:bg-muted/30 dark:hover:bg-[#242428]/40 transition-colors">
+                <tr key={perm.key} className="hover:bg-surface-hover/60 transition-colors">
                   <td className="py-2.5 px-3.5">
                     <div className="flex flex-col">
                       <span className="font-medium text-foreground">{perm.name}</span>
@@ -279,7 +279,7 @@ export function RolesPermissionsPage() {
                   placeholder="ANALYST"
                   value={roleName}
                   onChange={(e) => setRoleName(e.target.value)}
-                  className="h-8 text-xs font-mono bg-background dark:bg-[#1C1C1F]/60 border-border/80"
+                  className="h-8 text-xs font-mono bg-card border-border"
                   required
                 />
               </div>
@@ -293,13 +293,13 @@ export function RolesPermissionsPage() {
                   placeholder="Can view analytics and read workspace records..."
                   value={roleDesc}
                   onChange={(e) => setRoleDesc(e.target.value)}
-                  className="h-16 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80 resize-none"
+                  className="h-16 text-xs bg-card border-border resize-none"
                 />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium">Select Permissions</label>
-                <div className="border border-border/80 rounded-md p-2 space-y-1 max-h-52 overflow-y-auto bg-muted/20 dark:bg-[#171719]/50">
+                <div className="border border-border rounded-md p-2 space-y-1 max-h-52 overflow-y-auto bg-surface-elevated/40">
                   {ALL_SYSTEM_PERMISSIONS.map((perm) => (
                     <div
                       key={perm.key}

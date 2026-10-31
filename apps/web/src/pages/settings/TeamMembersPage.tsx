@@ -174,7 +174,7 @@ export function TeamMembersPage() {
       <Card className="border-border/80 bg-card overflow-hidden rounded-lg">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-muted/30 dark:bg-[#171719] border-b border-border/80 text-[10px] uppercase font-mono tracking-wider text-muted-foreground/80 font-medium">
+            <thead className="bg-surface-elevated/70 border-b border-border text-[10px] uppercase font-mono tracking-wider text-muted-foreground font-medium">
               <tr>
                 <th className="py-2.5 px-3.5">User</th>
                 <th className="py-2.5 px-3.5">Role</th>
@@ -198,7 +198,7 @@ export function TeamMembersPage() {
                 </tr>
               ) : (
                 members.map((member) => (
-                  <tr key={member.id} className="hover:bg-muted/30 dark:hover:bg-[#242428]/40 transition-colors">
+                  <tr key={member.id} className="hover:bg-surface-hover/60 transition-colors">
                     <td className="py-2.5 px-3.5">
                       <div className="flex items-center gap-2.5">
                         <Avatar className="h-7 w-7 border border-border/70">
@@ -274,7 +274,7 @@ export function TeamMembersPage() {
                   placeholder="colleague@brightloop.local"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  className="h-8 text-xs bg-background dark:bg-[#1C1C1F]/60 border-border/80"
+                  className="h-8 text-xs bg-card border-border"
                   required
                 />
               </div>
@@ -282,7 +282,7 @@ export function TeamMembersPage() {
               <div className="space-y-1.5">
                 <label className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground font-medium">Workspace Role</label>
                 <Select value={selectedRole} onValueChange={setSelectedRole}>
-                  <SelectTrigger className="h-8 text-xs font-mono dark:bg-[#1C1C1F]/60 border-border/80">
+                  <SelectTrigger className="h-8 text-xs font-mono bg-card border-border">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="text-xs font-mono">
