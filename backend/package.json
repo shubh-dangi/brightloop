@@ -15,7 +15,8 @@
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio",
     "seed": "tsc prisma/seed.ts --outDir prisma/dist --module commonjs --target es2021 --skipLibCheck && node prisma/dist/seed.js",
-    "test": "vitest run"
+    "test": "node test/run-e2e.js",
+    "test:vitest": "vitest run"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.15",
