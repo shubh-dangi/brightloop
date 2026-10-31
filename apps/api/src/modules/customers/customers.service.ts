@@ -6,10 +6,13 @@ import { CreateCustomerInput, UpdateCustomerInput } from '@brightloop/contracts'
 export class CustomersService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(orgId: string, search?: string) {
+  async findAll(orgId: string, userRole?: string, userEmail?: string, search?: string) {
     const where: any = { organizationId: orgId };
 
-    if (search) {
+    // IDOR & Privacy Isolation: Customers can only see their own profile
+    if (userRole === 'CUSTOMER' && userEmail) {
+      where.email = userEmail.toLowerCase();
+    } else if (search) {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },
         { email: { contains: search, mode: 'insensitive' } },
@@ -32,9 +35,16 @@ export class CustomersService {
     });
   }
 
-  async findOne(orgId: string, id: string) {
+  async findOne(orgId: string, id: string, userRole?: string, userEmail?: string) {
+    const where: any = { id, organizationId: orgId };
+
+    // Prevent cross-customer inspection
+    if (userRole === 'CUSTOMER' && userEmail) {
+      where.email = userEmail.toLowerCase();
+    }
+
     const customer = await this.prisma.customer.findFirst({
-      where: { id, organizationId: orgId },
+      where,
       include: {
         subscriptions: {
           include: { plan: true },

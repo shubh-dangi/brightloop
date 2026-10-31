@@ -29,9 +29,10 @@ export class CustomersController {
   @ApiOperation({ summary: 'List all customers in the workspace' })
   async findAll(
     @CurrentTenant() tenant: TenantContext,
+    @CurrentUser() user: any,
     @Query('search') search?: string,
   ) {
-    return this.customersService.findAll(tenant.id, search);
+    return this.customersService.findAll(tenant.id, tenant.role, user?.email, search);
   }
 
   @Get(':id')
@@ -39,9 +40,10 @@ export class CustomersController {
   @ApiOperation({ summary: 'Get customer details by ID' })
   async findOne(
     @CurrentTenant() tenant: TenantContext,
+    @CurrentUser() user: any,
     @Param('id') id: string,
   ) {
-    return this.customersService.findOne(tenant.id, id);
+    return this.customersService.findOne(tenant.id, id, tenant.role, user?.email);
   }
 
   @Post()

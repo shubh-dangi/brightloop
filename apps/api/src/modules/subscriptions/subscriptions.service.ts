@@ -6,8 +6,19 @@ import { CreateSubscriptionInput, SubscriptionStatus } from '@brightloop/contrac
 export class SubscriptionsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(orgId: string, status?: string, search?: string) {
+  async findAll(orgId: string, userRole?: string, userEmail?: string, status?: string, search?: string) {
     const where: any = { organizationId: orgId };
+
+    // Enforce Customer Portal IDOR isolation
+    if (userRole === 'CUSTOMER' && userEmail) {
+      const customer = await this.prisma.customer.findFirst({
+        where: { organizationId: orgId, email: userEmail.toLowerCase() },
+      });
+      if (!customer) {
+        return [];
+      }
+      where.customerId = customer.id;
+    }
 
     if (status) {
       where.status = status as SubscriptionStatus;
@@ -33,9 +44,21 @@ export class SubscriptionsService {
     });
   }
 
-  async findOne(orgId: string, id: string) {
+  async findOne(orgId: string, id: string, userRole?: string, userEmail?: string) {
+    const where: any = { id, organizationId: orgId };
+
+    if (userRole === 'CUSTOMER' && userEmail) {
+      const customer = await this.prisma.customer.findFirst({
+        where: { organizationId: orgId, email: userEmail.toLowerCase() },
+      });
+      if (!customer) {
+        throw new NotFoundException('Subscription not found');
+      }
+      where.customerId = customer.id;
+    }
+
     const subscription = await this.prisma.subscription.findFirst({
-      where: { id, organizationId: orgId },
+      where,
       include: {
         customer: true,
         plan: true,
