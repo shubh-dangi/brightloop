@@ -353,6 +353,31 @@ async function main() {
     update: {},
   });
 
+  const customerUser = await prisma.user.upsert({
+    where: { email: 'customer@brightloop.local' },
+    create: {
+      name: 'Sam Carter (Customer Portal)',
+      email: 'customer@brightloop.local',
+      passwordHash,
+      isEmailVerified: true,
+      userPreference: {
+        create: {
+          theme: 'dark',
+          accentColor: 'blue',
+          density: 'comfortable',
+        },
+      },
+      memberships: {
+        create: {
+          organizationId: org.id,
+          roleId: customerRole.id,
+          status: 'ACTIVE',
+        },
+      },
+    },
+    update: {},
+  });
+
   // 5. Seed Domain Entities: Products & Variants
   const productSoftware = await prisma.product.upsert({
     where: { id: 'prod-software-suite-001' },
@@ -480,6 +505,22 @@ async function main() {
       company: 'Apex Retail Solutions',
       address: '42 Commerce Blvd, Austin, TX',
       notes: 'B2B boutique retailer scaling to national delivery.',
+      createdById: memberUser.id,
+    },
+    update: {},
+  });
+
+  const customerPortalDemo = await prisma.customer.upsert({
+    where: { id: 'cust-portal-demo-003' },
+    create: {
+      id: 'cust-portal-demo-003',
+      organizationId: org.id,
+      name: 'Sam Carter',
+      email: 'customer@brightloop.local',
+      phone: '+1 555-0188',
+      company: 'Brightloop Demo Customer Co.',
+      address: '77 Innovation Way, Denver, CO',
+      notes: 'Customer portal test profile.',
       createdById: memberUser.id,
     },
     update: {},
