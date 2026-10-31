@@ -56,7 +56,7 @@ describe('Complete Route & Navigation Security Suite', () => {
         </MemoryRouter>
       );
 
-      expect(screen.getByText(/Start Managing Smarter with Brightloop/i)).toBeInTheDocument();
+      expect(screen.getByText(/Create your Brightloop account/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Create account/i })).toBeInTheDocument();
     });
 

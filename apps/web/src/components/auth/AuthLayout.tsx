@@ -1,60 +1,44 @@
 import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { BrightloopLogo } from '../common/BrightloopLogo';
-import { AuthBrandingPanel } from './AuthBrandingPanel';
 import { ThemeSwitcher } from '../layout/ThemeSwitcher';
 
 interface AuthLayoutProps {
   children: ReactNode;
-  heading: string;
-  subheading: string;
+  heading?: string;
+  subheading?: string;
   type?: 'login' | 'signup' | 'reset';
   benefits?: string[];
 }
 
 export function AuthLayout({
   children,
-  heading,
-  subheading,
-  type = 'login',
-  benefits,
 }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen flex w-full bg-background selection:bg-primary/20 selection:text-primary relative">
-      {/* Top Right Quick Theme Switcher */}
+    <div className="min-h-screen flex flex-col justify-center items-center w-full bg-background selection:bg-primary/20 selection:text-primary relative px-4 sm:px-6 py-12">
+      {/* Top Right Quick Theme Toggle */}
       <div className="absolute top-4 right-4 z-50">
         <ThemeSwitcher />
       </div>
 
-      {/* Left Branding Panel (Desktop Only) */}
-      <AuthBrandingPanel
-        heading={heading}
-        subheading={subheading}
-        type={type}
-        benefits={benefits}
-      />
+      {/* Ambient Radial Lighting Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Right Authentication Form Panel */}
-      <div className="flex-1 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-12 py-12 relative overflow-y-auto">
-        {/* Subtle Ambient Backing Glow on Form Side */}
-        <div className="absolute top-10 right-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+      {/* Centered Brand Logo Header */}
+      <div className="mb-6 text-center relative z-10">
+        <Link to="/" className="inline-block hover:opacity-90 transition-opacity" aria-label="Brightloop Home">
+          <BrightloopLogo size="lg" />
+        </Link>
+      </div>
 
-        {/* Mobile Logo Header */}
-        <div className="lg:hidden mb-8 text-center">
-          <Link to="/" className="inline-block" aria-label="Brightloop Home">
-            <BrightloopLogo size="md" />
-          </Link>
-        </div>
+      {/* Centered Auth Card Container */}
+      <div className="w-full max-w-md relative z-10 animate-in fade-in-50 slide-in-from-bottom-2 duration-200">
+        {children}
+      </div>
 
-        {/* Form Container */}
-        <div className="w-full max-w-md space-y-6 relative z-10">
-          {children}
-        </div>
-
-        {/* Mobile Legal Note */}
-        <div className="mt-8 text-center text-xs text-muted-foreground lg:hidden">
-          © 2026 Brightloop. All rights reserved.
-        </div>
+      {/* Subtle Copyright Footer */}
+      <div className="mt-8 text-center text-xs text-muted-foreground relative z-10 font-mono">
+        © 2026 Brightloop. All rights reserved.
       </div>
     </div>
   );
