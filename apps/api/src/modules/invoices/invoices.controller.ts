@@ -9,6 +9,7 @@ import {
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { InvoicesService } from './invoices.service';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { RequirePermissions } from '../../common/decorators/permissions.decorator';
 import { TenantContext } from '../../common/guards/tenant.guard';
 import { PermissionKey } from '@brightloop/contracts';
@@ -23,10 +24,11 @@ export class InvoicesController {
   @ApiOperation({ summary: 'List all recurring & generated invoices' })
   async findAll(
     @CurrentTenant() tenant: TenantContext,
+    @CurrentUser() user: any,
     @Query('status') status?: string,
     @Query('search') search?: string,
   ) {
-    return this.invoicesService.findAll(tenant.id, status, search);
+    return this.invoicesService.findAll(tenant.id, tenant.role, user?.email, status, search);
   }
 
   @Get(':id')
@@ -34,9 +36,10 @@ export class InvoicesController {
   @ApiOperation({ summary: 'Get invoice details by ID' })
   async findOne(
     @CurrentTenant() tenant: TenantContext,
+    @CurrentUser() user: any,
     @Param('id') id: string,
   ) {
-    return this.invoicesService.findOne(tenant.id, id);
+    return this.invoicesService.findOne(tenant.id, id, tenant.role, user?.email);
   }
 
   @Patch(':id/confirm')
