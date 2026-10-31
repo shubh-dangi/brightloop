@@ -1,6 +1,7 @@
 import { Inject, Controller,
   Get,
   Post,
+  Patch,
   Param,
   Body, } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -43,6 +44,17 @@ export class DiscountsController {
     @Body() body: CreateDiscountInput,
   ) {
     return this.discountsService.create(tenant.id, body);
+  }
+
+  @Patch(':id')
+  @RequirePermissions(PermissionKey.DISCOUNTS_MANAGE)
+  @ApiOperation({ summary: 'Update discount rule (Admin only)' })
+  async update(
+    @CurrentTenant() tenant: TenantContext,
+    @Param('id') id: string,
+    @Body() body: any,
+  ) {
+    return this.discountsService.update(tenant.id, id, body);
   }
 
   @Post('validate')

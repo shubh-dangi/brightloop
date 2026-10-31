@@ -1,9 +1,13 @@
-import { Inject, Controller,
+import {
+  Inject,
+  Controller,
   Get,
   Post,
   Patch,
   Param,
-  Query, } from '@nestjs/common';
+  Query,
+  Header,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { InvoicesService } from './invoices.service';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
@@ -27,6 +31,37 @@ export class InvoicesController {
     @Query('search') search?: string,
   ) {
     return this.invoicesService.findAll(tenant.id, tenant.role, user?.email, status, search);
+  }
+
+  @Post('generate')
+  @RequirePermissions(PermissionKey.INVOICES_CONFIRM)
+  @ApiOperation({ summary: 'Generate recurring billing run invoices for active subscriptions' })
+  async generateInvoices(@CurrentTenant() tenant: TenantContext) {
+    return this.invoicesService.generateInvoices(tenant.id);
+  }
+
+  @Get(':id/print')
+  @RequirePermissions(PermissionKey.INVOICES_READ)
+  @Header('Content-Type', 'text/html; charset=utf-8')
+  @ApiOperation({ summary: 'Get printable HTML invoice' })
+  async printInvoice(
+    @CurrentTenant() tenant: TenantContext,
+    @CurrentUser() user: any,
+    @Param('id') id: string,
+  ) {
+    return this.invoicesService.getPrintHtml(tenant.id, id, tenant.role, user?.email);
+  }
+
+  @Get(':id/pdf')
+  @RequirePermissions(PermissionKey.INVOICES_READ)
+  @Header('Content-Type', 'text/html; charset=utf-8')
+  @ApiOperation({ summary: 'Get downloadable invoice document' })
+  async getPdf(
+    @CurrentTenant() tenant: TenantContext,
+    @CurrentUser() user: any,
+    @Param('id') id: string,
+  ) {
+    return this.invoicesService.getPrintHtml(tenant.id, id, tenant.role, user?.email);
   }
 
   @Get(':id')

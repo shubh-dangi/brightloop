@@ -95,13 +95,15 @@ export class QuotationsService {
         throw new BadRequestException(`Product with ID ${line.productId} not found`);
       }
 
-      let unitPrice = line.unitPrice || product.salesPrice;
+      const basePrice = product.salesPrice || 0;
+      let variantExtra = 0;
       if (line.variantId) {
         const variant = product.variants.find((v) => v.id === line.variantId);
         if (variant) {
-          unitPrice += variant.additionalPrice;
+          variantExtra = variant.additionalPrice;
         }
       }
+      const unitPrice = (line.unitPrice && line.unitPrice > variantExtra) ? line.unitPrice : (basePrice + variantExtra);
 
       const lineSubtotal = unitPrice * line.quantity;
       const lineTax = (lineSubtotal * (line.taxRate || 0)) / 100;
@@ -268,6 +270,60 @@ export class QuotationsService {
       });
 
       return subscription;
+    });
+  }
+
+  async getTemplates(orgId: string) {
+    return [
+      {
+        id: 'standard-enterprise',
+        name: 'Enterprise Cloud Suite',
+        description: 'Standard 12-month enterprise bundle with premium SLA and 15% volume discount',
+        validDays: 30,
+        discountPercentage: 15,
+      },
+      {
+        id: 'starter-growth',
+        name: 'Starter Growth Package',
+        description: 'Ideal package for scaling teams up to 25 seats with basic add-on',
+        validDays: 14,
+        discountPercentage: 5,
+      },
+      {
+        id: 'quarterly-flex',
+        name: 'Quarterly Flex Contract',
+        description: '90-day flexible commitment with standard licensing',
+        validDays: 15,
+        discountPercentage: 0,
+      },
+    ];
+  }
+
+  async createFromTemplate(orgId: string, userId: string, data: { templateName: string; customerId: string }) {
+    const products = await this.prisma.product.findMany({
+      where: { organizationId: orgId },
+      include: { variants: true },
+      take: 2,
+    });
+
+    if (products.length === 0) {
+      throw new BadRequestException('No products configured in organization to populate template');
+    }
+
+    const lines = products.map((prod) => ({
+      productId: prod.id,
+      variantId: prod.variants[0]?.id,
+      quantity: 1,
+      unitPrice: prod.salesPrice,
+      taxRate: 18,
+    }));
+
+    return this.create(orgId, userId, {
+      customerId: data.customerId,
+      templateName: data.templateName,
+      validDays: 30,
+      notes: `Generated automatically from template "${data.templateName}"`,
+      lines,
     });
   }
 }

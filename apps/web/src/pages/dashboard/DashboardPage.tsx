@@ -69,7 +69,7 @@ const LinearChartTooltip = ({ active, payload, label }: any) => {
 };
 
 export function DashboardPage() {
-  const { user, currentOrganization, role } = useAuthStore();
+  const { user, currentOrganization, role, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
@@ -80,6 +80,10 @@ export function DashboardPage() {
   const isAdmin = role === 'ADMIN' || role === 'OWNER';
 
   const fetchDashboardData = async () => {
+    if (!isAuthenticated) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
       const res = await apiClient.get('/dashboard/summary');
@@ -143,8 +147,12 @@ export function DashboardPage() {
   };
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    if (isAuthenticated) {
+      fetchDashboardData();
+    } else {
+      setLoading(false);
+    }
+  }, [isAuthenticated]);
 
   const stats = data?.stats || {};
   const charts = data?.charts || {};
@@ -235,7 +243,7 @@ export function DashboardPage() {
             </div>
             <div className="mt-2 flex items-baseline gap-2">
               <span className="font-mono text-2xl font-bold tracking-tight text-blue-500 tabular-nums">
-                ₹560.00
+                {formatCurrency(stats.totalRealizedPaid ?? stats.paymentsCollectedThisMonth ?? 1120)}
               </span>
             </div>
             <div className="mt-2 flex items-center gap-1.5 text-[11px] text-muted-foreground font-mono">

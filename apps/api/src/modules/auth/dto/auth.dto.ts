@@ -11,11 +11,11 @@ export class SignupDto {
   @IsEmail()
   email!: string;
 
-  @ApiProperty({ example: 'Password123!' })
+  @ApiProperty({ example: 'Admin@12345' })
   @IsString()
-  @MinLength(8)
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d|.*[^A-Za-z0-9]).{8,}$/, {
-    message: 'Password must contain uppercase, lowercase, and at least one number or symbol',
+  @MinLength(9, { message: 'Password must be more than 8 characters' })
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{9,}$/, {
+    message: 'Password must be more than 8 characters and contain uppercase, lowercase, and a special character',
   })
   password!: string;
 
@@ -49,11 +49,11 @@ export class ResetPasswordDto {
   @IsNotEmpty()
   token!: string;
 
-  @ApiProperty({ example: 'NewPassword123!' })
+  @ApiProperty({ example: 'NewAdmin@12345' })
   @IsString()
-  @MinLength(8)
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d|.*[^A-Za-z0-9]).{8,}$/, {
-    message: 'Password must contain uppercase, lowercase, and at least one number or symbol',
+  @MinLength(9, { message: 'Password must be more than 8 characters' })
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{9,}$/, {
+    message: 'Password must be more than 8 characters and contain uppercase, lowercase, and a special character',
   })
   password!: string;
 }

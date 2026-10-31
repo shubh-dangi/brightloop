@@ -30,6 +30,7 @@ import { InvoicesModule } from './modules/invoices/invoices.module';
 import { DiscountsModule } from './modules/discounts/discounts.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { ReportsModule } from './modules/reports/reports.module';
+import { HealthModule } from './modules/health/health.module';
 
 // Common Filters, Guards & Interceptors
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
@@ -78,6 +79,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
     DiscountsModule,
     PaymentsModule,
     ReportsModule,
+    HealthModule,
   ],
   providers: [
     {

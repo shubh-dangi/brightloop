@@ -33,7 +33,7 @@ export class DashboardService {
         };
       }
 
-      const [activeSubs, invoicesDue, invoicesOverdue, paymentsThisMonth, mySubs] =
+      const [activeSubs, invoicesDue, invoicesOverdue, paymentsThisMonth, mySubs, allPayments] =
         await Promise.all([
           this.prisma.subscription.count({
             where: { organizationId: orgId, customerId: customer.id, status: 'ACTIVE' },
@@ -61,9 +61,17 @@ export class DashboardService {
             where: { organizationId: orgId, customerId: customer.id, status: 'ACTIVE' },
             select: { billingFrequency: true, totalAmount: true },
           }),
+          this.prisma.payment.findMany({
+            where: {
+              organizationId: orgId,
+              customerId: customer.id,
+            },
+            select: { amount: true },
+          }),
         ]);
 
       const paymentsCollectedThisMonth = paymentsThisMonth.reduce((sum, p) => sum + p.amount, 0);
+      const totalRealizedPaid = allPayments.reduce((sum, p) => sum + p.amount, 0);
       const calculatedSpend = mySubs.reduce((sum, s) => sum + s.totalAmount, 0);
 
       return {
@@ -74,6 +82,7 @@ export class DashboardService {
           invoicesDue,
           invoicesOverdue,
           paymentsCollectedThisMonth,
+          totalRealizedPaid,
           mrr: calculatedSpend,
           totalMembers: 1,
           systemHealth: '100% Operational',

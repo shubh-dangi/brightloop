@@ -332,6 +332,7 @@ model Subscription {
 
   @@unique([organizationId, subscriptionNumber])
   @@index([organizationId, status])
+  @@index([customerId])
   @@map("subscriptions")
 }
 
@@ -374,6 +375,8 @@ model Invoice {
   totalAmount       Float         @default(0)
   paidAmount        Float         @default(0)
   outstandingAmount Float         @default(0)
+  periodStart       DateTime?
+  periodEnd         DateTime?
   status            InvoiceStatus @default(DRAFT)
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
@@ -385,8 +388,13 @@ model Invoice {
   payments     Payment[]
 
   @@unique([organizationId, invoiceNumber])
+  @@unique([subscriptionId, periodStart, periodEnd])
   @@index([organizationId, status])
   @@index([organizationId, dueDate])
+  @@index([customerId])
+  @@index([subscriptionId])
+  @@index([status])
+  @@index([dueDate])
   @@map("invoices")
 }
 
@@ -468,6 +476,7 @@ model Payment {
 
   @@unique([organizationId, paymentReference])
   @@index([organizationId, invoiceId])
+  @@index([customerId])
   @@map("payments")
 }
 
@@ -576,7 +585,7 @@ model UserPreference {
   accentColor        String   @default("indigo")
   density            String   @default("comfortable")
   language           String   @default("en")
-  timezone           String   @default("UTC")
+  timezone           String   @default("Asia/Kolkata")
   dateFormat         String   @default("YYYY-MM-DD")
   emailNotifications Boolean  @default(true)
   inAppNotifications Boolean  @default(true)
@@ -593,7 +602,7 @@ model OrganizationSetting {
   organizationId     String   @unique
   displayName        String
   supportEmail       String?
-  timezone           String   @default("UTC")
+  timezone           String   @default("Asia/Kolkata")
   dateFormat         String   @default("YYYY-MM-DD")
   allowMemberInvites Boolean  @default(true)
   enforce2FA         Boolean  @default(false)

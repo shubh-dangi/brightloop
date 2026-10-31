@@ -61,4 +61,26 @@ export class PlansService {
       },
     });
   }
+
+  async update(orgId: string, id: string, data: any) {
+    await this.findOne(orgId, id);
+    return this.prisma.plan.update({
+      where: { id },
+      data: {
+        ...(data.name && { name: data.name }),
+        ...(data.price !== undefined && { price: data.price }),
+        ...(data.billingFrequency && { billingFrequency: data.billingFrequency }),
+        ...(data.minQuantity !== undefined && { minQuantity: data.minQuantity }),
+        ...(data.startDate !== undefined && { startDate: data.startDate ? new Date(data.startDate) : null }),
+        ...(data.endDate !== undefined && { endDate: data.endDate ? new Date(data.endDate) : null }),
+        ...(data.autoCloseOnEnd !== undefined && { autoCloseOnEnd: data.autoCloseOnEnd }),
+        ...(data.allowEarlyClose !== undefined && { allowEarlyClose: data.allowEarlyClose }),
+        ...(data.allowPause !== undefined && { allowPause: data.allowPause }),
+        ...(data.allowRenewal !== undefined && { allowRenewal: data.allowRenewal }),
+      },
+      include: {
+        product: true,
+      },
+    });
+  }
 }

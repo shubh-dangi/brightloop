@@ -33,6 +33,24 @@ export class QuotationsController {
     return this.quotationsService.findAll(tenant.id, tenant.role, user?.email, search);
   }
 
+  @Get('templates')
+  @RequirePermissions(PermissionKey.QUOTATIONS_READ)
+  @ApiOperation({ summary: 'List reusable quotation templates' })
+  async getTemplates(@CurrentTenant() tenant: TenantContext) {
+    return this.quotationsService.getTemplates(tenant.id);
+  }
+
+  @Post('from-template')
+  @RequirePermissions(PermissionKey.QUOTATIONS_CREATE)
+  @ApiOperation({ summary: 'Create quotation from reusable template' })
+  async createFromTemplate(
+    @CurrentTenant() tenant: TenantContext,
+    @CurrentUser('id') userId: string,
+    @Body() body: { templateName: string; customerId: string },
+  ) {
+    return this.quotationsService.createFromTemplate(tenant.id, userId, body);
+  }
+
   @Get(':id')
   @RequirePermissions(PermissionKey.QUOTATIONS_READ)
   @ApiOperation({ summary: 'Get quotation details by ID' })

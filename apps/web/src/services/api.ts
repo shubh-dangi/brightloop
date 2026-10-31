@@ -20,6 +20,10 @@ export function setActiveOrganizationId(orgId: string | null) {
   activeOrganizationId = orgId;
 }
 
+export function getAuthToken(): string | null {
+  return activeAccessToken;
+}
+
 // Request Interceptor: Attach Auth & Tenant Headers
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
@@ -42,8 +46,14 @@ apiClient.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    // If 401 Unauthorized and not already retried
-    if (error.response?.status === 401 && !originalRequest._retry && originalRequest.url !== '/auth/login' && originalRequest.url !== '/auth/refresh') {
+    // If 401 Unauthorized, not already retried, and an auth token exists
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      Boolean(activeAccessToken) &&
+      originalRequest.url !== '/auth/login' &&
+      originalRequest.url !== '/auth/refresh'
+    ) {
       originalRequest._retry = true;
       try {
         const refreshResponse = await axios.post<ApiResponse<{ accessToken: string }>>(

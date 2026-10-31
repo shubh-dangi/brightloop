@@ -45,8 +45,9 @@ export class OrganizationsController {
   }
 
   @Post('members/invite')
+  @Roles(SystemRole.ADMIN, SystemRole.OWNER)
   @RequirePermissions(PermissionKey.MEMBERS_INVITE)
-  @ApiOperation({ summary: 'Invite a new member to the organization' })
+  @ApiOperation({ summary: 'Invite a new member to the organization (Admin only)' })
   async inviteMember(
     @CurrentTenant() tenant: TenantContext,
     @CurrentUser('id') userId: string,

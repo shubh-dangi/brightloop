@@ -378,27 +378,16 @@ async function main() {
     update: {},
   });
 
-  // Seed Clean User Credentials requested by user
-  const adminPass = await argon2.hash('admin@123', {
+  // Seed Clean User Credentials requested by user (satisfying password rules: >8 chars, upper, lower, special)
+  const standardPass = await argon2.hash('Admin@12345', {
     type: argon2.argon2id,
     memoryCost: 65536,
     timeCost: 3,
   });
-  const staffPass = await argon2.hash('staff@123', {
-    type: argon2.argon2id,
-    memoryCost: 65536,
-    timeCost: 3,
-  });
-  const ownerPass = await argon2.hash('owner@123', {
-    type: argon2.argon2id,
-    memoryCost: 65536,
-    timeCost: 3,
-  });
-  const customerPass = await argon2.hash('customer@123', {
-    type: argon2.argon2id,
-    memoryCost: 65536,
-    timeCost: 3,
-  });
+  const adminPass = standardPass;
+  const staffPass = standardPass;
+  const ownerPass = standardPass;
+  const customerPass = standardPass;
 
   await prisma.user.upsert({
     where: { email: 'admin@gmail.com' },
@@ -419,10 +408,46 @@ async function main() {
   });
 
   await prisma.user.upsert({
+    where: { email: 'admin@brightloop.com' },
+    create: {
+      name: 'Admin User',
+      email: 'admin@brightloop.com',
+      passwordHash: adminPass,
+      isEmailVerified: true,
+      memberships: {
+        create: {
+          organizationId: org.id,
+          roleId: adminRole.id,
+          status: 'ACTIVE',
+        },
+      },
+    },
+    update: { passwordHash: adminPass },
+  });
+
+  await prisma.user.upsert({
     where: { email: 'staff@gmail.com' },
     create: {
       name: 'Staff Operations User',
       email: 'staff@gmail.com',
+      passwordHash: staffPass,
+      isEmailVerified: true,
+      memberships: {
+        create: {
+          organizationId: org.id,
+          roleId: memberRole.id,
+          status: 'ACTIVE',
+        },
+      },
+    },
+    update: { passwordHash: staffPass },
+  });
+
+  await prisma.user.upsert({
+    where: { email: 'staff@brightloop.com' },
+    create: {
+      name: 'Staff Operations User',
+      email: 'staff@brightloop.com',
       passwordHash: staffPass,
       isEmailVerified: true,
       memberships: {
@@ -457,7 +482,7 @@ async function main() {
   await prisma.user.upsert({
     where: { email: 'customer1@gmail.com' },
     create: {
-      name: 'Customer 1 (John Miller - Bakery Shop)',
+      name: 'Alex Mercer',
       email: 'customer1@gmail.com',
       passwordHash: customerPass,
       isEmailVerified: true,
@@ -469,13 +494,13 @@ async function main() {
         },
       },
     },
-    update: { passwordHash: customerPass },
+    update: { name: 'Alex Mercer', passwordHash: customerPass },
   });
 
   await prisma.user.upsert({
     where: { email: 'customer2@gmail.com' },
     create: {
-      name: 'Customer 2 (Marcus Vance - Apex Corp)',
+      name: 'Marcus Vance',
       email: 'customer2@gmail.com',
       passwordHash: customerPass,
       isEmailVerified: true,
@@ -638,6 +663,25 @@ async function main() {
     update: {},
   });
 
+  const customerAlex = await prisma.customer.upsert({
+    where: { id: 'cust-alex-mercer-001' },
+    create: {
+      id: 'cust-alex-mercer-001',
+      organizationId: org.id,
+      name: 'Alex Mercer',
+      email: 'customer1@gmail.com',
+      phone: '+1 555-0177',
+      company: 'Mercer Software Enterprises',
+      address: '450 Innovation Parkway, Suite 300, San Francisco, CA',
+      notes: 'Key small business customer account.',
+      createdById: memberUser.id,
+    },
+    update: {
+      name: 'Alex Mercer',
+      email: 'customer1@gmail.com',
+    },
+  });
+
   // 9. Seed Subscriptions & Invoices
   const subAcme = await prisma.subscription.upsert({
     where: { id: 'sub-acme-001' },
@@ -755,12 +799,147 @@ async function main() {
     update: {},
   });
 
+  // Subscriptions & Invoices for Alex Mercer (Customer1)
+  const subAlex = await prisma.subscription.upsert({
+    where: { id: 'sub-alex-001' },
+    create: {
+      id: 'sub-alex-001',
+      organizationId: org.id,
+      subscriptionNumber: 'SUB-2026-002',
+      customerId: customerAlex.id,
+      planId: planMonthly.id,
+      startDate: new Date(Date.now() - 60 * 86400000),
+      billingFrequency: 'MONTHLY',
+      paymentTerms: 'Net 30',
+      subtotal: 509.09,
+      taxAmount: 50.91,
+      totalAmount: 560.0,
+      status: 'ACTIVE',
+      createdById: memberUser.id,
+      lines: {
+        create: [
+          {
+            productId: productSoftware.id,
+            quantity: 1,
+            unitPrice: 560.0,
+            taxRate: 10.0,
+            taxAmount: 50.91,
+            lineTotal: 560.0,
+          },
+        ],
+      },
+    },
+    update: {},
+  });
+
+  // Alex Mercer Invoice 1: Paid (₹560)
+  const invAlex1 = await prisma.invoice.upsert({
+    where: { id: 'inv-alex-001' },
+    create: {
+      id: 'inv-alex-001',
+      organizationId: org.id,
+      invoiceNumber: 'INV-ALEX-001',
+      subscriptionId: subAlex.id,
+      customerId: customerAlex.id,
+      invoiceDate: new Date(Date.now() - 60 * 86400000),
+      dueDate: new Date(Date.now() - 30 * 86400000),
+      subtotal: 509.09,
+      taxAmount: 50.91,
+      totalAmount: 560.0,
+      paidAmount: 560.0,
+      outstandingAmount: 0.0,
+      status: 'PAID',
+      lines: {
+        create: [
+          {
+            description: 'Monthly Growth Plan with Odoo Connector Variant',
+            quantity: 1,
+            unitPrice: 560.0,
+            taxRate: 10.0,
+            taxAmount: 50.91,
+            lineTotal: 560.0,
+          },
+        ],
+      },
+    },
+    update: {},
+  });
+
+  // Alex Mercer Payment 1 (₹560)
+  await prisma.payment.upsert({
+    where: { id: 'pay-alex-001' },
+    create: {
+      id: 'pay-alex-001',
+      organizationId: org.id,
+      paymentReference: 'PAY-ALEX-001',
+      invoiceId: invAlex1.id,
+      customerId: customerAlex.id,
+      amount: 560.0,
+      paymentMethod: 'CREDIT_CARD',
+      paymentDate: new Date(Date.now() - 30 * 86400000),
+      note: 'Settled via Corporate Card ending 4242',
+      recordedById: memberUser.id,
+    },
+    update: {},
+  });
+
+  // Alex Mercer Invoice 2: Paid (₹560)
+  const invAlex2 = await prisma.invoice.upsert({
+    where: { id: 'inv-alex-002' },
+    create: {
+      id: 'inv-alex-002',
+      organizationId: org.id,
+      invoiceNumber: 'INV-ALEX-002',
+      subscriptionId: subAlex.id,
+      customerId: customerAlex.id,
+      invoiceDate: new Date(Date.now() - 30 * 86400000),
+      dueDate: new Date(),
+      subtotal: 509.09,
+      taxAmount: 50.91,
+      totalAmount: 560.0,
+      paidAmount: 560.0,
+      outstandingAmount: 0.0,
+      status: 'PAID',
+      lines: {
+        create: [
+          {
+            description: 'Monthly Growth Plan with Odoo Connector Variant',
+            quantity: 1,
+            unitPrice: 560.0,
+            taxRate: 10.0,
+            taxAmount: 50.91,
+            lineTotal: 560.0,
+          },
+        ],
+      },
+    },
+    update: {},
+  });
+
+  // Alex Mercer Payment 2 (₹560)
+  await prisma.payment.upsert({
+    where: { id: 'pay-alex-002' },
+    create: {
+      id: 'pay-alex-002',
+      organizationId: org.id,
+      paymentReference: 'PAY-ALEX-002',
+      invoiceId: invAlex2.id,
+      customerId: customerAlex.id,
+      amount: 560.0,
+      paymentMethod: 'CREDIT_CARD',
+      paymentDate: new Date(),
+      note: 'Settled via Corporate Card ending 4242',
+      recordedById: memberUser.id,
+    },
+    update: {},
+  });
+
   console.log('✅ Brightloop database seed completed successfully!');
   console.log('==============================================');
-  console.log('Default Demo Accounts:');
-  console.log('Owner:  owner@brightloop.local  | Password123!');
-  console.log('Admin:  admin@brightloop.local  | Password123!');
-  console.log('Staff:  member@brightloop.local | Password123!');
+  console.log('Default Demo Accounts (Password: Admin@12345):');
+  console.log('Admin:    admin@brightloop.com / admin@brightloop.local / admin@gmail.com');
+  console.log('Staff:    staff@brightloop.com / member@brightloop.local / staff@gmail.com');
+  console.log('Customer: customer1@gmail.com (Alex Mercer)');
   console.log('==============================================');
 }
 

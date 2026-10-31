@@ -1,6 +1,7 @@
 import { Inject, Controller,
   Get,
   Post,
+  Patch,
   Param,
   Body, } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -43,5 +44,16 @@ export class PlansController {
     @Body() body: CreatePlanInput,
   ) {
     return this.plansService.create(tenant.id, body);
+  }
+
+  @Patch(':id')
+  @RequirePermissions(PermissionKey.PLANS_UPDATE)
+  @ApiOperation({ summary: 'Update a subscription plan (Admin only)' })
+  async update(
+    @CurrentTenant() tenant: TenantContext,
+    @Param('id') id: string,
+    @Body() body: any,
+  ) {
+    return this.plansService.update(tenant.id, id, body);
   }
 }

@@ -17,7 +17,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    const status =
+    let status =
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
@@ -30,7 +30,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let message = 'An unexpected internal server error occurred';
     let details: unknown = null;
 
-    if (typeof exceptionResponse === 'string') {
+    const isDbUnavailable =
+      (exception as any)?.name === 'PrismaClientInitializationError' ||
+      (exception as any)?.constructor?.name === 'PrismaClientInitializationError' ||
+      ((exception as any)?.message &&
+        typeof (exception as any).message === 'string' &&
+        ((exception as any).message.includes("Can't reach database server") ||
+         (exception as any).message.includes('PrismaClientInitializationError')));
+
+    if (isDbUnavailable) {
+      status = HttpStatus.SERVICE_UNAVAILABLE;
+      message = 'Database unavailable';
+      details = null;
+    } else if (typeof exceptionResponse === 'string') {
       message = exceptionResponse;
     } else if (
       typeof exceptionResponse === 'object' &&

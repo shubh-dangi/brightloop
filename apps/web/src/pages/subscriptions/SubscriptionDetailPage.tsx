@@ -282,6 +282,8 @@ export function SubscriptionDetailPage() {
                     <tr>
                       <th className="pb-2">Product Line</th>
                       <th className="pb-2 text-center">Qty</th>
+                      <th className="pb-2 text-right">Base Price</th>
+                      <th className="pb-2 text-right">Variant Extra</th>
                       <th className="pb-2 text-right">Unit Price</th>
                       <th className="pb-2 text-right">Recurring Total</th>
                     </tr>
@@ -291,7 +293,10 @@ export function SubscriptionDetailPage() {
                       const productName =
                         line.product?.name || line.productName || 'Software License';
                       const variantName = line.variant?.name ? ` (${line.variant.name})` : '';
-                      const unitPrice = line.unitPrice ?? 0;
+                      const variantExtra = line.variant?.additionalPrice ?? line.variantPremium ?? 0;
+                      const rawBase = line.product?.salesPrice ?? (line.basePrice ?? (line.unitPrice > variantExtra ? line.unitPrice - variantExtra : line.unitPrice));
+                      const basePrice = Math.max(0, rawBase);
+                      const unitPrice = line.unitPrice ?? (basePrice + variantExtra);
                       const lineAmount =
                         line.amount ?? line.lineTotal ?? unitPrice * (line.quantity || 1);
 
@@ -302,7 +307,11 @@ export function SubscriptionDetailPage() {
                             {variantName}
                           </td>
                           <td className="py-2.5 text-center font-mono">{line.quantity || 1}</td>
-                          <td className="py-2.5 text-right font-mono">{formatCurrency(unitPrice)}</td>
+                          <td className="py-2.5 text-right font-mono text-muted-foreground">{formatCurrency(basePrice)}</td>
+                          <td className="py-2.5 text-right font-mono text-purple-500">
+                            {variantExtra > 0 ? `+${formatCurrency(variantExtra)}` : '—'}
+                          </td>
+                          <td className="py-2.5 text-right font-mono font-semibold">{formatCurrency(unitPrice)}</td>
                           <td className="py-2.5 text-right font-mono font-bold">
                             {formatCurrency(lineAmount)}
                           </td>

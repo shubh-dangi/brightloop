@@ -107,7 +107,7 @@ export class UsersService {
           accentColor: 'indigo',
           density: 'comfortable',
           language: 'en',
-          timezone: 'UTC',
+          timezone: 'Asia/Kolkata',
           dateFormat: 'YYYY-MM-DD',
         },
       });

@@ -19,14 +19,24 @@ export function BrightloopLogo({ className = '', iconOnly = false, size = 'md' }
     lg: 'text-2xl',
   };
 
+  const pxSizes = {
+    sm: 28,
+    md: 36,
+    lg: 44,
+  };
+
+  const dim = pxSizes[size];
+
   return (
     <div className={`flex items-center gap-2.5 font-sans select-none ${className}`}>
       {/* Precision Geometric Dual-Loop Emblem */}
       <div
-        className={`relative flex ${iconSizes[size]} items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform hover:scale-105`}
+        style={{ width: `${dim}px`, height: `${dim}px`, minWidth: `${dim}px`, minHeight: `${dim}px` }}
+        className={`relative flex ${iconSizes[size]} shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform hover:scale-105`}
       >
         <svg
-          className="h-[60%] w-[60%]"
+          style={{ width: `${Math.round(dim * 0.6)}px`, height: `${Math.round(dim * 0.6)}px` }}
+          className="h-[60%] w-[60%] shrink-0"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"

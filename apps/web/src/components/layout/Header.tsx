@@ -157,18 +157,16 @@ export function Header() {
               <User className="mr-2 h-3.5 w-3.5" />
               <span>My Profile</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/settings/appearance')} className="cursor-pointer">
-              <Paintbrush className="mr-2 h-3.5 w-3.5" />
-              <span>Appearance & Theme</span>
-            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate('/preferences')} className="cursor-pointer">
               <Sliders className="mr-2 h-3.5 w-3.5" />
-              <span>User Preferences</span>
+              <span>Preferences</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/settings/general')} className="cursor-pointer">
-              <Sliders className="mr-2 h-3.5 w-3.5" />
-              <span>Workspace Settings</span>
-            </DropdownMenuItem>
+            {role !== 'CUSTOMER' && (
+              <DropdownMenuItem onClick={() => navigate('/settings/general')} className="cursor-pointer">
+                <Building2 className="mr-2 h-3.5 w-3.5" />
+                <span>Workspace Settings</span>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {

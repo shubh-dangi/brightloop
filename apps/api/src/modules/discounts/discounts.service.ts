@@ -95,4 +95,22 @@ export class DiscountsService {
       finalAmount: Math.max(0, purchaseAmount - discountAmount),
     };
   }
+
+  async update(orgId: string, id: string, data: any) {
+    await this.findOne(orgId, id);
+    return this.prisma.discount.update({
+      where: { id },
+      data: {
+        ...(data.name && { name: data.name }),
+        ...(data.type && { type: data.type }),
+        ...(data.value !== undefined && { value: data.value }),
+        ...(data.minPurchase !== undefined && { minPurchase: data.minPurchase }),
+        ...(data.minQuantity !== undefined && { minQuantity: data.minQuantity }),
+        ...(data.startDate !== undefined && { startDate: data.startDate ? new Date(data.startDate) : null }),
+        ...(data.endDate !== undefined && { endDate: data.endDate ? new Date(data.endDate) : null }),
+        ...(data.maxUsage !== undefined && { maxUsage: data.maxUsage }),
+        ...(data.scope && { scope: data.scope }),
+      },
+    });
+  }
 }

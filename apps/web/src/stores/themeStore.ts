@@ -74,6 +74,7 @@ export const useThemeStore = create<ThemeState>((set, get) => {
     setAccentColor: (color: string) => {
       if (typeof window !== 'undefined') {
         localStorage.setItem('brightloop-accent', color);
+        document.documentElement.setAttribute('data-accent', color);
       }
       set({ accentColor: color });
     },
@@ -81,6 +82,11 @@ export const useThemeStore = create<ThemeState>((set, get) => {
     setDensity: (density: Density) => {
       if (typeof window !== 'undefined') {
         localStorage.setItem('brightloop-density', density);
+        if (density === 'compact') {
+          document.documentElement.classList.add('density-compact');
+        } else {
+          document.documentElement.classList.remove('density-compact');
+        }
       }
       set({ density });
     },

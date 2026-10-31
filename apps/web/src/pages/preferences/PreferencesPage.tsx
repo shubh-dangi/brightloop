@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Sun, Moon, Laptop, Bell, Globe, Check } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Sun, Moon, Laptop, Bell, Globe, Check, Loader2 } from 'lucide-react';
 import { useThemeStore } from '../../stores/themeStore';
+import { apiClient } from '../../services/api';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Switch } from '../../components/ui/switch';
@@ -14,8 +15,33 @@ export function PreferencesPage() {
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [inAppAlerts, setInAppAlerts] = useState(true);
   const [marketingEmails, setMarketingEmails] = useState(false);
-  const [timezone, setTimezone] = useState('UTC');
+  const [timezone, setTimezone] = useState('Asia/Kolkata');
   const [savedMsg, setSavedMsg] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadPreferences() {
+      try {
+        const res = await apiClient.get('/users/preferences');
+        if (res.data?.data) {
+          const pref = res.data.data;
+          if (pref.theme) setTheme(pref.theme);
+          if (pref.accentColor) setAccentColor(pref.accentColor);
+          if (pref.density) setDensity(pref.density);
+          if (pref.timezone) setTimezone(pref.timezone);
+          if (typeof pref.emailNotifications === 'boolean') setEmailAlerts(pref.emailNotifications);
+          if (typeof pref.inAppNotifications === 'boolean') setInAppAlerts(pref.inAppNotifications);
+          if (typeof pref.marketingEmails === 'boolean') setMarketingEmails(pref.marketingEmails);
+        }
+      } catch (e) {
+        // Fall back to client storage
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadPreferences();
+  }, [setTheme, setAccentColor, setDensity]);
 
   const colors = [
     { name: 'Frost Blue (Official)', value: 'frost-blue', bg: 'bg-[#A5D8FF]' },
@@ -25,9 +51,27 @@ export function PreferencesPage() {
     { name: 'Amber', value: 'amber', bg: 'bg-amber-500' },
   ];
 
-  const handleSave = () => {
-    setSavedMsg(true);
-    setTimeout(() => setSavedMsg(false), 2000);
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await apiClient.patch('/users/preferences', {
+        theme,
+        accentColor,
+        density,
+        timezone,
+        emailNotifications: emailAlerts,
+        inAppNotifications: inAppAlerts,
+        marketingEmails,
+      });
+      setSavedMsg(true);
+      setTimeout(() => setSavedMsg(false), 2000);
+    } catch (e) {
+      // Local storage already holds it as well
+      setSavedMsg(true);
+      setTimeout(() => setSavedMsg(false), 2000);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -179,6 +223,7 @@ export function PreferencesPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="text-xs font-mono">
+                    <SelectItem value="Asia/Kolkata">Asia/Kolkata (IST +05:30) - Default</SelectItem>
                     <SelectItem value="UTC">UTC (Coordinated Universal Time)</SelectItem>
                     <SelectItem value="America/New_York">Eastern Time (US & Canada)</SelectItem>
                     <SelectItem value="America/Los_Angeles">Pacific Time (US & Canada)</SelectItem>

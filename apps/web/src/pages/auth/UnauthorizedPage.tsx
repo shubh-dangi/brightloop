@@ -21,15 +21,10 @@ export function UnauthorizedPage() {
             Your user account lacks the required RBAC policy credentials to access this workspace resource.
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col sm:flex-row gap-2 justify-center pt-2">
-          <Button asChild variant="outline" size="sm" className="gap-1.5 h-8 text-xs border-border/80">
-            <Link to="/dashboard">
-              <Home className="h-3.5 w-3.5" /> Dashboard
-            </Link>
-          </Button>
+        <CardContent className="flex justify-center pt-2">
           <Button asChild size="sm" className="gap-1.5 h-8 text-xs">
-            <Link to="/profile">
-              <ArrowLeft className="h-3.5 w-3.5" /> View Profile
+            <Link to="/dashboard">
+              <Home className="h-3.5 w-3.5" /> Back to Dashboard
             </Link>
           </Button>
         </CardContent>

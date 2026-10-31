@@ -68,53 +68,46 @@ export function LoginPage() {
         description="Welcome back! Enter your details to access your workspace."
         footer={
           <div className="space-y-4">
-            {/* Quick Demo Credentials for Fast Evaluation */}
-            <div className="pt-3 border-t border-border/60 space-y-2">
-              <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                <span className="font-semibold uppercase tracking-wider flex items-center gap-1">
-                  <KeyRound className="h-3 w-3" /> Quick Demo Fill
-                </span>
-                <span className="font-mono">Dev Accounts</span>
+            {/* Quick Demo Credentials for Fast Evaluation (Dev Mode Only) */}
+            {import.meta.env.DEV && (
+              <div className="pt-3 border-t border-border/60 space-y-2">
+                <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                  <span className="font-semibold uppercase tracking-wider flex items-center gap-1">
+                    <KeyRound className="h-3 w-3" /> Quick Demo Fill
+                  </span>
+                  <span className="font-mono">Dev Accounts</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fillDemo('admin@brightloop.com', 'Admin@12345')}
+                    className="text-xs font-mono h-8 cursor-pointer px-1"
+                  >
+                    Admin
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fillDemo('staff@brightloop.com', 'Admin@12345')}
+                    className="text-xs font-mono h-8 cursor-pointer px-1"
+                  >
+                    Staff
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fillDemo('customer1@gmail.com', 'Admin@12345')}
+                    className="text-xs font-mono h-8 cursor-pointer px-1"
+                  >
+                    Customer
+                  </Button>
+                </div>
               </div>
-              <div className="grid grid-cols-4 gap-1.5">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => fillDemo('admin@gmail.com', 'admin@123')}
-                  className="text-xs font-mono h-8 cursor-pointer px-1"
-                >
-                  Admin
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => fillDemo('staff@gmail.com', 'staff@123')}
-                  className="text-xs font-mono h-8 cursor-pointer px-1"
-                >
-                  Staff
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => fillDemo('customer1@gmail.com', 'customer@123')}
-                  className="text-xs font-mono h-8 cursor-pointer px-1"
-                >
-                  Customer
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => fillDemo('owner@gmail.com', 'owner@123')}
-                  className="text-xs font-mono h-8 cursor-pointer px-1"
-                >
-                  Owner
-                </Button>
-              </div>
-            </div>
+            )}
 
             {/* Signup Navigation Link */}
             <div className="text-center text-xs text-muted-foreground pt-1">

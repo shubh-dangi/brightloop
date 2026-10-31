@@ -17,9 +17,12 @@
     "typecheck": "pnpm --filter=@brightloop/web typecheck && pnpm --filter=@brightloop/api typecheck",
     "test": "pnpm --filter=@brightloop/web test && pnpm --filter=@brightloop/api test",
     "test:e2e": "pnpm --filter=@brightloop/api test:e2e",
+    "db:up": "docker compose up -d",
     "db:generate": "pnpm --filter=@brightloop/api db:generate",
     "db:migrate": "pnpm --filter=@brightloop/api db:migrate",
     "db:seed": "pnpm --filter=@brightloop/api db:seed",
+    "db:reset": "pnpm --filter=@brightloop/api db:reset",
+    "setup": "pnpm db:up && pnpm db:migrate && pnpm db:seed",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "clean": "rimraf node_modules"

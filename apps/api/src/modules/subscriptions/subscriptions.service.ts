@@ -106,11 +106,13 @@ export class SubscriptionsService {
         throw new BadRequestException(`Product ${line.productId} not found`);
       }
 
-      let unitPrice = line.unitPrice || product.salesPrice;
+      const basePrice = product.salesPrice || 0;
+      let variantExtra = 0;
       if (line.variantId) {
         const variant = product.variants.find((v) => v.id === line.variantId);
-        if (variant) unitPrice += variant.additionalPrice;
+        if (variant) variantExtra = variant.additionalPrice;
       }
+      const unitPrice = (line.unitPrice && line.unitPrice > variantExtra) ? line.unitPrice : (basePrice + variantExtra);
 
       const lineSubtotal = unitPrice * line.quantity;
       const lineTax = (lineSubtotal * (line.taxRate || 0)) / 100;

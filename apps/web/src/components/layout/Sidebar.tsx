@@ -156,9 +156,13 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
             onClick={() => isMobile && setMobileMenuOpen(false)}
           >
             {/* High-visibility Vibrant Gradient Logo */}
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white shadow-md shadow-blue-500/25 ring-1 ring-white/20 transition-transform group-hover:scale-105">
+            <div
+              style={{ width: '36px', height: '36px', minWidth: '36px' }}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white shadow-md shadow-blue-500/25 ring-1 ring-white/20 transition-transform group-hover:scale-105"
+            >
               <svg
-                className="h-5 w-5"
+                style={{ width: '20px', height: '20px' }}
+                className="h-5 w-5 shrink-0"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
