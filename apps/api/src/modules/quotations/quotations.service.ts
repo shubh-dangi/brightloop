@@ -168,8 +168,8 @@ export class QuotationsService {
       throw new BadRequestException('This quotation has already been converted into an active subscription');
     }
 
-    if (quote.status === 'CANCELLED' || quote.status === 'EXPIRED') {
-      throw new BadRequestException('Cannot convert a cancelled or expired quotation');
+    if (quote.status === 'CONFIRMED' || quote.status === 'CANCELLED' || quote.status === 'EXPIRED') {
+      throw new BadRequestException('Quotation has already been confirmed, cancelled, or expired');
     }
 
     // Verify plan exists
