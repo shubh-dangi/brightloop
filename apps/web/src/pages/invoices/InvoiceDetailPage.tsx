@@ -143,56 +143,58 @@ export function InvoiceDetailPage() {
     new Date(invoice.dueDate) < new Date();
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
-      <PageHeader
-        title={`Invoice ${invoice.invoiceNumber}`}
-        description={`Commercial billing statement issued to ${invoice.customer?.name}.`}
-        breadcrumbs={[
-          { label: 'Workspace', href: '/dashboard' },
-          { label: 'Invoices', href: '/invoices' },
-          { label: invoice.invoiceNumber },
-        ]}
-        actions={
-          <div className="flex items-center gap-2">
-            <Button asChild variant="outline" size="sm">
-              <Link to="/invoices">
-                <ArrowLeft className="h-4 w-4 mr-1.5" /> Back
-              </Link>
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => window.print()} className="gap-1.5">
-              <Printer className="h-4 w-4" /> Print
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleSend} className="gap-1.5">
-              <Send className="h-4 w-4" /> Send Email
-            </Button>
-            {invoice.status === 'DRAFT' && (
-              <Button size="sm" onClick={handleConfirm} disabled={actionLoading} className="gap-1.5">
-                <CheckCircle2 className="h-4 w-4" /> Confirm
+    <div className="space-y-6 max-w-4xl mx-auto print:max-w-none print:p-0">
+      <div className="print:hidden">
+        <PageHeader
+          title={`Invoice ${invoice.invoiceNumber}`}
+          description={`Commercial billing statement issued to ${invoice.customer?.name}.`}
+          breadcrumbs={[
+            { label: 'Workspace', href: '/dashboard' },
+            { label: 'Invoices', href: '/invoices' },
+            { label: invoice.invoiceNumber },
+          ]}
+          actions={
+            <div className="flex items-center gap-2">
+              <Button asChild variant="outline" size="sm">
+                <Link to="/invoices">
+                  <ArrowLeft className="h-4 w-4 mr-1.5" /> Back
+                </Link>
               </Button>
-            )}
-            {invoice.status !== 'PAID' && invoice.status !== 'CANCELLED' && (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleCancel}
-                  disabled={actionLoading}
-                  className="gap-1.5 text-destructive"
-                >
-                  <XCircle className="h-4 w-4" /> Cancel
+              <Button variant="outline" size="sm" onClick={() => window.print()} className="gap-1.5">
+                <Printer className="h-4 w-4" /> Print
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleSend} className="gap-1.5">
+                <Send className="h-4 w-4" /> Send Email
+              </Button>
+              {invoice.status === 'DRAFT' && (
+                <Button size="sm" onClick={handleConfirm} disabled={actionLoading} className="gap-1.5">
+                  <CheckCircle2 className="h-4 w-4" /> Confirm
                 </Button>
-                <Button
-                  size="sm"
-                  onClick={() => setPaymentModalOpen(true)}
-                  className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
-                >
-                  <Banknote className="h-4 w-4" /> Record Payment
-                </Button>
-              </>
-            )}
-          </div>
-        }
-      />
+              )}
+              {invoice.status !== 'PAID' && invoice.status !== 'CANCELLED' && (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCancel}
+                    disabled={actionLoading}
+                    className="gap-1.5 text-destructive"
+                  >
+                    <XCircle className="h-4 w-4" /> Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => setPaymentModalOpen(true)}
+                    className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
+                  >
+                    <Banknote className="h-4 w-4" /> Record Payment
+                  </Button>
+                </>
+              )}
+            </div>
+          }
+        />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Recipient Meta */}
@@ -257,8 +259,8 @@ export function InvoiceDetailPage() {
                       <tr key={line.id}>
                         <td className="py-2.5 font-semibold text-foreground">{line.description}</td>
                         <td className="py-2.5 text-center font-mono">{line.quantity}</td>
-                        <td className="py-2.5 text-right font-mono">${line.unitPrice?.toFixed(2)}</td>
-                        <td className="py-2.5 text-right font-mono font-bold">${line.lineTotal?.toFixed(2)}</td>
+                        <td className="py-2.5 text-right font-mono">₹{line.unitPrice?.toFixed(2)}</td>
+                        <td className="py-2.5 text-right font-mono font-bold">₹{line.lineTotal?.toFixed(2)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -269,23 +271,23 @@ export function InvoiceDetailPage() {
               <div className="pt-3 border-t border-border flex flex-col items-end space-y-1 font-mono text-xs">
                 <div className="flex justify-between w-60 text-muted-foreground">
                   <span>Subtotal:</span>
-                  <span>${invoice.subtotal?.toFixed(2)}</span>
+                  <span>₹{invoice.subtotal?.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between w-60 text-muted-foreground">
                   <span>Taxes (Automatic):</span>
-                  <span>${invoice.taxAmount?.toFixed(2)}</span>
+                  <span>₹{invoice.taxAmount?.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between w-60 pt-1 font-bold text-foreground">
                   <span>Total Invoiced:</span>
-                  <span>${invoice.totalAmount?.toFixed(2)}</span>
+                  <span>₹{invoice.totalAmount?.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between w-60 text-emerald-500 font-semibold">
                   <span>Paid to Date:</span>
-                  <span>-${invoice.paidAmount?.toFixed(2)}</span>
+                  <span>-₹{invoice.paidAmount?.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between w-60 pt-2 border-t border-border font-bold text-sm text-foreground">
                   <span>Outstanding Balance:</span>
-                  <span className="text-amber-500 text-base">${invoice.outstandingAmount?.toFixed(2)}</span>
+                  <span className="text-amber-500 text-base">₹{invoice.outstandingAmount?.toFixed(2)}</span>
                 </div>
               </div>
             </CardContent>

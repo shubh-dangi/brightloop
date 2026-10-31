@@ -96,7 +96,7 @@ export function QuotationDetailPage() {
       setPlans([
         {
           id: 'plan-1',
-          name: 'Monthly Growth Plan ($120/mo)',
+          name: 'Monthly Growth Plan (₹120/mo)',
           price: 120,
           billingFrequency: 'MONTHLY' as any,
           organizationId: '',
@@ -276,8 +276,8 @@ export function QuotationDetailPage() {
                         )}
                       </td>
                       <td className="py-2.5 text-center font-mono">{line.quantity}</td>
-                      <td className="py-2.5 text-right font-mono">${line.unitPrice?.toFixed(2)}</td>
-                      <td className="py-2.5 text-right font-mono font-bold">${line.lineTotal?.toFixed(2)}</td>
+                      <td className="py-2.5 text-right font-mono">₹{line.unitPrice?.toFixed(2)}</td>
+                      <td className="py-2.5 text-right font-mono font-bold">₹{line.lineTotal?.toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -288,15 +288,15 @@ export function QuotationDetailPage() {
             <div className="pt-3 border-t border-border flex flex-col items-end space-y-1 font-mono text-xs">
               <div className="flex justify-between w-56 text-muted-foreground">
                 <span>Subtotal:</span>
-                <span>${quotation.subtotal?.toFixed(2)}</span>
+                <span>₹{quotation.subtotal?.toFixed(2)}</span>
               </div>
               <div className="flex justify-between w-56 text-muted-foreground">
                 <span>Tax Amount:</span>
-                <span>${quotation.taxAmount?.toFixed(2)}</span>
+                <span>₹{quotation.taxAmount?.toFixed(2)}</span>
               </div>
               <div className="flex justify-between w-56 pt-2 border-t border-border font-bold text-sm text-foreground">
                 <span>Grand Total:</span>
-                <span className="text-primary text-base">${quotation.totalAmount?.toFixed(2)}</span>
+                <span className="text-primary text-base">₹{quotation.totalAmount?.toFixed(2)}</span>
               </div>
             </div>
           </CardContent>
@@ -324,7 +324,7 @@ export function QuotationDetailPage() {
               <SelectContent>
                 {plans.map((pl) => (
                   <SelectItem key={pl.id} value={pl.id}>
-                    {pl.name} (${pl.price}/{pl.billingFrequency.toLowerCase()})
+                    {pl.name} (₹{pl.price}/{pl.billingFrequency.toLowerCase()})
                   </SelectItem>
                 ))}
               </SelectContent>

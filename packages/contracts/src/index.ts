@@ -43,6 +43,7 @@ export enum SystemRole {
   ADMIN = 'ADMIN',
   MEMBER = 'MEMBER',
   VIEWER = 'VIEWER',
+  CUSTOMER = 'CUSTOMER',
 }
 
 export enum PermissionKey {

@@ -15,6 +15,7 @@ import { ResetPasswordPage } from '../pages/auth/ResetPasswordPage';
 import { EmailVerificationPage } from '../pages/auth/EmailVerificationPage';
 import { AcceptInvitePage } from '../pages/auth/AcceptInvitePage';
 import { UnauthorizedPage } from '../pages/auth/UnauthorizedPage';
+import { ForbiddenPage } from '../pages/system/ForbiddenPage';
 
 // Core Operations & Workspace Pages
 import { DashboardPage } from '../pages/dashboard/DashboardPage';
@@ -71,6 +72,7 @@ export function AppRoutes() {
       <Route path="/verify-email" element={<EmailVerificationPage />} />
       <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />
+      <Route path="/403" element={<ForbiddenPage />} />
 
       {/* System Standalone Pages */}
       <Route path="/maintenance" element={<MaintenancePage />} />

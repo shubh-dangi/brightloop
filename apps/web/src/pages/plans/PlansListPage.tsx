@@ -157,7 +157,7 @@ export function PlansListPage() {
                     {plan.billingFrequency}
                   </Badge>
                   <span className="font-mono font-bold text-lg text-foreground">
-                    ${plan.price.toFixed(2)}
+                    ₹{plan.price.toFixed(2)}
                     <span className="text-xs text-muted-foreground font-normal">
                       /{plan.billingFrequency.toLowerCase()}
                     </span>

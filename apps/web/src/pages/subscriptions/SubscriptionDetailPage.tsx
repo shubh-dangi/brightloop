@@ -265,8 +265,8 @@ export function SubscriptionDetailPage() {
                           {line.productName || 'Software License'}
                         </td>
                         <td className="py-2.5 text-center font-mono">{line.quantity}</td>
-                        <td className="py-2.5 text-right font-mono">${line.unitPrice?.toFixed(2)}</td>
-                        <td className="py-2.5 text-right font-mono font-bold">${line.lineTotal?.toFixed(2)}</td>
+                        <td className="py-2.5 text-right font-mono">₹{line.unitPrice?.toFixed(2)}</td>
+                        <td className="py-2.5 text-right font-mono font-bold">₹{line.lineTotal?.toFixed(2)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -275,7 +275,7 @@ export function SubscriptionDetailPage() {
 
               <div className="pt-2 border-t border-border flex justify-between font-mono text-xs font-bold">
                 <span className="text-foreground">Total Recurring Rate:</span>
-                <span className="text-primary text-sm">${subscription.totalAmount?.toFixed(2)}</span>
+                <span className="text-primary text-sm">₹{subscription.totalAmount?.toFixed(2)}</span>
               </div>
             </CardContent>
           </Card>
@@ -308,7 +308,7 @@ export function SubscriptionDetailPage() {
                         </span>
                       </div>
                       <div className="text-right">
-                        <span className="font-mono font-bold text-foreground">${inv.totalAmount?.toFixed(2)}</span>
+                        <span className="font-mono font-bold text-foreground">₹{inv.totalAmount?.toFixed(2)}</span>
                         <Badge
                           variant={inv.status === 'PAID' ? 'secondary' : 'default'}
                           className="ml-2 text-[10px] font-mono"

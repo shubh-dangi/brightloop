@@ -21,6 +21,7 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
+  UserCircle,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useThemeStore } from '../../stores/themeStore';
@@ -43,12 +44,13 @@ interface NavGroup {
 
 export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
   const { sidebarCollapsed, toggleSidebar, setMobileMenuOpen } = useThemeStore();
-  const { currentOrganization, user, role } = useAuthStore();
+  const { currentOrganization, user, role, setRole } = useAuthStore();
   const location = useLocation();
 
+  const isCustomer = role === 'CUSTOMER';
   const isAdmin = role === 'ADMIN' || role === 'OWNER';
 
-  const navGroups: NavGroup[] = [
+  const staffNavGroups: NavGroup[] = [
     {
       label: 'Core Workspace',
       items: [
@@ -107,6 +109,46 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
     },
   ];
 
+  const customerNavGroups: NavGroup[] = [
+    {
+      label: 'Customer Portal',
+      items: [
+        { title: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+        { title: 'Notifications', href: '/notifications', icon: Bell },
+      ],
+    },
+    {
+      label: 'My Subscriptions',
+      items: [
+        { title: 'Subscriptions', href: '/subscriptions', icon: CreditCard },
+        { title: 'Quotations', href: '/quotations', icon: FileText },
+      ],
+    },
+    {
+      label: 'Billing & Invoices',
+      items: [
+        { title: 'My Invoices', href: '/invoices', icon: Receipt },
+        { title: 'Payment History', href: '/payments', icon: Banknote },
+      ],
+    },
+    {
+      label: 'Catalog & Plans',
+      items: [
+        { title: 'Browse Products', href: '/products', icon: Package },
+        { title: 'Plans Available', href: '/plans', icon: Layers },
+      ],
+    },
+    {
+      label: 'Account',
+      items: [
+        { title: 'My Profile', href: '/profile', icon: UserCircle },
+        { title: 'Appearance', href: '/settings/appearance', icon: Paintbrush },
+        { title: 'Preferences', href: '/preferences', icon: Sliders },
+      ],
+    },
+  ];
+
+  const navGroups = isCustomer ? customerNavGroups : staffNavGroups;
   const collapsed = !isMobile && sidebarCollapsed;
 
   return (
@@ -135,7 +177,7 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
                   Brightloop
                 </span>
                 <span className="text-[11px] text-muted-foreground truncate pt-0.5">
-                  {currentOrganization?.name || 'Workspace'}
+                  {isCustomer ? 'Customer Portal' : currentOrganization?.name || 'Workspace'}
                 </span>
               </div>
             )}
@@ -230,6 +272,57 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
           ))}
         </div>
 
+        {/* Role Switcher for Testing (Admin / Staff / Customer) */}
+        {!collapsed && (
+          <div className="px-3 py-2 border-t border-border/60 bg-muted/20">
+            <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/80 mb-1.5 font-mono flex items-center justify-between">
+              <span>View As</span>
+              <span className="text-[9px] text-primary font-bold">RBAC</span>
+            </div>
+            <div className="grid grid-cols-3 gap-1">
+              <button
+                type="button"
+                onClick={() => setRole('ADMIN')}
+                className={cn(
+                  'px-1.5 py-1 text-[10px] font-medium rounded transition-colors text-center cursor-pointer',
+                  role === 'ADMIN' || role === 'OWNER'
+                    ? 'bg-primary text-primary-foreground font-bold shadow-xs'
+                    : 'bg-background hover:bg-muted text-muted-foreground'
+                )}
+                title="Full Admin privileges"
+              >
+                Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole('MEMBER')}
+                className={cn(
+                  'px-1.5 py-1 text-[10px] font-medium rounded transition-colors text-center cursor-pointer',
+                  role === 'MEMBER'
+                    ? 'bg-primary text-primary-foreground font-bold shadow-xs'
+                    : 'bg-background hover:bg-muted text-muted-foreground'
+                )}
+                title="Internal Staff (Cost prices hidden)"
+              >
+                Staff
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole('CUSTOMER')}
+                className={cn(
+                  'px-1.5 py-1 text-[10px] font-medium rounded transition-colors text-center cursor-pointer',
+                  role === 'CUSTOMER'
+                    ? 'bg-primary text-primary-foreground font-bold shadow-xs'
+                    : 'bg-background hover:bg-muted text-muted-foreground'
+                )}
+                title="Customer Portal Self-Service"
+              >
+                Customer
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Bottom User & Role Indicator */}
         <div className="border-t border-border/80 p-2.5 bg-background/30">
           <Link
@@ -245,7 +338,7 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
             {!collapsed && (
               <div className="flex flex-col truncate flex-1 leading-none">
                 <span className="font-semibold text-foreground truncate text-xs">
-                  {user?.name || 'Staff User'}
+                  {user?.name || (isCustomer ? 'Customer User' : 'Staff User')}
                 </span>
                 <span className="text-[10px] text-muted-foreground truncate pt-0.5 font-mono">
                   {role || 'MEMBER'}

@@ -75,7 +75,7 @@ export class DiscountsService {
     }
 
     if (discount.minPurchase > 0 && purchaseAmount < discount.minPurchase) {
-      throw new BadRequestException(`Minimum purchase of $${discount.minPurchase} required to apply this coupon`);
+      throw new BadRequestException(`Minimum purchase of ₹${discount.minPurchase} required to apply this coupon`);
     }
 
     if (discount.minQuantity > 0 && quantity < discount.minQuantity) {

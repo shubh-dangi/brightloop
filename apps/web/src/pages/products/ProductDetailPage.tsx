@@ -104,14 +104,14 @@ export function ProductDetailPage() {
             <div>
               <span className="text-muted-foreground block text-[11px] font-mono uppercase">Base Sales Price</span>
               <span className="font-mono font-bold text-lg text-foreground pt-0.5 block">
-                ${product.salesPrice?.toFixed(2)}
+                ₹{product.salesPrice?.toFixed(2)}
               </span>
             </div>
             {!isStaff && product.costPrice !== null && (
               <div className="p-2.5 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-500">
                 <span className="block text-[10px] uppercase font-mono font-semibold">Cost Price (Admin Only)</span>
                 <span className="font-mono font-bold text-sm text-amber-400">
-                  ${product.costPrice?.toFixed(2)}
+                  ₹{product.costPrice?.toFixed(2)}
                 </span>
               </div>
             )}
@@ -148,7 +148,7 @@ export function ProductDetailPage() {
                     >
                       <span className="font-semibold text-foreground">{v.name}</span>
                       <span className="font-mono font-bold text-primary">
-                        {v.additionalPrice > 0 ? `+$${v.additionalPrice.toFixed(2)}` : 'Standard Tier (+0.00)'}
+                        {v.additionalPrice > 0 ? `+₹${v.additionalPrice.toFixed(2)}` : 'Standard Tier (+0.00)'}
                       </span>
                     </div>
                   ))}
@@ -184,7 +184,7 @@ export function ProductDetailPage() {
                         </Badge>
                       </div>
                       <span className="font-mono font-bold text-foreground">
-                        ${pl.price?.toFixed(2)}
+                        ₹{pl.price?.toFixed(2)}
                       </span>
                     </div>
                   ))}

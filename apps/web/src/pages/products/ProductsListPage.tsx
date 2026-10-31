@@ -180,7 +180,7 @@ export function ProductsListPage() {
                         <div className="flex flex-wrap gap-1">
                           {p.variants.map((v) => (
                             <Badge key={v.id} variant="secondary" className="text-[10px]">
-                              {v.name} {v.additionalPrice > 0 ? `(+$${v.additionalPrice})` : ''}
+                              {v.name} {v.additionalPrice > 0 ? `(+₹${v.additionalPrice})` : ''}
                             </Badge>
                           ))}
                         </div>
@@ -189,11 +189,11 @@ export function ProductsListPage() {
                       )}
                     </td>
                     <td className="px-4 py-3.5 text-right font-mono font-bold text-sm text-foreground">
-                      ${p.salesPrice.toFixed(2)}
+                      ₹{p.salesPrice.toFixed(2)}
                     </td>
                     {!isStaff && (
                       <td className="px-4 py-3.5 text-right font-mono text-xs text-amber-400">
-                        {p.costPrice ? `$${p.costPrice.toFixed(2)}` : '—'}
+                        {p.costPrice ? `₹${p.costPrice.toFixed(2)}` : '—'}
                       </td>
                     )}
                     <td className="px-4 py-3.5 text-right">

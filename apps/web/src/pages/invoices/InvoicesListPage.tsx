@@ -237,10 +237,10 @@ export function InvoicesListPage() {
                         </Badge>
                       </td>
                       <td className="px-4 py-3.5 text-right font-mono font-bold text-sm text-foreground">
-                        ${inv.totalAmount.toFixed(2)}
+                        ₹{inv.totalAmount.toFixed(2)}
                       </td>
                       <td className="px-4 py-3.5 text-right font-mono font-bold text-sm text-amber-500">
-                        ${inv.outstandingAmount.toFixed(2)}
+                        ₹{inv.outstandingAmount.toFixed(2)}
                       </td>
                       <td className="px-4 py-3.5 text-right">
                         <span className="inline-flex items-center gap-1 text-primary text-xs font-medium group-hover:translate-x-0.5 transition-transform">

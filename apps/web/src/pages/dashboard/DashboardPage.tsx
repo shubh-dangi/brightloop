@@ -53,7 +53,7 @@ const LinearChartTooltip = ({ active, payload, label }: any) => {
               {entry.name}:
             </span>
             <span className="font-mono font-medium text-foreground tabular-nums">
-              ${entry.value}
+              ₹{entry.value}
             </span>
           </div>
         ))}
@@ -250,11 +250,11 @@ export function DashboardPage() {
           </div>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="font-mono text-2xl font-bold tracking-tight text-emerald-500 tabular-nums">
-              ${stats.paymentsCollectedThisMonth?.toFixed(2) || '0.00'}
+              ₹{stats.paymentsCollectedThisMonth?.toFixed(2) || '0.00'}
             </span>
           </div>
           <div className="mt-2 flex items-center gap-1.5 text-[11px] text-muted-foreground font-mono">
-            <span>MRR Rate: ${stats.mrr?.toFixed(2) || '0.00'}/mo</span>
+            <span>MRR Rate: ₹{stats.mrr?.toFixed(2) || '0.00'}/mo</span>
           </div>
         </Card>
       </div>

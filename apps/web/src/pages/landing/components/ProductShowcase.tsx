@@ -127,8 +127,8 @@ export function ProductShowcase() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="rounded-xl border border-border/80 bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground font-medium">Annual Run Rate</span>
-                  <div className="text-xl sm:text-2xl font-bold font-mono text-foreground">$579,000</div>
-                  <div className="text-[11px] text-emerald-600 font-medium">+$42,100 this quarter</div>
+                  <div className="text-xl sm:text-2xl font-bold font-mono text-foreground">₹579,000</div>
+                  <div className="text-[11px] text-emerald-600 font-medium">+₹42,100 this quarter</div>
                 </div>
                 <div className="rounded-xl border border-border/80 bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground font-medium">Active Subscriptions</span>
@@ -137,12 +137,12 @@ export function ProductShowcase() {
                 </div>
                 <div className="rounded-xl border border-border/80 bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground font-medium">Collected Cash (MTD)</span>
-                  <div className="text-xl sm:text-2xl font-bold font-mono text-foreground">$41,830</div>
+                  <div className="text-xl sm:text-2xl font-bold font-mono text-foreground">₹41,830</div>
                   <div className="text-[11px] text-muted-foreground">87% settled automatically</div>
                 </div>
                 <div className="rounded-xl border border-border/80 bg-card p-4 space-y-1">
                   <span className="text-xs text-muted-foreground font-medium">Open Balance</span>
-                  <div className="text-xl sm:text-2xl font-bold font-mono text-foreground">$6,420</div>
+                  <div className="text-xl sm:text-2xl font-bold font-mono text-foreground">₹6,420</div>
                   <div className="text-[11px] text-amber-600 font-medium">14 pending invoices</div>
                 </div>
               </div>
@@ -204,7 +204,7 @@ export function ProductShowcase() {
                         <div className="text-[11px] text-muted-foreground">INV-2026-0891 • Annual</div>
                       </div>
                       <div className="text-right space-y-0.5">
-                        <div className="font-mono font-bold text-foreground">$12,000</div>
+                        <div className="font-mono font-bold text-foreground">₹12,000</div>
                         <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
                           Paid
                         </Badge>
@@ -217,7 +217,7 @@ export function ProductShowcase() {
                         <div className="text-[11px] text-muted-foreground">INV-2026-0892 • Pro Tier</div>
                       </div>
                       <div className="text-right space-y-0.5">
-                        <div className="font-mono font-bold text-foreground">$240</div>
+                        <div className="font-mono font-bold text-foreground">₹240</div>
                         <Badge variant="outline" className="text-[10px] bg-blue-500/10 text-blue-600 border-blue-500/20">
                           Active
                         </Badge>
@@ -230,7 +230,7 @@ export function ProductShowcase() {
                         <div className="text-[11px] text-muted-foreground">INV-2026-0893 • Custom Plan</div>
                       </div>
                       <div className="text-right space-y-0.5">
-                        <div className="font-mono font-bold text-foreground">$4,500</div>
+                        <div className="font-mono font-bold text-foreground">₹4,500</div>
                         <Badge variant="outline" className="text-[10px] bg-amber-500/10 text-amber-600 border-amber-500/20">
                           Pending
                         </Badge>

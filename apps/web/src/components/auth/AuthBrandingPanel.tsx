@@ -73,7 +73,7 @@ export function AuthBrandingPanel({
 
               <div className="p-3 rounded-xl bg-white/5 border border-white/5 space-y-1">
                 <div className="text-[10px] text-slate-400 font-medium">Monthly MRR</div>
-                <div className="text-lg font-bold font-mono text-white">$48.2k</div>
+                <div className="text-lg font-bold font-mono text-white">₹48.2k</div>
                 <div className="text-[10px] text-emerald-400 font-medium">+14.2%</div>
               </div>
 

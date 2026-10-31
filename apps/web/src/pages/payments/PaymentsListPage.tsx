@@ -155,7 +155,7 @@ export function PaymentsListPage() {
                       {formatDate(p.paymentDate)}
                     </td>
                     <td className="px-4 py-3.5 text-right font-mono font-bold text-sm text-emerald-500">
-                      ${p.amount.toFixed(2)}
+                      ₹{p.amount.toFixed(2)}
                     </td>
                     <td className="px-4 py-3.5 text-right font-mono text-muted-foreground text-[11px]">
                       {p.recordedBy?.name || 'Staff'}

@@ -62,7 +62,7 @@ export function DiscountsListPage() {
           {
             id: 'disc-2',
             organizationId: 'org-1',
-            name: 'New Startup Credit ($50)',
+            name: 'New Startup Credit (₹50)',
             code: 'STARTUP50',
             type: DiscountType.FIXED,
             value: 50.0,
@@ -144,7 +144,7 @@ export function DiscountsListPage() {
                         {disc.code}
                       </Badge>
                       <span className="font-mono font-bold text-base text-foreground">
-                        {disc.type === 'PERCENTAGE' ? `${disc.value}% OFF` : `$${disc.value} OFF`}
+                        {disc.type === 'PERCENTAGE' ? `${disc.value}% OFF` : `₹${disc.value} OFF`}
                       </span>
                     </div>
                     <CardTitle className="text-sm font-semibold">{disc.name}</CardTitle>
@@ -163,7 +163,7 @@ export function DiscountsListPage() {
                     <div className="flex justify-between text-muted-foreground">
                       <span>Minimum Purchase:</span>
                       <span className="font-mono font-medium text-foreground">
-                        {disc.minPurchase > 0 ? `$${disc.minPurchase.toFixed(2)}` : 'None'}
+                        {disc.minPurchase > 0 ? `₹${disc.minPurchase.toFixed(2)}` : 'None'}
                       </span>
                     </div>
                     <div className="flex justify-between text-muted-foreground">
@@ -209,7 +209,7 @@ export function DiscountsListPage() {
 
             <div className="space-y-1">
               <label className="text-[10px] font-mono uppercase text-muted-foreground font-semibold">
-                Gross Order Amount ($)
+                Gross Order Amount (₹)
               </label>
               <Input
                 type="number"

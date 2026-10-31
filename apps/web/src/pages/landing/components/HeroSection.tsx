@@ -122,7 +122,7 @@ export function HeroSection() {
                     <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
                   </div>
                   <div className="text-xl sm:text-2xl font-bold tracking-tight text-foreground font-mono">
-                    $48,250
+                    ₹48,250
                   </div>
                   <div className="text-[11px] font-medium text-emerald-600 flex items-center gap-1">
                     <span>+14.2%</span>
@@ -166,7 +166,7 @@ export function HeroSection() {
                     <FileCheck2 className="h-3.5 w-3.5 text-amber-500" />
                   </div>
                   <div className="text-xl sm:text-2xl font-bold tracking-tight text-foreground font-mono">
-                    $6,420
+                    ₹6,420
                   </div>
                   <div className="text-[11px] text-amber-600 font-medium">
                     14 invoices due for renewal
@@ -178,7 +178,7 @@ export function HeroSection() {
               <div className="rounded-xl border border-border/60 bg-background/60 p-3.5 space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-semibold text-foreground">Revenue Run Rate (ARR Trajectory)</span>
-                  <span className="text-emerald-600 font-medium font-mono">$579,000 ARR</span>
+                  <span className="text-emerald-600 font-medium font-mono">₹579,000 ARR</span>
                 </div>
                 {/* SVG Visual Bars */}
                 <div className="h-14 flex items-end gap-1.5 pt-2">
@@ -208,7 +208,7 @@ export function HeroSection() {
                       <span className="font-medium text-foreground">Apex Dynamics</span>
                       <span className="text-muted-foreground">• Enterprise Plan</span>
                     </div>
-                    <span className="font-mono text-foreground font-medium">+$2,400/yr</span>
+                    <span className="font-mono text-foreground font-medium">+₹2,400/yr</span>
                   </div>
                   <div className="flex items-center justify-between py-1 border-b border-border/40">
                     <div className="flex items-center gap-2">
@@ -216,7 +216,7 @@ export function HeroSection() {
                       <span className="font-medium text-foreground">Horizon Cloud</span>
                       <span className="text-muted-foreground">• Pro Monthly</span>
                     </div>
-                    <span className="font-mono text-foreground font-medium">+$180/mo</span>
+                    <span className="font-mono text-foreground font-medium">+₹180/mo</span>
                   </div>
                   <div className="flex items-center justify-between py-1">
                     <div className="flex items-center gap-2">

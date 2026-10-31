@@ -25,6 +25,7 @@ interface AuthState {
   switchOrganization: (orgId: string) => void;
   checkAuth: () => Promise<boolean>;
   setUser: (user: UserDto) => void;
+  setRole: (role: string) => void;
 }
 
 // Fallback initial demo session so the app can be fully explored immediately
@@ -61,6 +62,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     'roles:manage',
     'settings:update',
     'audit:read',
+    'customers:read',
+    'customers:create',
+    'customers:update',
+    'products:read',
+    'products:create',
+    'plans:read',
+    'plans:create',
+    'quotations:read',
+    'quotations:create',
+    'subscriptions:read',
+    'subscriptions:create',
+    'invoices:read',
+    'payments:read',
+    'payments:record',
+    'discounts:read',
+    'reports:operational',
+    'reports:financial',
   ],
   isAuthenticated: true,
   isLoading: false,
@@ -176,4 +194,5 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   setUser: (user: UserDto) => set({ user }),
+  setRole: (role: string) => set({ role }),
 }));

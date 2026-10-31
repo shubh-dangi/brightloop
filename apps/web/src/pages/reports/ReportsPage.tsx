@@ -132,7 +132,7 @@ export function ReportsPage() {
               <span className="text-[11px] font-mono uppercase text-muted-foreground">Overdue Balances</span>
               <div className="flex items-center justify-between pt-1">
                 <span className="font-mono font-bold text-2xl text-destructive">
-                  ${data?.summary?.totalOverdueAmount?.toFixed(2)}
+                  ₹{data?.summary?.totalOverdueAmount?.toFixed(2)}
                 </span>
                 <AlertCircle className="h-5 w-5 text-destructive/80" />
               </div>
@@ -171,7 +171,7 @@ export function ReportsPage() {
               <span className="text-[11px] font-mono uppercase text-muted-foreground">Recent Collections</span>
               <div className="flex items-center justify-between pt-1">
                 <span className="font-mono font-bold text-2xl text-emerald-500">
-                  ${data?.summary?.totalCollected?.toFixed(2)}
+                  ₹{data?.summary?.totalCollected?.toFixed(2)}
                 </span>
                 <Banknote className="h-5 w-5 text-emerald-500/80" />
               </div>
@@ -243,9 +243,9 @@ export function ReportsPage() {
                         <td className="px-4 py-3.5 font-mono text-destructive font-semibold">
                           {formatDate(inv.dueDate)}
                         </td>
-                        <td className="px-4 py-3.5 text-right font-mono">${inv.totalAmount?.toFixed(2)}</td>
+                        <td className="px-4 py-3.5 text-right font-mono">₹{inv.totalAmount?.toFixed(2)}</td>
                         <td className="px-4 py-3.5 text-right font-mono font-bold text-destructive text-sm">
-                          ${inv.outstandingAmount?.toFixed(2)}
+                          ₹{inv.outstandingAmount?.toFixed(2)}
                         </td>
                       </tr>
                     ))}
@@ -285,7 +285,7 @@ export function ReportsPage() {
                           </Badge>
                         </td>
                         <td className="px-4 py-3.5 text-right font-mono font-bold text-foreground">
-                          ${sub.totalAmount?.toFixed(2)}
+                          ₹{sub.totalAmount?.toFixed(2)}
                         </td>
                       </tr>
                     ))}
@@ -327,7 +327,7 @@ export function ReportsPage() {
                           </Badge>
                         </td>
                         <td className="px-4 py-3.5 text-right font-mono font-bold text-emerald-500 text-sm">
-                          ${p.amount?.toFixed(2)}
+                          ₹{p.amount?.toFixed(2)}
                         </td>
                       </tr>
                     ))}

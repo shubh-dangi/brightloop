@@ -224,7 +224,7 @@ export function CustomerDetailPage() {
                       </div>
                       <div className="text-right">
                         <span className="font-mono font-bold text-sm text-foreground">
-                          ${sub.totalAmount?.toFixed(2)}
+                          ₹{sub.totalAmount?.toFixed(2)}
                         </span>
                         <span className="block text-[10px] text-emerald-500 font-semibold uppercase">
                           {sub.status}
@@ -273,7 +273,7 @@ export function CustomerDetailPage() {
                       </div>
                       <div className="text-right">
                         <span className="font-mono font-bold text-sm text-foreground">
-                          ${inv.totalAmount?.toFixed(2)}
+                          ₹{inv.totalAmount?.toFixed(2)}
                         </span>
                         <Badge
                           variant={inv.status === 'PAID' ? 'secondary' : 'default'}

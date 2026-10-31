@@ -159,7 +159,7 @@ export function RecordPaymentModal({
               <SelectContent>
                 {invoices.map((inv) => (
                   <SelectItem key={inv.id} value={inv.id}>
-                    {inv.invoiceNumber} — {inv.customer?.name} (${inv.outstandingAmount} due)
+                    {inv.invoiceNumber} — {inv.customer?.name} (₹{inv.outstandingAmount} due)
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -169,7 +169,7 @@ export function RecordPaymentModal({
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
-                Amount Received ($) *
+                Amount Received (₹) *
               </label>
               <Input
                 type="number"

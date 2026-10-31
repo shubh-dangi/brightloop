@@ -12,7 +12,7 @@ export function PricingSection() {
     {
       name: 'Starter',
       description: 'Ideal for early-stage subscription businesses launching their first recurring tiers.',
-      price: '$49',
+      price: '₹3,999',
       interval: '/month',
       badge: 'Early Stage',
       popular: false,
@@ -28,7 +28,7 @@ export function PricingSection() {
     {
       name: 'Growth',
       description: 'Engineered for scaling SaaS companies requiring multi-interval billing and quotations.',
-      price: '$149',
+      price: '₹9,999',
       interval: '/month',
       badge: 'Most Popular',
       popular: true,
