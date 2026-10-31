@@ -29,9 +29,10 @@ export class QuotationsController {
   @ApiOperation({ summary: 'List all quotations' })
   async findAll(
     @CurrentTenant() tenant: TenantContext,
+    @CurrentUser() user: any,
     @Query('search') search?: string,
   ) {
-    return this.quotationsService.findAll(tenant.id, search);
+    return this.quotationsService.findAll(tenant.id, tenant.role, user?.email, search);
   }
 
   @Get(':id')
@@ -39,9 +40,10 @@ export class QuotationsController {
   @ApiOperation({ summary: 'Get quotation details by ID' })
   async findOne(
     @CurrentTenant() tenant: TenantContext,
+    @CurrentUser() user: any,
     @Param('id') id: string,
   ) {
-    return this.quotationsService.findOne(tenant.id, id);
+    return this.quotationsService.findOne(tenant.id, id, tenant.role, user?.email);
   }
 
   @Post()

@@ -6,8 +6,19 @@ import { CreateQuotationInput, QuotationStatus } from '@brightloop/contracts';
 export class QuotationsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(orgId: string, search?: string) {
+  async findAll(orgId: string, userRole?: string, userEmail?: string, search?: string) {
     const where: any = { organizationId: orgId };
+
+    // Enforce Customer Portal IDOR isolation
+    if (userRole === 'CUSTOMER' && userEmail) {
+      const customer = await this.prisma.customer.findFirst({
+        where: { organizationId: orgId, email: userEmail.toLowerCase() },
+      });
+      if (!customer) {
+        return [];
+      }
+      where.customerId = customer.id;
+    }
 
     if (search) {
       where.OR = [
@@ -28,9 +39,21 @@ export class QuotationsService {
     });
   }
 
-  async findOne(orgId: string, id: string) {
+  async findOne(orgId: string, id: string, userRole?: string, userEmail?: string) {
+    const where: any = { id, organizationId: orgId };
+
+    if (userRole === 'CUSTOMER' && userEmail) {
+      const customer = await this.prisma.customer.findFirst({
+        where: { organizationId: orgId, email: userEmail.toLowerCase() },
+      });
+      if (!customer) {
+        throw new NotFoundException('Quotation not found');
+      }
+      where.customerId = customer.id;
+    }
+
     const quotation = await this.prisma.quotation.findFirst({
-      where: { id, organizationId: orgId },
+      where,
       include: {
         customer: true,
         creator: { select: { id: true, name: true, email: true } },
@@ -138,6 +161,13 @@ export class QuotationsService {
   async convertToSubscription(orgId: string, userId: string, quoteId: string, planId: string) {
     const quote = await this.findOne(orgId, quoteId);
 
+    const existingSub = await this.prisma.subscription.findFirst({
+      where: { quotationId: quoteId, organizationId: orgId },
+    });
+    if (existingSub) {
+      throw new BadRequestException('This quotation has already been converted into an active subscription');
+    }
+
     if (quote.status === 'CANCELLED' || quote.status === 'EXPIRED') {
       throw new BadRequestException('Cannot convert a cancelled or expired quotation');
     }
@@ -155,6 +185,14 @@ export class QuotationsService {
     const subNumber = `SUB-${new Date().getFullYear()}-${String(subCount + 1).padStart(3, '0')}`;
 
     return this.prisma.$transaction(async (tx) => {
+      // Re-verify quotation conversion inside transaction to prevent race conditions
+      const existingSubInside = await tx.subscription.findFirst({
+        where: { quotationId: quote.id, organizationId: orgId },
+      });
+      if (existingSubInside) {
+        throw new BadRequestException('Quotation has already been converted into a subscription');
+      }
+
       // 1. Update quote status to CONFIRMED
       await tx.quotation.update({
         where: { id: quote.id },
