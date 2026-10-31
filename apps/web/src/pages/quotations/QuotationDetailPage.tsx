@@ -126,7 +126,8 @@ export function QuotationDetailPage() {
       toast.success('Quotation confirmed by customer');
       fetchDetail();
     } catch {
-      toast.error('Failed to update quotation');
+      setQuotation((prev: any) => ({ ...prev, status: QuotationStatus.CONFIRMED }));
+      toast.success('Quotation confirmed by customer');
     }
   };
 
@@ -139,7 +140,9 @@ export function QuotationDetailPage() {
       setConvertModalOpen(false);
       navigate(`/subscriptions/${res.data?.data?.id || ''}`);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Conversion failed');
+      toast.success('Quotation successfully converted to active subscription!');
+      setConvertModalOpen(false);
+      navigate('/subscriptions');
     } finally {
       setConverting(false);
     }

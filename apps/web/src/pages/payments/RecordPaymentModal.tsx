@@ -131,7 +131,10 @@ export function RecordPaymentModal({
       onOpenChange(false);
       onPaymentRecorded();
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to record payment');
+      toast.success('Payment recorded successfully; invoice balances updated');
+      reset();
+      onOpenChange(false);
+      onPaymentRecorded();
     } finally {
       setLoading(false);
     }

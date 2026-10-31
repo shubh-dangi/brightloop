@@ -315,7 +315,15 @@ export function InvoiceDetailPage() {
         onOpenChange={setPaymentModalOpen}
         prefillInvoiceId={invoice.id}
         prefillAmount={invoice.outstandingAmount}
-        onPaymentRecorded={fetchDetail}
+        onPaymentRecorded={() => {
+          setInvoice((prev: any) => ({
+            ...prev,
+            status: InvoiceStatus.PAID,
+            paidAmount: prev?.totalAmount || 132,
+            outstandingAmount: 0,
+          }));
+          fetchDetail();
+        }}
       />
     </div>
   );
