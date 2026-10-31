@@ -92,6 +92,8 @@ export class AuthService {
     };
 
     return {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
       tokens,
       user: {
         id: user.id,
@@ -165,6 +167,8 @@ export class AuthService {
     };
 
     return {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
       tokens,
       user: {
         id: user.id,

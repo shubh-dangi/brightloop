@@ -4,6 +4,7 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import request from "supertest";
 import { AppModule } from "../src/app.module";
 import { AllExceptionsFilter } from "../src/common/filters/http-exception.filter";
+import { PrismaService } from "../src/common/prisma/prisma.service";
 
 describe("Brightloop Subscription API E2E Test Suite", () => {
   let app: INestApplication;
@@ -21,17 +22,34 @@ describe("Brightloop Subscription API E2E Test Suite", () => {
     app.useGlobalFilters(new AllExceptionsFilter());
     await app.init();
 
+    // Reset SUB-2026-0002 for billing test repeatability
+    const prisma = app.get(PrismaService);
+    await prisma.subscription.updateMany({
+      where: { subscriptionNumber: "SUB-2026-0002" },
+      data: { nextBillingDate: new Date(Date.now() - 60000) },
+    });
+
     // Login Admin
-    const adminRes = await request(app.getHttpServer())
+    let adminRes = await request(app.getHttpServer())
       .post("/api/auth/login")
-      .send({ email: "admin@brightloop.com", password: "AdminBright#2026" });
-    adminToken = adminRes.body.accessToken;
+      .send({ email: "admin@gmail.com", password: "admin@123" });
+    if (!adminRes.body?.tokens?.accessToken && !adminRes.body?.accessToken) {
+      adminRes = await request(app.getHttpServer())
+        .post("/api/auth/login")
+        .send({ email: "admin@brightloop.com", password: "AdminBright#2026" });
+    }
+    adminToken = adminRes.body?.accessToken || adminRes.body?.tokens?.accessToken;
 
     // Login Customer
-    const custRes = await request(app.getHttpServer())
+    let custRes = await request(app.getHttpServer())
       .post("/api/auth/login")
-      .send({ email: "john@bakeryshop.com", password: "Customer#2026" });
-    customerToken = custRes.body.accessToken;
+      .send({ email: "customer1@gmail.com", password: "customer@123" });
+    if (!custRes.body?.tokens?.accessToken && !custRes.body?.accessToken) {
+      custRes = await request(app.getHttpServer())
+        .post("/api/auth/login")
+        .send({ email: "john@bakeryshop.com", password: "Customer#2026" });
+    }
+    customerToken = custRes.body?.accessToken || custRes.body?.tokens?.accessToken;
   });
 
   afterAll(async () => {
