@@ -82,6 +82,10 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
   providers: [
     {
       provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
     {

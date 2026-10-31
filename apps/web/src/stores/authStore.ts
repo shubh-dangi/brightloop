@@ -105,11 +105,74 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch (err: any) {
       if (!err.response) {
         console.warn('Backend server offline. Setting simulated authenticated session.');
+        const emailLower = data.email.toLowerCase();
+        let detectedRole = 'OWNER';
+        let detectedName = 'Taylor Reed (Owner)';
+        let permissions = [
+          'org:read',
+          'org:update',
+          'records:read',
+          'records:create',
+          'records:update',
+          'records:delete',
+          'members:read',
+          'members:invite',
+          'roles:manage',
+          'settings:update',
+          'audit:read',
+          'customers:read',
+          'customers:create',
+          'customers:update',
+          'products:read',
+          'products:create',
+          'plans:read',
+          'plans:create',
+          'quotations:read',
+          'quotations:create',
+          'subscriptions:read',
+          'subscriptions:create',
+          'invoices:read',
+          'payments:read',
+          'payments:record',
+          'discounts:read',
+          'reports:operational',
+          'reports:financial',
+        ];
+
+        if (emailLower.includes('customer')) {
+          detectedRole = 'CUSTOMER';
+          detectedName = 'Alex Mercer (Customer)';
+          permissions = ['subscriptions:read', 'invoices:read', 'quotations:read', 'payments:read'];
+        } else if (emailLower.includes('member') || emailLower.includes('staff')) {
+          detectedRole = 'MEMBER';
+          detectedName = 'Jordan Lee (Staff)';
+          permissions = [
+            'customers:read',
+            'customers:create',
+            'customers:update',
+            'products:read',
+            'plans:read',
+            'quotations:read',
+            'quotations:create',
+            'subscriptions:read',
+            'subscriptions:create',
+            'invoices:read',
+            'payments:read',
+            'payments:record',
+            'discounts:read',
+            'reports:operational',
+          ];
+        } else if (emailLower.includes('admin')) {
+          detectedRole = 'ADMIN';
+          detectedName = 'Morgan Smith (Admin)';
+        }
+
         set({
-          user: DEMO_USER,
+          user: { ...DEMO_USER, id: `usr-${detectedRole.toLowerCase()}`, email: data.email, name: detectedName },
           currentOrganization: DEMO_ORG,
           organizations: [DEMO_ORG],
-          role: 'OWNER',
+          role: detectedRole,
+          permissions,
           isAuthenticated: true,
           isLoading: false,
         });

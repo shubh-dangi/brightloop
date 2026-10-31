@@ -75,13 +75,13 @@ export function LoginPage() {
                 </span>
                 <span className="font-mono">Dev Accounts</span>
               </div>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-4 gap-1.5">
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={() => fillDemo('owner@brightloop.local')}
-                  className="text-xs font-mono h-8 cursor-pointer"
+                  className="text-xs font-mono h-8 cursor-pointer px-1"
                 >
                   Owner
                 </Button>
@@ -90,7 +90,7 @@ export function LoginPage() {
                   variant="outline"
                   size="sm"
                   onClick={() => fillDemo('admin@brightloop.local')}
-                  className="text-xs font-mono h-8 cursor-pointer"
+                  className="text-xs font-mono h-8 cursor-pointer px-1"
                 >
                   Admin
                 </Button>
@@ -99,9 +99,18 @@ export function LoginPage() {
                   variant="outline"
                   size="sm"
                   onClick={() => fillDemo('member@brightloop.local')}
-                  className="text-xs font-mono h-8 cursor-pointer"
+                  className="text-xs font-mono h-8 cursor-pointer px-1"
                 >
                   Staff
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fillDemo('customer@brightloop.local')}
+                  className="text-xs font-mono h-8 cursor-pointer px-1"
+                >
+                  Customer
                 </Button>
               </div>
             </div>

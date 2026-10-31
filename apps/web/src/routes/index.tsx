@@ -85,9 +85,18 @@ export function AppRoutes() {
           {/* Dashboard */}
           <Route path="/dashboard" element={<DashboardPage />} />
 
-          {/* Customer Management */}
-          <Route path="/customers" element={<CustomersListPage />} />
-          <Route path="/customers/:id" element={<CustomerDetailPage />} />
+          {/* Internal Operations Routes (Restricted to Staff, Admin, Owner) */}
+          <Route element={<RoleGuard allowedRoles={['OWNER', 'ADMIN', 'MEMBER', 'STAFF']} />}>
+            {/* Customer Management */}
+            <Route path="/customers" element={<CustomersListPage />} />
+            <Route path="/customers/:id" element={<CustomerDetailPage />} />
+
+            {/* Quotation Creation */}
+            <Route path="/quotations/new" element={<CreateQuotationPage />} />
+
+            {/* Reports */}
+            <Route path="/reports" element={<ReportsPage />} />
+          </Route>
 
           {/* Product Catalog */}
           <Route path="/products" element={<ProductsListPage />} />
@@ -96,9 +105,8 @@ export function AppRoutes() {
           {/* Subscription Plans */}
           <Route path="/plans" element={<PlansListPage />} />
 
-          {/* Quotations */}
+          {/* Quotations (Accessible to Staff and Customer) */}
           <Route path="/quotations" element={<QuotationsListPage />} />
-          <Route path="/quotations/new" element={<CreateQuotationPage />} />
           <Route path="/quotations/:id" element={<QuotationDetailPage />} />
 
           {/* Subscriptions */}
@@ -114,9 +122,6 @@ export function AppRoutes() {
 
           {/* Payments */}
           <Route path="/payments" element={<PaymentsListPage />} />
-
-          {/* Reports */}
-          <Route path="/reports" element={<ReportsPage />} />
 
           {/* Operations & System */}
           <Route path="/records" element={<RecordsListPage />} />
