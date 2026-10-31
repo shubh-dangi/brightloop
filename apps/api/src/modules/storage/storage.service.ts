@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -9,11 +9,11 @@ export class StorageService {
   private s3Client?: S3Client;
   private bucket: string;
 
-  constructor(private configService: ConfigService) {
-    this.bucket = this.configService.get<string>('s3.bucket', 'brightloop-saas-uploads');
-    const region = this.configService.get<string>('s3.region', 'us-east-1');
-    const accessKeyId = this.configService.get<string>('s3.accessKeyId');
-    const secretAccessKey = this.configService.get<string>('s3.secretAccessKey');
+  constructor(@Optional() private configService?: ConfigService) {
+    this.bucket = this.configService?.get<string>('s3.bucket', 'brightloop-saas-uploads') || 'brightloop-saas-uploads';
+    const region = this.configService?.get<string>('s3.region', 'us-east-1') || 'us-east-1';
+    const accessKeyId = this.configService?.get<string>('s3.accessKeyId');
+    const secretAccessKey = this.configService?.get<string>('s3.secretAccessKey');
 
     if (accessKeyId && accessKeyId !== 'placeholder') {
       this.s3Client = new S3Client({

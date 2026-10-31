@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 
@@ -8,9 +8,9 @@ export class EmailService {
   private resend?: Resend;
   private from: string;
 
-  constructor(private configService: ConfigService) {
-    const apiKey = this.configService.get<string>('resend.apiKey');
-    this.from = this.configService.get<string>('resend.from', 'noreply@brightloop.local');
+  constructor(@Optional() private configService?: ConfigService) {
+    const apiKey = this.configService?.get<string>('resend.apiKey');
+    this.from = this.configService?.get<string>('resend.from', 'noreply@brightloop.local') || 'noreply@brightloop.local';
 
     if (apiKey && apiKey !== 're_placeholder') {
       this.resend = new Resend(apiKey);
