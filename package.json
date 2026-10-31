@@ -5,6 +5,9 @@
   "description": "Brightloop - Enterprise Subscription Management & Recurring Billing Platform",
   "license": "MIT",
   "packageManager": "pnpm@12.16.1",
+  "engines": {
+    "node": ">=22.0.0 <=24.x"
+  },
   "scripts": {
     "dev": "turbo run dev",
     "dev:web": "turbo run dev --filter=@brightloop/web",
