@@ -158,6 +158,28 @@ async function main() {
     update: {},
   });
 
+  const customerRole = await prisma.role.upsert({
+    where: { organizationId_name: { organizationId: org.id, name: 'CUSTOMER' } },
+    create: {
+      organizationId: org.id,
+      name: 'CUSTOMER',
+      description: 'Customer portal access for subscriptions, invoices, and payments',
+      isSystem: true,
+    },
+    update: {},
+  });
+
+  const customerAllowedPermissions = [
+    'customers:read',
+    'subscriptions:read',
+    'invoices:read',
+    'quotations:read',
+    'payments:read',
+    'plans:read',
+    'products:read',
+    'discounts:read',
+  ];
+
   // Permissions for Staff (MEMBER)
   const staffAllowedPrefixes = [
     'customers:read',
@@ -233,6 +255,17 @@ async function main() {
           roleId_permissionId: { roleId: viewerRole.id, permissionId: p.id },
         },
         create: { roleId: viewerRole.id, permissionId: p.id },
+        update: {},
+      });
+    }
+
+    // Customer gets portal-specific read permissions
+    if (customerAllowedPermissions.includes(p.key)) {
+      await prisma.rolePermission.upsert({
+        where: {
+          roleId_permissionId: { roleId: customerRole.id, permissionId: p.id },
+        },
+        create: { roleId: customerRole.id, permissionId: p.id },
         update: {},
       });
     }
