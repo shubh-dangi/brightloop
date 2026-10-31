@@ -3,20 +3,21 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, Lock, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { apiClient } from '../../services/api';
 import { AuthLayout } from '../../components/auth/AuthLayout';
+import { AuthFormContainer } from '../../components/auth/AuthFormContainer';
+import { PasswordInput } from '../../components/auth/PasswordInput';
 import { PasswordStrengthIndicator } from '../../components/auth/PasswordStrengthIndicator';
+import { AuthSubmitButton } from '../../components/auth/AuthSubmitButton';
+import { AuthErrorMessage } from '../../components/auth/AuthErrorMessage';
 import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
-import { Alert, AlertDescription } from '../../components/ui/alert';
 
-const ResetPasswordClientSchema = z
+const ResetPasswordFormSchema = z
   .object({
     password: z
       .string()
-      .min(9, 'Password must be at least 9 characters')
+      .min(9, 'Password must be more than 8 characters (minimum 9)')
       .regex(/[A-Z]/, 'Must contain at least one uppercase letter')
       .regex(/[a-z]/, 'Must contain at least one lowercase letter')
       .regex(/[^A-Za-z0-9]/, 'Must contain at least one special character'),
@@ -27,15 +28,13 @@ const ResetPasswordClientSchema = z
     path: ['confirmPassword'],
   });
 
-type ResetPasswordClientInput = z.infer<typeof ResetPasswordClientSchema>;
+type ResetPasswordFormValues = z.infer<typeof ResetPasswordFormSchema>;
 
 export function ResetPasswordPage() {
   const { token: routeToken } = useParams<{ token?: string }>();
   const [searchParams] = useSearchParams();
   const token = routeToken || searchParams.get('token') || '';
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -46,8 +45,8 @@ export function ResetPasswordPage() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<ResetPasswordClientInput>({
-    resolver: zodResolver(ResetPasswordClientSchema),
+  } = useForm<ResetPasswordFormValues>({
+    resolver: zodResolver(ResetPasswordFormSchema),
     defaultValues: {
       password: '',
       confirmPassword: '',
@@ -56,9 +55,9 @@ export function ResetPasswordPage() {
 
   const passwordValue = watch('password') || '';
 
-  const onSubmit = async (data: ResetPasswordClientInput) => {
+  const onSubmit = async (data: ResetPasswordFormValues) => {
     if (!token) {
-      setError('Password reset token is missing or malformed.');
+      setError('Password reset token is missing. Please use the link provided in your email.');
       return;
     }
 
@@ -73,7 +72,7 @@ export function ResetPasswordPage() {
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
-          'Password reset token is expired or invalid. Please request a new link.'
+          'Password reset token has expired or is invalid. Please request a new link.'
       );
     } finally {
       setLoading(false);
@@ -82,149 +81,89 @@ export function ResetPasswordPage() {
 
   return (
     <AuthLayout
-      heading="Secure Your Workspace Access"
-      subheading="Create a compliant, robust credential to safeguard your subscription data and financial records."
+      heading="Create a New Secure Password"
+      subheading="Safeguard your workspace access with encrypted enterprise credentials."
       type="reset"
       benefits={[
         'Argon2id cryptographic hashing with enterprise-grade salt generation',
-        'Automatic termination of previous active sessions for compromised tokens',
-        'Direct multi-tenant audit trail validation',
+        'Automatic revocation of previous active sessions',
+        'Direct multi-tenant audit trail logging',
       ]}
     >
-      <Card className="border-border/80 shadow-xl bg-card">
-        <CardHeader className="space-y-1.5 pb-4">
-          <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
-            Create a New Password
-          </CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">
-            Choose a strong password to secure your Brightloop account.
-          </CardDescription>
-        </CardHeader>
+      <AuthFormContainer
+        title="Create a New Password"
+        description="Choose a strong password to secure your Brightloop account."
+      >
+        <AuthErrorMessage message={error} />
 
-        <CardContent className="space-y-5">
-          {error && (
-            <Alert variant="destructive" className="py-2.5">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription className="text-xs">{error}</AlertDescription>
-            </Alert>
-          )}
-
-          {success ? (
-            <div className="space-y-5 text-center py-4">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 shadow-sm">
-                <CheckCircle2 className="h-7 w-7" />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-lg font-bold text-foreground">Password updated successfully!</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mx-auto">
-                  Your credentials have been updated. You can now sign in with your new password.
-                </p>
-              </div>
-
-              <div className="pt-2">
-                <Button
-                  onClick={() => navigate('/login')}
-                  className="w-full h-11 text-sm font-semibold shadow-sm hover:shadow cursor-pointer gap-2"
-                >
-                  <span>Go to Sign In</span>
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </div>
+        {success ? (
+          <div className="space-y-5 text-center py-4">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 shadow-sm">
+              <CheckCircle2 className="h-7 w-7" />
             </div>
-          ) : (
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              {/* New Password */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground" htmlFor="password">
-                  New Password
-                </label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter new password"
-                    {...register('password')}
-                    autoComplete="new-password"
-                    className="h-10 text-sm pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
 
-                {/* Password Strength Checklist */}
-                <PasswordStrengthIndicator password={passwordValue} />
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold text-foreground">Password updated successfully!</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mx-auto">
+                Your credentials have been updated. You can now sign in with your new password.
+              </p>
+            </div>
 
-                {errors.password && (
-                  <p className="text-xs text-destructive font-medium pt-0.5">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Confirm New Password */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground" htmlFor="confirmPassword">
-                  Confirm New Password
-                </label>
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="Confirm new password"
-                    {...register('confirmPassword')}
-                    autoComplete="new-password"
-                    className="h-10 text-sm pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
-                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-                {errors.confirmPassword && (
-                  <p className="text-xs text-destructive font-medium">
-                    {errors.confirmPassword.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Submit Button */}
+            <div className="pt-2">
               <Button
-                type="submit"
-                disabled={loading}
-                className="w-full h-11 text-sm font-semibold shadow-sm hover:shadow cursor-pointer gap-2 mt-2"
+                onClick={() => navigate('/login')}
+                className="w-full h-11 text-sm font-semibold shadow-sm hover:shadow cursor-pointer gap-2"
               >
-                {loading ? (
-                  <span>Saving new password...</span>
-                ) : (
-                  <>
-                    <span>Set New Password</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </>
-                )}
+                <span>Go to Sign In</span>
+                <ArrowRight className="h-4 w-4" />
               </Button>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* New Password */}
+            <div className="space-y-1.5">
+              <PasswordInput
+                id="password"
+                label="New Password"
+                placeholder="Enter new password"
+                autoComplete="new-password"
+                error={errors.password?.message}
+                {...register('password')}
+              />
 
-              <div className="text-center pt-2">
-                <Link
-                  to="/login"
-                  className="text-xs text-muted-foreground hover:text-foreground font-medium"
-                >
-                  Return to Sign In
-                </Link>
-              </div>
-            </form>
-          )}
-        </CardContent>
-      </Card>
+              {/* Live Password Strength Requirements */}
+              <PasswordStrengthIndicator password={passwordValue} />
+            </div>
+
+            {/* Confirm New Password */}
+            <PasswordInput
+              id="confirmPassword"
+              label="Confirm New Password"
+              placeholder="Confirm new password"
+              autoComplete="new-password"
+              error={errors.confirmPassword?.message}
+              {...register('confirmPassword')}
+            />
+
+            {/* Submit Button */}
+            <AuthSubmitButton
+              label="Set New Password"
+              loadingLabel="Saving new password..."
+              isLoading={loading}
+            />
+
+            <div className="text-center pt-2">
+              <Link
+                to="/login"
+                className="text-xs text-muted-foreground hover:text-foreground font-medium cursor-pointer"
+              >
+                Return to Sign In
+              </Link>
+            </div>
+          </form>
+        )}
+      </AuthFormContainer>
     </AuthLayout>
   );
 }
