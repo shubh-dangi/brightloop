@@ -26,11 +26,11 @@ export class ProductsService {
       },
     });
 
-    // Mask cost price for Staff (MEMBER / VIEWER)
-    const isStaff = userRole === 'MEMBER' || userRole === 'VIEWER';
+    // Mask cost price for non-administrative roles (Staff/MEMBER, VIEWER, CUSTOMER)
+    const isPrivileged = userRole === 'ADMIN' || userRole === 'OWNER';
     return products.map((p) => ({
       ...p,
-      costPrice: isStaff ? null : p.costPrice,
+      costPrice: isPrivileged ? p.costPrice : null,
     }));
   }
 
@@ -47,10 +47,10 @@ export class ProductsService {
       throw new NotFoundException('Product not found');
     }
 
-    const isStaff = userRole === 'MEMBER' || userRole === 'VIEWER';
+    const isPrivileged = userRole === 'ADMIN' || userRole === 'OWNER';
     return {
       ...product,
-      costPrice: isStaff ? null : product.costPrice,
+      costPrice: isPrivileged ? product.costPrice : null,
     };
   }
 

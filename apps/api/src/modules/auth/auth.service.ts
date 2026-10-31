@@ -119,6 +119,12 @@ export class AuthService {
             description: 'Read-only access across the workspace',
             isSystem: true,
           },
+          {
+            organizationId: org.id,
+            name: SystemRole.CUSTOMER,
+            description: 'Customer portal access for subscriptions, invoices, and payments',
+            isSystem: true,
+          },
         ],
       });
 
@@ -318,25 +324,28 @@ export class AuthService {
       return { message: 'If this email is registered, a password reset link has been dispatched.' };
     }
 
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    const rawResetToken = crypto.randomBytes(32).toString('hex');
+    const hashedResetToken = this.hashToken(rawResetToken);
     const resetExpires = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
 
     await this.prisma.user.update({
       where: { id: user.id },
       data: {
-        passwordResetToken: resetToken,
+        passwordResetToken: hashedResetToken,
         passwordResetExpires: resetExpires,
       },
     });
 
-    this.logger.log(`Password reset token generated for ${user.email}: ${resetToken}`);
+    // In production, dispatch email with rawResetToken via EmailService
+    this.logger.log(`Password reset requested for user: ${user.id}`);
     return { message: 'If this email is registered, a password reset link has been dispatched.' };
   }
 
   async resetPassword(dto: ResetPasswordDto): Promise<{ message: string }> {
+    const hashedToken = this.hashToken(dto.token);
     const user = await this.prisma.user.findFirst({
       where: {
-        passwordResetToken: dto.token,
+        passwordResetToken: hashedToken,
         passwordResetExpires: { gt: new Date() },
       },
     });
