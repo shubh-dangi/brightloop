@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { BrightloopLogo } from '../common/BrightloopLogo';
 import { AuthBrandingPanel } from './AuthBrandingPanel';
+import { ThemeSwitcher } from '../layout/ThemeSwitcher';
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -19,7 +20,12 @@ export function AuthLayout({
   benefits,
 }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen flex w-full bg-background selection:bg-primary/20 selection:text-primary">
+    <div className="min-h-screen flex w-full bg-background selection:bg-primary/20 selection:text-primary relative">
+      {/* Top Right Quick Theme Switcher */}
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeSwitcher />
+      </div>
+
       {/* Left Branding Panel (Desktop Only) */}
       <AuthBrandingPanel
         heading={heading}

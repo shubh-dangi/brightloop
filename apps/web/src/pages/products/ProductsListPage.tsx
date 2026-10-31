@@ -27,7 +27,7 @@ export function ProductsListPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
-  const isStaff = role === 'MEMBER' || role === 'VIEWER';
+  const isAdmin = role === 'ADMIN' || role === 'OWNER';
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -45,7 +45,7 @@ export function ProductsListPage() {
           name: 'Brightloop Business Software',
           type: 'Software Subscription',
           salesPrice: 120.0,
-          costPrice: isStaff ? null : 40.0,
+          costPrice: isAdmin ? 40.0 : null,
           notes: 'Main business software suite billed monthly or yearly.',
           variants: [
             { id: 'var-1', productId: 'prod-1', name: 'Standard Edition', additionalPrice: 0.0 },
@@ -60,7 +60,7 @@ export function ProductsListPage() {
           name: 'Cloud Storage & Archive Add-on',
           type: 'Add-on',
           salesPrice: 25.0,
-          costPrice: isStaff ? null : 8.0,
+          costPrice: isAdmin ? 8.0 : null,
           notes: 'High-speed storage tier for document retention and encrypted archives.',
           variants: [],
           createdAt: new Date().toISOString(),
@@ -72,7 +72,7 @@ export function ProductsListPage() {
           name: '24/7 Dedicated Support SLA',
           type: 'Service Add-on',
           salesPrice: 250.0,
-          costPrice: isStaff ? null : 75.0,
+          costPrice: isAdmin ? 75.0 : null,
           notes: '15-minute response SLA with dedicated technical account manager.',
           variants: [],
           createdAt: new Date().toISOString(),
@@ -98,15 +98,15 @@ export function ProductsListPage() {
           { label: 'Products' },
         ]}
         actions={
-          isStaff ? (
-            <Badge variant="outline" className="font-mono text-xs gap-1.5 py-1 px-2.5">
-              <span className="h-2 w-2 rounded-full bg-blue-500" />
-              Staff View (Read-Only)
-            </Badge>
-          ) : (
+          isAdmin ? (
             <Button className="gap-2 cursor-pointer">
               <Plus className="h-4 w-4" /> Add Product
             </Button>
+          ) : (
+            <Badge variant="outline" className="font-mono text-xs gap-1.5 py-1 px-2.5">
+              <span className="h-2 w-2 rounded-full bg-blue-500" />
+              Catalog View (Read-Only)
+            </Badge>
           )
         }
       />
@@ -145,7 +145,7 @@ export function ProductsListPage() {
                   <th className="px-4 py-3 font-semibold">Type</th>
                   <th className="px-4 py-3 font-semibold">Variants</th>
                   <th className="px-4 py-3 font-semibold text-right">Sales Price</th>
-                  {!isStaff && (
+                  {isAdmin && (
                     <th className="px-4 py-3 font-semibold text-right text-amber-500">
                       Cost Price (Admin Only)
                     </th>
@@ -191,7 +191,7 @@ export function ProductsListPage() {
                     <td className="px-4 py-3.5 text-right font-mono font-bold text-sm text-foreground">
                       ₹{p.salesPrice.toFixed(2)}
                     </td>
-                    {!isStaff && (
+                    {isAdmin && (
                       <td className="px-4 py-3.5 text-right font-mono text-xs text-amber-400">
                         {p.costPrice ? `₹${p.costPrice.toFixed(2)}` : '—'}
                       </td>

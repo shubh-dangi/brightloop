@@ -16,7 +16,7 @@ export function ProductDetailPage() {
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  const isStaff = role === 'MEMBER' || role === 'VIEWER';
+  const isAdmin = role === 'ADMIN' || role === 'OWNER';
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -31,7 +31,7 @@ export function ProductDetailPage() {
           name: 'Brightloop Business Software',
           type: 'Software Subscription',
           salesPrice: 120.0,
-          costPrice: isStaff ? null : 40.0,
+          costPrice: isAdmin ? 40.0 : null,
           notes: 'Main business software suite billed monthly or yearly with modular add-ons.',
           variants: [
             { id: 'v-1', name: 'Standard Edition', additionalPrice: 0.0 },
@@ -48,7 +48,7 @@ export function ProductDetailPage() {
     };
 
     fetchDetail();
-  }, [id, isStaff]);
+  }, [id, isAdmin]);
 
   if (loading) {
     return (
@@ -107,7 +107,7 @@ export function ProductDetailPage() {
                 ₹{product.salesPrice?.toFixed(2)}
               </span>
             </div>
-            {!isStaff && product.costPrice !== null && (
+            {isAdmin && product.costPrice !== null && (
               <div className="p-2.5 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-500">
                 <span className="block text-[10px] uppercase font-mono font-semibold">Cost Price (Admin Only)</span>
                 <span className="font-mono font-bold text-sm text-amber-400">

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, ArrowRight, ShieldCheck } from 'lucide-react';
 import { BrightloopLogo } from '../../../components/common/BrightloopLogo';
 import { Button } from '../../../components/ui/button';
+import { ThemeSwitcher } from '../../../components/layout/ThemeSwitcher';
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -63,6 +64,7 @@ export function Navbar() {
 
           {/* Desktop Right CTAs */}
           <div className="hidden md:flex items-center gap-3">
+            <ThemeSwitcher />
             <Button
               variant="ghost"
               size="sm"
@@ -81,8 +83,9 @@ export function Navbar() {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden">
+          {/* Mobile Right Bar: Theme Switcher & Menu Button */}
+          <div className="flex md:hidden items-center gap-2">
+            <ThemeSwitcher />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted cursor-pointer"

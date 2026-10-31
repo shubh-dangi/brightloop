@@ -13,7 +13,7 @@ export function RoleGuard({ allowedRoles }: RoleGuardProps) {
     return null;
   }
 
-  const userRole = (role || 'MEMBER').toUpperCase();
+  const userRole = (role || '').toUpperCase();
   const isAllowed = allowedRoles.map((r) => r.toUpperCase()).includes(userRole);
 
   if (!isAllowed) {

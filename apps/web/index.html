@@ -17,10 +17,17 @@
       (function() {
         try {
           var stored = localStorage.getItem('brightloop-theme');
-          var isDark = stored ? stored === 'dark' : true;
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
           if (stored === 'light') {
             document.documentElement.classList.remove('dark');
+          } else if (stored === 'system') {
+            if (prefersDark) {
+              document.documentElement.classList.add('dark');
+            } else {
+              document.documentElement.classList.remove('dark');
+            }
           } else {
+            // Default to dark mode
             document.documentElement.classList.add('dark');
           }
         } catch (e) {

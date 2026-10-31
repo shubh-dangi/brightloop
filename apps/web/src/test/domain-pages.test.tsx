@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { RoleGuard } from '../routes/RoleGuard';
 import { useAuthStore } from '../stores/authStore';
@@ -8,6 +8,18 @@ import { SubscriptionsListPage } from '../pages/subscriptions/SubscriptionsListP
 import { InvoicesListPage } from '../pages/invoices/InvoicesListPage';
 import { QuotationsListPage } from '../pages/quotations/QuotationsListPage';
 import { PlansListPage } from '../pages/plans/PlansListPage';
+import { apiClient } from '../services/api';
+
+vi.mock('../services/api', () => ({
+  apiClient: {
+    get: vi.fn().mockResolvedValue({ data: { data: [] } }),
+    post: vi.fn().mockResolvedValue({ data: { data: {} } }),
+    patch: vi.fn().mockResolvedValue({ data: { data: {} } }),
+    delete: vi.fn().mockResolvedValue({ data: { data: {} } }),
+  },
+  setAuthToken: vi.fn(),
+  setActiveOrganizationId: vi.fn(),
+}));
 
 describe('Domain Pages & Navigation Guards', () => {
   it('renders SubscriptionsListPage with headers and demo subscriptions table', async () => {

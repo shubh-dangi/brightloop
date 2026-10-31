@@ -4,9 +4,6 @@ import {
   Menu,
   Search,
   Bell,
-  Sun,
-  Moon,
-  Laptop,
   User,
   Sliders,
   LogOut,
@@ -17,6 +14,7 @@ import { useThemeStore } from '../../stores/themeStore';
 import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { ThemeSwitcher } from './ThemeSwitcher';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +25,7 @@ import {
 } from '../ui/dropdown-menu';
 
 export function Header() {
-  const { theme, setTheme, setMobileMenuOpen } = useThemeStore();
+  const { setMobileMenuOpen } = useThemeStore();
   const { user, currentOrganization, role, logout } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
@@ -128,37 +126,8 @@ export function Header() {
           <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
         </Button>
 
-        {/* Theme Toggle Dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/70 cursor-pointer"
-              aria-label="Toggle visual theme"
-            >
-              {theme === 'dark' ? (
-                <Moon className="h-4 w-4 text-primary" />
-              ) : (
-                <Sun className="h-4 w-4 text-primary" />
-              )}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-36 text-xs">
-            <DropdownMenuItem onClick={() => setTheme('light')} className="cursor-pointer">
-              <Sun className="mr-2 h-3.5 w-3.5" />
-              <span>Light</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme('dark')} className="cursor-pointer">
-              <Moon className="mr-2 h-3.5 w-3.5" />
-              <span>Dark (Default)</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme('system')} className="cursor-pointer">
-              <Laptop className="mr-2 h-3.5 w-3.5" />
-              <span>System</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {/* Global Theme Switcher */}
+        <ThemeSwitcher />
 
         {/* User Profile Dropdown */}
         <DropdownMenu>
