@@ -29,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       ignoreExpiration: false,
       secretOrKey: configService.get<string>(
         'jwt.accessSecret',
-        'unknown_default_dev_secret_access_token_min_32_characters!',
+        'brightloop_default_dev_secret_access_token_min_32_characters!',
       ),
     });
   }

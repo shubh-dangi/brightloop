@@ -1,5 +1,5 @@
 {
-  "name": "@subpulse/api",
+  "name": "@brightloop/api",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -30,7 +30,7 @@
     "@nestjs/throttler": "^6.4.0",
     "@nestjs/websockets": "^11.0.11",
     "@prisma/client": "^6.4.1",
-    "@subpulse/contracts": "workspace:*",
+    "@brightloop/contracts": "workspace:*",
     "argon2": "^0.41.1",
     "bullmq": "^5.41.6",
     "class-transformer": "^0.5.1",
@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@nestjs/testing": "^11.0.11",
-    "@subpulse/config": "workspace:*",
+    "@brightloop/config": "workspace:*",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.9",

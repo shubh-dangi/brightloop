@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Hexagon, Eye, EyeOff, ArrowRight, ShieldCheck } from 'lucide-react';
-import { LoginSchema, LoginInput } from '@subpulse/contracts';
+import { LoginSchema, LoginInput } from '@brightloop/contracts';
 import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -23,7 +23,7 @@ export function LoginPage() {
   } = useForm<LoginInput>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
-      email: 'owner@subpulse.local',
+      email: 'owner@brightloop.local',
       password: 'Password123!',
     },
   });
@@ -55,7 +55,7 @@ export function LoginPage() {
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">Welcome back</h1>
           <p className="text-sm text-muted-foreground">
-            Sign in to access your Subpulse enterprise workspace
+            Sign in to access your Brightloop enterprise workspace
           </p>
         </div>
 
@@ -79,7 +79,7 @@ export function LoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="name@subpulse.local"
+                  placeholder="name@brightloop.local"
                   {...register('email')}
                   autoComplete="email"
                 />
@@ -133,7 +133,7 @@ export function LoginPage() {
                     variant="outline"
                     size="sm"
                     className="h-7 text-xs"
-                    onClick={() => fillDemo('owner@subpulse.local')}
+                    onClick={() => fillDemo('owner@brightloop.local')}
                   >
                     Owner
                   </Button>
@@ -142,7 +142,7 @@ export function LoginPage() {
                     variant="outline"
                     size="sm"
                     className="h-7 text-xs"
-                    onClick={() => fillDemo('admin@subpulse.local')}
+                    onClick={() => fillDemo('admin@brightloop.local')}
                   >
                     Admin
                   </Button>
@@ -151,7 +151,7 @@ export function LoginPage() {
                     variant="outline"
                     size="sm"
                     className="h-7 text-xs"
-                    onClick={() => fillDemo('member@subpulse.local')}
+                    onClick={() => fillDemo('member@brightloop.local')}
                   >
                     Member
                   </Button>

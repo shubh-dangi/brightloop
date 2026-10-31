@@ -1,6 +1,6 @@
-# Setup & Installation Guide - UNKNOWN
+# Setup & Installation Guide - Brightloop
 
-This guide walks you through setting up and running the UNKNOWN SaaS Starter Kit on your development environment.
+This guide walks you through setting up and running the Brightloop SaaS Starter Kit on your development environment.
 
 ---
 
@@ -17,7 +17,7 @@ This guide walks you through setting up and running the UNKNOWN SaaS Starter Kit
 
 1. **Clone or locate the repository:**
    ```bash
-   cd %USERPROFILE%\Desktop\UNKNOWN
+   cd %USERPROFILE%\Desktop\Brightloop
    ```
 
 2. **Configure environment variables:**
@@ -54,7 +54,7 @@ pnpm db:seed
 ### Option B: Using an Existing PostgreSQL Instance
 Update `DATABASE_URL` in your `.env`:
 ```
-DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/unknown_db?schema=public
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/brightloop_db?schema=public
 ```
 Then run:
 ```bash
@@ -92,9 +92,9 @@ The database seed provides three pre-configured accounts:
 
 | Role | Email | Password |
 |---|---|---|
-| **Owner** | `owner@unknown.local` | `Password123!` |
-| **Admin** | `admin@unknown.local` | `Password123!` |
-| **Member** | `member@unknown.local` | `Password123!` |
+| **Owner** | `owner@brightloop.local` | `Password123!` |
+| **Admin** | `admin@brightloop.local` | `Password123!` |
+| **Member** | `member@brightloop.local` | `Password123!` |
 
 *(The login screen also includes convenient one-click credential filler buttons for rapid testing)*
 

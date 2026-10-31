@@ -19,7 +19,7 @@ import {
   OrganizationDto,
   SystemRole,
   PermissionKey,
-} from '@subpulse/contracts';
+} from '@brightloop/contracts';
 
 @Injectable()
 export class AuthService {
@@ -403,11 +403,11 @@ export class AuthService {
 
     const accessSecret = this.configService.get<string>(
       'jwt.accessSecret',
-      'unknown_default_dev_secret_access_token_min_32_characters!',
+      'brightloop_default_dev_secret_access_token_min_32_characters!',
     );
     const refreshSecret = this.configService.get<string>(
       'jwt.refreshSecret',
-      'unknown_default_dev_secret_refresh_token_min_32_characters!',
+      'brightloop_default_dev_secret_refresh_token_min_32_characters!',
     );
 
     const accessToken = this.jwtService.sign(payload, {

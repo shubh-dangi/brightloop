@@ -21,7 +21,7 @@ const permissions = [
 ];
 
 async function main() {
-  console.log('🌱 Starting Subpulse database seed...');
+  console.log('🌱 Starting Brightloop database seed...');
 
   // 1. Seed Permissions
   console.log('Inserting system permissions...');
@@ -37,14 +37,14 @@ async function main() {
 
   // 2. Seed Default Organization
   const org = await prisma.organization.upsert({
-    where: { slug: 'subpulse-primary-workspace' },
+    where: { slug: 'brightloop-primary-workspace' },
     create: {
-      name: 'Subpulse Primary Workspace',
-      slug: 'subpulse-primary-workspace',
+      name: 'Brightloop Primary Workspace',
+      slug: 'brightloop-primary-workspace',
       settings: {
         create: {
-          displayName: 'Subpulse Workspace',
-          supportEmail: 'support@subpulse.local',
+          displayName: 'Brightloop Workspace',
+          supportEmail: 'support@brightloop.local',
           timezone: 'UTC',
           dateFormat: 'YYYY-MM-DD',
           allowMemberInvites: true,
@@ -154,10 +154,10 @@ async function main() {
   });
 
   const ownerUser = await prisma.user.upsert({
-    where: { email: 'owner@subpulse.local' },
+    where: { email: 'owner@brightloop.local' },
     create: {
       name: 'Taylor Reed (Owner)',
-      email: 'owner@subpulse.local',
+      email: 'owner@brightloop.local',
       passwordHash,
       isEmailVerified: true,
       userPreference: {
@@ -172,10 +172,10 @@ async function main() {
   });
 
   const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@subpulse.local' },
+    where: { email: 'admin@brightloop.local' },
     create: {
       name: 'Morgan Blake (Admin)',
-      email: 'admin@subpulse.local',
+      email: 'admin@brightloop.local',
       passwordHash,
       isEmailVerified: true,
       userPreference: {
@@ -190,10 +190,10 @@ async function main() {
   });
 
   const memberUser = await prisma.user.upsert({
-    where: { email: 'member@subpulse.local' },
+    where: { email: 'member@brightloop.local' },
     create: {
       name: 'Jordan Hayes (Staff)',
-      email: 'member@subpulse.local',
+      email: 'member@brightloop.local',
       passwordHash,
       isEmailVerified: true,
       userPreference: {
@@ -308,7 +308,7 @@ async function main() {
   // 6. Seed Demo Notifications
   const demoNotifications = [
     {
-      title: 'Subpulse Platform Initialized',
+      title: 'Brightloop Platform Initialized',
       message: 'Workspace configured with enterprise RBAC roles and subscription billing architecture.',
       type: 'SUCCESS' as const,
       isRead: true,
@@ -337,12 +337,12 @@ async function main() {
     });
   }
 
-  console.log('✅ Subpulse database seed completed successfully!');
+  console.log('✅ Brightloop database seed completed successfully!');
   console.log('==============================================');
   console.log('Default Demo Accounts:');
-  console.log('Owner:  owner@subpulse.local  | Password123!');
-  console.log('Admin:  admin@subpulse.local  | Password123!');
-  console.log('Staff:  member@subpulse.local | Password123!');
+  console.log('Owner:  owner@brightloop.local  | Password123!');
+  console.log('Admin:  admin@brightloop.local  | Password123!');
+  console.log('Staff:  member@brightloop.local | Password123!');
   console.log('==============================================');
 }
 

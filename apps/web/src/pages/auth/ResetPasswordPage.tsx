@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Hexagon, Lock, Eye, EyeOff } from 'lucide-react';
-import { ResetPasswordSchema, ResetPasswordInput } from '@subpulse/contracts';
+import { ResetPasswordSchema, ResetPasswordInput } from '@brightloop/contracts';
 import { apiClient } from '../../services/api';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';

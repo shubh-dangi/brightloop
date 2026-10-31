@@ -1,6 +1,6 @@
-# Database Schema & Multi-Tenant Design - UNKNOWN
+# Database Schema & Multi-Tenant Design - Brightloop
 
-The UNKNOWN Starter Kit uses PostgreSQL with Prisma ORM.
+The Brightloop Starter Kit uses PostgreSQL with Prisma ORM.
 
 ---
 

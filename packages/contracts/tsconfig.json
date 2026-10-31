@@ -1,5 +1,5 @@
 {
-  "extends": "@subpulse/config/tsconfig.base.json",
+  "extends": "@brightloop/config/tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",

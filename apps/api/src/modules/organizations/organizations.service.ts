@@ -5,7 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
-import { MemberStatus, SystemRole } from '@subpulse/contracts';
+import { MemberStatus, SystemRole } from '@brightloop/contracts';
 
 @Injectable()
 export class OrganizationsService {

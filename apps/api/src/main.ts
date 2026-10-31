@@ -59,7 +59,7 @@ async function bootstrap() {
 
   // Swagger OpenAPI Documentation
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Subpulse — Subscription Management & Billing API')
+    .setTitle('Brightloop — Subscription Management & Billing API')
     .setDescription(
       'Enterprise-grade multi-tenant subscription lifecycle, billing engine, quotation, and revenue management REST API.',
     )
@@ -73,7 +73,7 @@ async function bootstrap() {
 
   await app.listen(port);
   logger.log(`=======================================================`);
-  logger.log(`🚀 Subpulse API Server running on: http://localhost:${port}/api/v1`);
+  logger.log(`🚀 Brightloop API Server running on: http://localhost:${port}/api/v1`);
   logger.log(`📑 Swagger Documentation ready at: http://localhost:${port}/api/docs`);
   logger.log(`=======================================================`);
 }

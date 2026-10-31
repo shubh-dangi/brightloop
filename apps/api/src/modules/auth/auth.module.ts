@@ -15,7 +15,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>(
           'jwt.accessSecret',
-          'unknown_default_dev_secret_access_token_min_32_characters!',
+          'brightloop_default_dev_secret_access_token_min_32_characters!',
         ),
         signOptions: {
           expiresIn: (config.get<string>('jwt.accessExpiration', '15m') as any),

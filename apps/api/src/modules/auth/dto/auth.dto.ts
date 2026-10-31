@@ -7,7 +7,7 @@ export class SignupDto {
   @MinLength(2)
   name!: string;
 
-  @ApiProperty({ example: 'alex@unknown.local' })
+  @ApiProperty({ example: 'alex@brightloop.local' })
   @IsEmail()
   email!: string;
 
@@ -16,7 +16,7 @@ export class SignupDto {
   @MinLength(8)
   password!: string;
 
-  @ApiPropertyOptional({ example: 'UNKNOWN Workspace' })
+  @ApiPropertyOptional({ example: 'Brightloop Workspace' })
   @IsOptional()
   @IsString()
   @MinLength(2)
@@ -24,7 +24,7 @@ export class SignupDto {
 }
 
 export class LoginDto {
-  @ApiProperty({ example: 'owner@unknown.local' })
+  @ApiProperty({ example: 'owner@brightloop.local' })
   @IsEmail()
   email!: string;
 
@@ -35,7 +35,7 @@ export class LoginDto {
 }
 
 export class ForgotPasswordDto {
-  @ApiProperty({ example: 'owner@unknown.local' })
+  @ApiProperty({ example: 'owner@brightloop.local' })
   @IsEmail()
   email!: string;
 }

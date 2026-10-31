@@ -13,7 +13,7 @@ export function MaintenancePage() {
           </div>
           <CardTitle className="text-2xl font-bold">Scheduled Maintenance</CardTitle>
           <CardDescription>
-            UNKNOWN is undergoing planned database optimizations. We expect to be fully operational shortly.
+            Brightloop is undergoing planned database optimizations. We expect to be fully operational shortly.
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-2">

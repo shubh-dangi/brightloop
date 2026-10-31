@@ -1,8 +1,8 @@
-# Subpulse — Enterprise Subscription Management & Recurring Billing Platform
+# Brightloop — Enterprise Subscription Management & Recurring Billing Platform
 
-Subpulse is a modern, enterprise-grade subscription lifecycle and recurring billing management platform engineered for SaaS businesses.
+Brightloop is a modern, enterprise-grade subscription lifecycle and recurring billing management platform engineered for SaaS businesses.
 
-Built on **React 19**, **Vite**, **TypeScript**, **Tailwind CSS v4**, **NestJS LTS**, **Prisma ORM**, and **PostgreSQL**, Subpulse provides an end-to-end commercial operating system spanning product catalogs, variant pricing, quotes, subscriptions, automated invoicing, tax computation, discounts, and revenue analytics (MRR, ARR, and cash realization).
+Built on **React 19**, **Vite**, **TypeScript**, **Tailwind CSS v4**, **NestJS LTS**, **Prisma ORM**, and **PostgreSQL**, Brightloop provides an end-to-end commercial operating system spanning product catalogs, variant pricing, quotes, subscriptions, automated invoicing, tax computation, discounts, and revenue analytics (MRR, ARR, and cash realization).
 
 ---
 
@@ -48,7 +48,7 @@ Built on **React 19**, **Vite**, **TypeScript**, **Tailwind CSS v4**, **NestJS L
 ## 📂 Project Structure
 
 ```
-Subpulse/
+Brightloop/
 ├── apps/
 │   ├── web/                     # React 19 + Vite Frontend Application
 │   │   ├── src/
@@ -142,9 +142,9 @@ The database seed provides three pre-configured accounts:
 
 | Role | Email | Password |
 |---|---|---|
-| **Owner** | `owner@subpulse.local` | `Password123!` |
-| **Admin** | `admin@subpulse.local` | `Password123!` |
-| **Member** | `member@subpulse.local` | `Password123!` |
+| **Owner** | `owner@brightloop.local` | `Password123!` |
+| **Admin** | `admin@brightloop.local` | `Password123!` |
+| **Member** | `member@brightloop.local` | `Password123!` |
 
 *(The login screen also features 1-click demo credential filler buttons for rapid testing)*
 

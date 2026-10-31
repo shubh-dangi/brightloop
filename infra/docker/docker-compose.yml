@@ -1,30 +1,30 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: subpulse_postgres
+    container_name: brightloop_postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: subpulse_db
+      POSTGRES_DB: brightloop_db
     ports:
       - "5432:5432"
     volumes:
-      - subpulse_postgres_data:/var/lib/postgresql/data
+      - brightloop_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d subpulse_db"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d brightloop_db"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: subpulse_redis
+    container_name: brightloop_redis
     restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
-      - subpulse_redis_data:/data
+      - brightloop_redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -32,7 +32,7 @@ services:
       retries: 5
 
 volumes:
-  subpulse_postgres_data:
+  brightloop_postgres_data:
     driver: local
-  subpulse_redis_data:
+  brightloop_redis_data:
     driver: local

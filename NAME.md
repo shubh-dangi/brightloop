@@ -1,7 +1,7 @@
 # Product Name and Brand Identity
 
 ## 1. Product Overview
-**Subpulse** is an enterprise-grade subscription lifecycle and recurring billing management platform engineered specifically for modern B2B and B2C Software-as-a-Service (SaaS) companies. The platform orchestrates the end-to-end commercial customer journey, consolidating product catalogs, pricing tiers, automated quotation workflows, subscription provisioning, multi-currency invoicing, tax compliance, discount engines, payment gateways, and real-time revenue analytics (including MRR, ARR, and cash realization) into a unified, high-reliability control plane.
+**Brightloop** is an enterprise-grade subscription lifecycle and recurring billing management platform engineered specifically for modern B2B and B2C Software-as-a-Service (SaaS) companies. The platform orchestrates the end-to-end commercial customer journey, consolidating product catalogs, pricing tiers, automated quotation workflows, subscription provisioning, multi-currency invoicing, tax compliance, discount engines, payment gateways, and real-time revenue analytics (including MRR, ARR, and cash realization) into a unified, high-reliability control plane.
 
 The platform provides dedicated, role-tailored interfaces for three core user groups:
 1. **System Administrators**: Executive visibility and governance across product configurations, global tax jurisdictions, revenue reporting, audit logs, and security policies.
@@ -25,7 +25,7 @@ The following sixteen original name candidates were generated and benchmarked ag
 
 | # | Candidate | Linguistic Root / Etymology | Intended Connotation |
 |---|---|---|---|
-| 01 | **Subpulse** | *Subscription* + *Pulse* | The vital rhythm and real-time cadence of recurring revenue. |
+| 01 | **Brightloop** | *Bright* (clarity, intelligence) + *Loop* (continuous recurring billing lifecycle) | Illuminating real-time financial clarity across the continuous subscription lifecycle. |
 | 02 | **Recurio** | Latin *recurrere* (to run back / recur) | Algorithmic precision and automated cyclical workflows. |
 | 03 | **Billbase** | *Billing* + *Base* (foundation) | Solid, foundational platform infrastructure for billing. |
 | 04 | **Omnipact** | Latin *omni* (all) + *pact* (agreement) | Complete lifecycle management of customer contracts and subscriptions. |
@@ -56,7 +56,7 @@ Each candidate was evaluated across six objective criteria on a scale of 1 to 5 
 
 | Candidate | Mem | Pro | Rel | App | Sca | Unc | Total (out of 30) | Evaluation Notes |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| **Subpulse** | **5** | **5** | **5** | **5** | **5** | **4** | **29** | **Strongest overall. Energetic, authoritative, perfectly balanced.** |
+| **Brightloop** | **5** | **5** | **5** | **5** | **5** | **4** | **29** | **Strongest overall. Energetic, authoritative, perfectly balanced.** |
 | **Recurio** | 4 | 4 | 4 | 4 | 4 | 4 | 24 | Crisp, but suffix sounds slightly startup-esque rather than enterprise. |
 | **Billbase** | 4 | 5 | 4 | 3 | 3 | 4 | 23 | Highly descriptive, but feels utilitarian and lacks modern SaaS energy. |
 | **Omnipact** | 4 | 4 | 4 | 5 | 4 | 3 | 24 | Sounds authoritative; slightly heavier legal connotation than financial. |
@@ -71,13 +71,13 @@ Each candidate was evaluated across six objective criteria on a scale of 1 to 5 
 
 ## 5. Final Selected Name
 
-### **Subpulse**
+### **Brightloop**
 
-### Why Subpulse is the Clear Winner
+### Why Brightloop is the Clear Winner
 1. **Immediate Industry Context**: The prefix **Sub-** instantly roots the platform in *subscriptions*, *subscriber management*, and *subscription plans* without requiring cumbersome explanatory subheadings.
 2. **Dynamic Vitality**: The root **Pulse** embodies the continuous heartbeat of recurring revenue—every hourly cron run, daily renewal, invoice distribution, webhook execution, and real-time ARR calculation.
 3. **Uncompromising Phonetics**: Two syllables, eight letters, hard plosive stops (`b`, `p`), and natural rhythm. It is effortlessly spoken and understood on global sales calls, board presentations, and customer support desks.
-4. **Architectural Authority**: Subpulse does not sound like a temporary side project or an accounting spreadsheet plugin; it sounds like an established, category-defining enterprise platform on par with Stripe, Twilio, or Datadog.
+4. **Architectural Authority**: Brightloop does not sound like a temporary side project or an accounting spreadsheet plugin; it sounds like an established, category-defining enterprise platform on par with Stripe, Twilio, or Datadog.
 
 ---
 
@@ -96,10 +96,10 @@ Each candidate was evaluated across six objective criteria on a scale of 1 to 5 
 ## 7. Brand Description
 
 ### One-Sentence Elevator Pitch
-> **Subpulse is an enterprise-grade subscription management and recurring billing platform engineered to automate the entire customer lifecycle from quotation and plan configuration to multi-currency invoicing and revenue recognition.**
+> **Brightloop is an enterprise-grade subscription management and recurring billing platform engineered to automate the entire customer lifecycle from quotation and plan configuration to multi-currency invoicing and revenue recognition.**
 
 ### Executive Paragraph Description
-> Modern SaaS businesses require financial infrastructure that moves at the speed of product innovation. Subpulse eliminates billing fragmentation by unifying product catalogs, customizable subscription tiers, automated quotation workflows, scheduled recurring invoicing, tax computation, and payment reconciliation within a single, secure control plane. Built on modern, resilient open-source standards with enterprise role-based governance, Subpulse guarantees financial accuracy, zero-downtime subscription continuity, and crystal-clear real-time MRR/ARR visibility.
+> Modern SaaS businesses require financial infrastructure that moves at the speed of product innovation. Brightloop eliminates billing fragmentation by unifying product catalogs, customizable subscription tiers, automated quotation workflows, scheduled recurring invoicing, tax computation, and payment reconciliation within a single, secure control plane. Built on modern, resilient open-source standards with enterprise role-based governance, Brightloop guarantees financial accuracy, zero-downtime subscription continuity, and crystal-clear real-time MRR/ARR visibility.
 
 ---
 
@@ -130,7 +130,7 @@ To become the global architectural benchmark for recurring commercial relationsh
 
 ## 10. Brand Personality
 
-Subpulse embodies five essential attributes:
+Brightloop embodies five essential attributes:
 - **Precise**: Zero tolerance for rounding errors, ambiguous invoices, or unverified ledger lines. Every currency decimal, tax breakdown, and proration calculation is mathematically verified.
 - **Architectural**: Clean, robust, and engineered from fundamental principles. It feels like high-grade software infrastructure rather than decorative marketing software.
 - **Calm & Confident**: Financial systems should never induce panic. The interface and communications are restrained, clear, and reassuring.
@@ -146,7 +146,7 @@ Subpulse embodies five essential attributes:
 | **Formality** | High-Professional | Authoritative yet accessible. Avoid corporate jargon; use standard financial terminology. | *"Invoice #INV-2026-089 has been confirmed and scheduled for automated payment collection on Nov 1."* |
 | **Clarity** | Direct & Transparent | State statuses, dates, and amounts without ambiguity or fluff. | *"3 subscriptions require renewal confirmation within the next 48 hours."* |
 | **Error Handling** | Solution-Oriented | Explain the exact constraint and provide immediate actionable recourse. | *"Payment attempt failed: Card declined by issuing bank (insufficient funds). An automated retry has been scheduled for Nov 3."* |
-| **Marketing Tone** | Grounded & Credible | Focus on system reliability, automation depth, and operational velocity rather than hyperbole. | *"Subpulse processes recurring billing cycles with zero manual intervention and mathematically verified tax reconciliation."* |
+| **Marketing Tone** | Grounded & Credible | Focus on system reliability, automation depth, and operational velocity rather than hyperbole. | *"Brightloop processes recurring billing cycles with zero manual intervention and mathematically verified tax reconciliation."* |
 
 ---
 
@@ -157,7 +157,7 @@ Subpulse embodies five essential attributes:
                                   │
                                   │     [Zuora]
                                   │
-                                  │       ★ SUBPULSE
+                                  │       ★ BRIGHTLOOP
                                   │       (Enterprise rigor + Modern velocity)
       Fragmented Manual Invoicing │
       ────────────────────────────┼──────────────────────────── Pure Self-Serve Micro-Tools
@@ -168,21 +168,21 @@ Subpulse embodies five essential attributes:
                       Developer / Low-Code Simplicity
 ```
 
-- **Against Legacy ERPs (e.g., Zuora, SAP)**: Subpulse offers modern developer velocity, instant setup, responsive UI/UX, and zero bureaucratic bloat while retaining enterprise multi-tenancy and RBAC.
-- **Against Generic Payment APIs (e.g., Raw Stripe / Braintree)**: Subpulse delivers complete turn-key product management, quote-to-subscription workflows, customer portal views, multi-tier discount schedules, and consolidated tax management out of the box.
+- **Against Legacy ERPs (e.g., Zuora, SAP)**: Brightloop offers modern developer velocity, instant setup, responsive UI/UX, and zero bureaucratic bloat while retaining enterprise multi-tenancy and RBAC.
+- **Against Generic Payment APIs (e.g., Raw Stripe / Braintree)**: Brightloop delivers complete turn-key product management, quote-to-subscription workflows, customer portal views, multi-tier discount schedules, and consolidated tax management out of the box.
 
 ---
 
 ## 13. Logo Design Direction
 
 ### Concept: The "Continuous Pulse" Monogram
-The Subpulse brand mark merges two primary motifs:
+The Brightloop brand mark merges two primary motifs:
 1. **The Cyclical Loop (S)**: Representing recurring subscription continuity, renewal, and business longevity.
 2. **The Cadence Pulse (Hexagonal Node / Signal Bar)**: A sharp, geometric pulse line intersecting the cycle, signifying real-time financial transaction events and system health.
 
 ### Typography Direction
 - **Wordmark Font**: Clean, geometric neo-grotesque sans-serif with tight tracking and optical kerning (customized geometric cuts based on *Geist Sans* or *Inter*).
-- **Case**: Sentence-case with capitalized initials (**Subpulse**). The "Sub" carries medium weight (`500`), while "pulse" carries semi-bold weight (`600`) to create optical depth without using jarring multi-colored letters.
+- **Case**: Sentence-case with capitalized initials (**Brightloop**). The "Sub" carries medium weight (`500`), while "pulse" carries semi-bold weight (`600`) to create optical depth without using jarring multi-colored letters.
 - **Character**: Crisp, modern, and mathematically balanced, with horizontal terminal cuts and tabular alignment.
 
 ### Color Treatments
@@ -196,7 +196,7 @@ The Subpulse brand mark merges two primary motifs:
 
 ### App Icon Concept
 - A solid squircle (`22.5%` corner radius) with a deep, midnight-navy surface (`#0B0F19`).
-- Centered within the squircle is the stylized interlocking Subpulse emblem: an electric blue and indigo vector cycle with a precision horizontal pulse bridge.
+- Centered within the squircle is the stylized interlocking Brightloop emblem: an electric blue and indigo vector cycle with a precision horizontal pulse bridge.
 - Subtle inner border (`1px` with `15%` white opacity) creating a refined edge highlight.
 
 ### Favicon Variants
@@ -209,17 +209,17 @@ The Subpulse brand mark merges two primary motifs:
 ## 15. Brand Usage Guidelines
 
 ### Correct Naming Usages
-- **Subpulse** (Standard product name, single word, capital S, lowercase p).
-- **Subpulse Platform** (When referring to the complete architecture).
-- **Subpulse API** (When referencing backend REST endpoints and developer documentation).
-- **Subpulse Customer Portal** (When describing subscriber self-service views).
+- **Brightloop** (Standard product name, single word, capital B, lowercase loop).
+- **Brightloop Platform** (When referring to the complete architecture).
+- **Brightloop API** (When referencing backend REST endpoints and developer documentation).
+- **Brightloop Customer Portal** (When describing subscriber self-service views).
 
 ### Incorrect Naming Usages (Strictly Prohibited)
-- ❌ `SubPulse` (Do not use internal camelCase).
-- ❌ `Sub-Pulse` (Do not insert hyphens).
-- ❌ `subpulse` (Do not lowercase in running text or formal copy).
-- ❌ `SUBPULSE` (Do not write in all-caps except in monospace code environments).
-- ❌ `Subpulse.io` or `Subpulse App` (Do not append arbitrary domain suffixes to the brand name).
+- ❌ `BrightLoop` (Do not use internal camelCase).
+- ❌ `Bright-Loop` (Do not insert hyphens).
+- ❌ `brightloop` (Do not lowercase in running text or formal copy).
+- ❌ `BRIGHTLOOP` (Do not write in all-caps except in monospace code environments).
+- ❌ `Brightloop.io` or `Brightloop App` (Do not append arbitrary domain suffixes to the brand name).
 
 ### Visual Consistency Rules
 - Always maintain clear space around the logo equal to at least half the height of the icon mark.
@@ -231,10 +231,10 @@ The Subpulse brand mark merges two primary motifs:
 
 ## 16. Future Brand Scalability
 
-The Subpulse naming architecture is designed to support natural modular expansion as the enterprise product suite matures:
+The Brightloop naming architecture is designed to support natural modular expansion as the enterprise product suite matures:
 
-- **Subpulse Core**: The base subscription, quotation, plan, and customer engine.
-- **Subpulse Billing**: The automated invoice generation, tax calculation, and payment collection layer.
-- **Subpulse Metering**: Future high-frequency usage-based event ingestion engine.
-- **Subpulse Portal**: The dedicated white-label subscriber self-service experience.
-- **Subpulse Insights**: Advanced predictive revenue forecasting, churn modeling, and cohort analysis.
+- **Brightloop Core**: The base subscription, quotation, plan, and customer engine.
+- **Brightloop Billing**: The automated invoice generation, tax calculation, and payment collection layer.
+- **Brightloop Metering**: Future high-frequency usage-based event ingestion engine.
+- **Brightloop Portal**: The dedicated white-label subscriber self-service experience.
+- **Brightloop Insights**: Advanced predictive revenue forecasting, churn modeling, and cohort analysis.

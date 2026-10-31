@@ -10,7 +10,7 @@ import {
   CreateRecordInput,
   UpdateRecordInput,
   GenericRecordDto,
-} from '@subpulse/contracts';
+} from '@brightloop/contracts';
 
 export interface RecordQueryParams {
   page?: number;

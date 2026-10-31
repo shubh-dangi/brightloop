@@ -11,9 +11,9 @@ import { Alert, AlertDescription } from '../../components/ui/alert';
 
 export function GeneralSettingsPage() {
   const { currentOrganization } = useAuthStore();
-  const [appName, setAppName] = useState('Subpulse');
-  const [workspaceName, setWorkspaceName] = useState(currentOrganization?.name || 'Subpulse Workspace');
-  const [supportEmail, setSupportEmail] = useState('support@subpulse.local');
+  const [appName, setAppName] = useState('Brightloop');
+  const [workspaceName, setWorkspaceName] = useState(currentOrganization?.name || 'Brightloop Workspace');
+  const [supportEmail, setSupportEmail] = useState('support@brightloop.local');
   const [allowInvites, setAllowInvites] = useState(true);
   const [enforce2FA, setEnforce2FA] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -60,7 +60,7 @@ export function GeneralSettingsPage() {
               <Settings className="h-4 w-4" /> Workspace Identity
             </CardTitle>
             <CardDescription>
-              Branding defaults to UNKNOWN and can be tailored for client deployments
+              Branding defaults to Brightloop and can be tailored for client deployments
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -73,9 +73,9 @@ export function GeneralSettingsPage() {
                   id="appName"
                   value={appName}
                   onChange={(e) => setAppName(e.target.value)}
-                  placeholder="UNKNOWN"
+                  placeholder="Brightloop"
                 />
-                <p className="text-[11px] text-muted-foreground">Default: Subpulse</p>
+                <p className="text-[11px] text-muted-foreground">Default: Brightloop</p>
               </div>
 
               <div className="space-y-2">

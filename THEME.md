@@ -1,12 +1,12 @@
-# Design System and UI Theme — Subpulse
+# Design System and UI Theme — Brightloop
 
 ## 1. Design Philosophy
 
-The Subpulse design system is built upon four fundamental principles tailored for enterprise financial software:
+The Brightloop design system is built upon four fundamental principles tailored for enterprise financial software:
 
 1. **Information Density with Absolute Clarity**: Financial operators, revenue managers, and executive leadership require high visibility across complex records (subscriptions, invoices, prorations, tax rates). The interface delivers high data density without feeling congested through meticulous typographic scale, clean horizontal alignment, and whitespace calibration.
 2. **Deterministic Feedback & Precision**: In billing and revenue management, ambiguous interactions lead to catastrophic financial anxiety. Every system state (saving, draft, confirmed, pending webhook, payment settlement, failed payment) is represented with unambiguous, high-contrast, dual-channel indicators (icon + semantic text).
-3. **Calm, High-End Utility**: Taking inspiration from the functional minimalism of *Linear*, the financial authority of *Stripe*, and the typographical restraint of *Vercel*, Subpulse rejects decorative excess, arbitrary neon gradients, and unnecessary animations. The interface recedes into the background, ensuring data is always the hero.
+3. **Calm, High-End Utility**: Taking inspiration from the functional minimalism of *Linear*, the financial authority of *Stripe*, and the typographical restraint of *Vercel*, Brightloop rejects decorative excess, arbitrary neon gradients, and unnecessary animations. The interface recedes into the background, ensuring data is always the hero.
 4. **Resilient Dual-Mode Parity**: Light and dark themes are not afterthoughts or automated inversions. Each mode is independently calibrated for luminance balance, text contrast (WCAG 2.2 AA compliance), and optimal chart readability during long operational shifts.
 
 ---
@@ -23,7 +23,7 @@ The Subpulse design system is built upon four fundamental principles tailored fo
 
 ## 3. Brand Color Palette
 
-The Subpulse brand palette is grounded in a deep obsidian foundation, neutral structural slates, and a vibrant, authoritative indigo/cobalt primary spectrum.
+The Brightloop brand palette is grounded in a deep obsidian foundation, neutral structural slates, and a vibrant, authoritative indigo/cobalt primary spectrum.
 
 | Swatch Name | Token | HEX | Light Theme Role | Dark Theme Role | Contrast Ratio vs Background |
 |---|---|---|---|---|---|
@@ -73,7 +73,7 @@ Colors are exposed to the UI via CSS custom properties mapped to semantic respon
 
 ### 4.4 Business Status Palette
 
-Every business status in Subpulse maps to an exact semantic token, background tint, text shade, and border tone.
+Every business status in Brightloop maps to an exact semantic token, background tint, text shade, and border tone.
 
 #### A. Subscription Lifecycle Statuses
 | Status | Token Name | Badge Background | Badge Text | Border Tone | Business Meaning |
@@ -191,7 +191,7 @@ The Dark Theme utilizes carefully tiered midnight surfaces (`#0B0F19`, `#111827`
 
 ### Theme Transition & Preference Handling
 - **Default Theme**: Follows the user's OS preference (`prefers-color-scheme`) on initial load.
-- **Persistence**: Explicit user choices are stored in `localStorage` under `subpulse-theme` (`'light' | 'dark' | 'system'`).
+- **Persistence**: Explicit user choices are stored in `localStorage` under `brightloop-theme` (`'light' | 'dark' | 'system'`).
 - **Transition**: Smooth `150ms ease-out` transition applied exclusively to `background-color`, `border-color`, and `color` properties. Avoid universal wildcard transitions (`* { transition: all }`) to prevent layout lag.
 
 ---
@@ -283,7 +283,7 @@ The AppShell layout provides a consistent, unified framing across every page:
 ┌────────────────────────────────────────────────────────────────────────┐
 │  SIDEBAR (256px / 64px)       │  HEADER (Sticky, 64px)                 │
 │  ┌─────────────────────────┐  ├────────────────────────────────────────┤
-│  │ [Subpulse Logo]         │  │ Breadcrumbs  Search (Ctrl+K)   Theme   │
+│  │ [Brightloop Logo]         │  │ Breadcrumbs  Search (Ctrl+K)   Theme   │
 │  ├─────────────────────────┤  ├────────────────────────────────────────┤
 │  │ OVERVIEW                │  │ PAGE HEADER                            │
 │  │ • Dashboard             │  │ Title + Description + Primary Action   │
@@ -532,14 +532,14 @@ When implementing frontend features in `apps/web`:
 
 1. **Component Primitives**: First check `@/components/ui/` for existing primitives (`button`, `dialog`, `badge`, `input`, `select`, `card`). Do not create duplicate wrappers.
 2. **Table Implementation**: Use `TanStack Table` (`@tanstack/react-table`) paired with `@/components/ui/` table layout components.
-3. **Form Implementation**: Construct forms using `react-hook-form` with `@hookform/resolvers/zod` and schema models exported from `@subpulse/contracts`.
+3. **Form Implementation**: Construct forms using `react-hook-form` with `@hookform/resolvers/zod` and schema models exported from `@brightloop/contracts`.
 4. **State Segregation**: Keep global session and tenant preferences inside Zustand stores (`useAuthStore`, `useThemeStore`). Keep server entity caching inside TanStack Query hooks (`useQuery`, `useMutation`).
 
 ---
 
 ## 25. Future Design System Expansion
 
-As Subpulse expands, the design system will seamlessly support:
+As Brightloop expands, the design system will seamlessly support:
 
 - **Usage-Based Metering Widgets**: Real-time gauge bars and percentile thresholds for API call and seat consumption.
 - **Visual Plan Builder**: Drag-and-drop plan variant matrix with pricing tier sliders.

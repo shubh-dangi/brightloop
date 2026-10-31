@@ -10,7 +10,7 @@ export class StorageService {
   private bucket: string;
 
   constructor(private configService: ConfigService) {
-    this.bucket = this.configService.get<string>('s3.bucket', 'unknown-saas-uploads');
+    this.bucket = this.configService.get<string>('s3.bucket', 'brightloop-saas-uploads');
     const region = this.configService.get<string>('s3.region', 'us-east-1');
     const accessKeyId = this.configService.get<string>('s3.accessKeyId');
     const secretAccessKey = this.configService.get<string>('s3.secretAccessKey');

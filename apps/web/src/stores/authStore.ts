@@ -6,7 +6,7 @@ import {
   SignupInput,
   AuthResponseData,
   ApiResponse,
-} from '@subpulse/contracts';
+} from '@brightloop/contracts';
 import { apiClient, setAuthToken, setActiveOrganizationId } from '../services/api';
 
 interface AuthState {
@@ -31,7 +31,7 @@ interface AuthState {
 const DEMO_USER: UserDto = {
   id: 'usr-demo-owner',
   name: 'Taylor Reed (Owner)',
-  email: 'owner@subpulse.local',
+  email: 'owner@brightloop.local',
   isEmailVerified: true,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
@@ -39,8 +39,8 @@ const DEMO_USER: UserDto = {
 
 const DEMO_ORG: OrganizationDto = {
   id: 'org-demo-workspace',
-  name: 'Subpulse Primary Workspace',
-  slug: 'subpulse-primary-workspace',
+  name: 'Brightloop Primary Workspace',
+  slug: 'brightloop-primary-workspace',
   createdAt: new Date().toISOString(),
 };
 

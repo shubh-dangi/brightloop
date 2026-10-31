@@ -223,7 +223,7 @@ importers:
       '@prisma/client':
         specifier: ^6.4.1
         version: 6.19.3(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)
-      '@subpulse/contracts':
+      '@brightloop/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
       argon2:
@@ -275,7 +275,7 @@ importers:
       '@nestjs/testing':
         specifier: ^11.0.11
         version: 11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8)(@nestjs/platform-express@11.2.8)
-      '@subpulse/config':
+      '@brightloop/config':
         specifier: workspace:*
         version: link:../../packages/config
       '@types/cookie-parser':
@@ -356,7 +356,7 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.8
         version: 1.4.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@subpulse/contracts':
+      '@brightloop/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
       '@tanstack/react-query':
@@ -414,7 +414,7 @@ importers:
         specifier: ^5.0.3
         version: 5.0.16(@types/react@19.3.0)(react@19.3.1)
     devDependencies:
-      '@subpulse/config':
+      '@brightloop/config':
         specifier: workspace:*
         version: link:../../packages/config
       '@tailwindcss/vite':
@@ -462,7 +462,7 @@ importers:
         specifier: ^3.24.2
         version: 3.25.76
     devDependencies:
-      '@subpulse/config':
+      '@brightloop/config':
         specifier: workspace:*
         version: link:../config
       typescript:

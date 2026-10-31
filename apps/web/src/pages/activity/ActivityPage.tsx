@@ -9,7 +9,7 @@ import { PageHeader } from '../../components/layout/PageHeader';
 import { EmptyState } from '../../components/feedback/EmptyState';
 import { Spinner } from '../../components/ui/spinner';
 import { formatDateTime } from '../../lib/utils';
-import { ActivityLogDto } from '@subpulse/contracts';
+import { ActivityLogDto } from '@brightloop/contracts';
 
 export function ActivityPage() {
   const [logs, setLogs] = useState<ActivityLogDto[]>([]);
@@ -34,17 +34,17 @@ export function ActivityPage() {
           id: 'log-1',
           organizationId: 'org-demo',
           userId: 'usr-1',
-          user: { id: 'usr-1', name: 'Taylor Reed (Owner)', email: 'owner@unknown.local' },
+          user: { id: 'usr-1', name: 'Taylor Reed (Owner)', email: 'owner@brightloop.local' },
           action: 'workspace:initialized',
           entity: 'Organization',
-          details: { workspace: 'UNKNOWN Default Workspace' },
+          details: { workspace: 'Brightloop Default Workspace' },
           createdAt: new Date().toISOString(),
         },
         {
           id: 'log-2',
           organizationId: 'org-demo',
           userId: 'usr-1',
-          user: { id: 'usr-1', name: 'Taylor Reed (Owner)', email: 'owner@unknown.local' },
+          user: { id: 'usr-1', name: 'Taylor Reed (Owner)', email: 'owner@brightloop.local' },
           action: 'record:created',
           entity: 'GenericRecord',
           details: { title: 'Infrastructure Ingestion Gateway' },
@@ -54,10 +54,10 @@ export function ActivityPage() {
           id: 'log-3',
           organizationId: 'org-demo',
           userId: 'usr-2',
-          user: { id: 'usr-2', name: 'Morgan Blake (Admin)', email: 'admin@unknown.local' },
+          user: { id: 'usr-2', name: 'Morgan Blake (Admin)', email: 'admin@brightloop.local' },
           action: 'member:invited',
           entity: 'OrganizationMember',
-          details: { email: 'colleague@unknown.local', role: 'MEMBER' },
+          details: { email: 'colleague@brightloop.local', role: 'MEMBER' },
           createdAt: new Date(Date.now() - 7200000).toISOString(),
         },
       ]);

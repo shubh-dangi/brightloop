@@ -22,7 +22,7 @@ import {
   RecordStatus,
   RecordPriority,
   CreateRecordInput,
-} from '@subpulse/contracts';
+} from '@brightloop/contracts';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Card, CardContent } from '../../components/ui/card';
@@ -114,7 +114,7 @@ export function RecordsListPage() {
           category: 'Infrastructure',
           tags: ['network', 'gateway', 'core'],
           createdById: 'usr-1',
-          creator: { id: 'usr-1', name: 'Taylor Reed', email: 'owner@unknown.local' },
+          creator: { id: 'usr-1', name: 'Taylor Reed', email: 'owner@brightloop.local' },
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
@@ -128,7 +128,7 @@ export function RecordsListPage() {
           category: 'Compliance',
           tags: ['security', 'soc2'],
           createdById: 'usr-2',
-          creator: { id: 'usr-2', name: 'Morgan Blake', email: 'admin@unknown.local' },
+          creator: { id: 'usr-2', name: 'Morgan Blake', email: 'admin@brightloop.local' },
           createdAt: new Date(Date.now() - 86400000).toISOString(),
           updatedAt: new Date(Date.now() - 86400000).toISOString(),
         },
@@ -142,7 +142,7 @@ export function RecordsListPage() {
           category: 'Analytics',
           tags: ['telemetry'],
           createdById: 'usr-3',
-          creator: { id: 'usr-3', name: 'Jordan Hayes', email: 'member@unknown.local' },
+          creator: { id: 'usr-3', name: 'Jordan Hayes', email: 'member@brightloop.local' },
           createdAt: new Date(Date.now() - 2 * 86400000).toISOString(),
           updatedAt: new Date(Date.now() - 2 * 86400000).toISOString(),
         },
@@ -156,7 +156,7 @@ export function RecordsListPage() {
           category: 'Operations',
           tags: ['migration'],
           createdById: 'usr-2',
-          creator: { id: 'usr-2', name: 'Morgan Blake', email: 'admin@unknown.local' },
+          creator: { id: 'usr-2', name: 'Morgan Blake', email: 'admin@brightloop.local' },
           createdAt: new Date(Date.now() - 4 * 86400000).toISOString(),
           updatedAt: new Date(Date.now() - 4 * 86400000).toISOString(),
         },
@@ -271,7 +271,7 @@ export function RecordsListPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `unknown-records-${Date.now()}.json`;
+    a.download = `brightloop-records-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };

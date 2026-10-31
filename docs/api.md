@@ -1,6 +1,6 @@
-# REST API Specification - UNKNOWN
+# REST API Specification - Brightloop
 
-The UNKNOWN backend provides a versioned REST API mounted under `/api/v1`.
+The Brightloop backend provides a versioned REST API mounted under `/api/v1`.
 
 Interactive OpenAPI / Swagger documentation is available at:
 `http://localhost:4000/api/docs`

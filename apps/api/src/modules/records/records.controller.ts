@@ -19,7 +19,7 @@ import {
   PermissionKey,
   CreateRecordInput,
   UpdateRecordInput,
-} from '@subpulse/contracts';
+} from '@brightloop/contracts';
 
 @ApiTags('Records (Generic SaaS CRUD)')
 @ApiBearerAuth()

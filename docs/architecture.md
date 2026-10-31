@@ -1,6 +1,6 @@
-# Architecture Overview - UNKNOWN SaaS Starter Kit
+# Architecture Overview - Brightloop SaaS Starter Kit
 
-UNKNOWN is an enterprise-grade, multi-tenant SaaS Starter Kit designed to serve as a reusable, scalable, production-oriented foundation for modern B2B/B2C SaaS products.
+Brightloop is an enterprise-grade, multi-tenant SaaS Starter Kit designed to serve as a reusable, scalable, production-oriented foundation for modern B2B/B2C SaaS products.
 
 ---
 
@@ -9,7 +9,7 @@ UNKNOWN is an enterprise-grade, multi-tenant SaaS Starter Kit designed to serve 
 The project is structured as a Turborepo-managed monorepo with `pnpm` workspaces:
 
 ```
-UNKNOWN/
+Brightloop/
 ├── apps/
 │   ├── web/          # React 19 + Vite + TypeScript + Tailwind v4 + Radix UI
 │   └── api/          # NestJS LTS + TypeScript + Prisma + PostgreSQL + Redis

@@ -1,5 +1,5 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { ApiResponse } from '@subpulse/contracts';
+import { ApiResponse } from '@brightloop/contracts';
 
 export const apiClient = axios.create({
   baseURL: '/api/v1',

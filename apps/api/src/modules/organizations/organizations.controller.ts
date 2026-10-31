@@ -15,7 +15,7 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RequirePermissions } from '../../common/decorators/permissions.decorator';
 import { TenantContext } from '../../common/guards/tenant.guard';
-import { SystemRole, PermissionKey } from '@subpulse/contracts';
+import { SystemRole, PermissionKey } from '@brightloop/contracts';
 
 @ApiTags('Organizations')
 @ApiBearerAuth()

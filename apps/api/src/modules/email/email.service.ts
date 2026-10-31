@@ -10,7 +10,7 @@ export class EmailService {
 
   constructor(private configService: ConfigService) {
     const apiKey = this.configService.get<string>('resend.apiKey');
-    this.from = this.configService.get<string>('resend.from', 'noreply@unknown.local');
+    this.from = this.configService.get<string>('resend.from', 'noreply@brightloop.local');
 
     if (apiKey && apiKey !== 're_placeholder') {
       this.resend = new Resend(apiKey);
@@ -46,7 +46,7 @@ export class EmailService {
     const link = `${frontendUrl}/verify-email?token=${token}`;
     return this.sendEmail(
       to,
-      'Verify your email address - UNKNOWN',
+      'Verify your email address - Brightloop',
       `<p>Welcome! Click <a href="${link}">here</a> to verify your account.</p>`,
     );
   }
@@ -59,7 +59,7 @@ export class EmailService {
     const link = `${frontendUrl}/reset-password?token=${token}`;
     return this.sendEmail(
       to,
-      'Reset your password - UNKNOWN',
+      'Reset your password - Brightloop',
       `<p>You requested a password reset. Click <a href="${link}">here</a> to choose a new password.</p>`,
     );
   }

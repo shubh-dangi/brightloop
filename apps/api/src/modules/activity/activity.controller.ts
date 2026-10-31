@@ -4,7 +4,7 @@ import { ActivityService, ActivityQueryParams } from './activity.service';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
 import { RequirePermissions } from '../../common/decorators/permissions.decorator';
 import { TenantContext } from '../../common/guards/tenant.guard';
-import { PermissionKey } from '@subpulse/contracts';
+import { PermissionKey } from '@brightloop/contracts';
 
 @ApiTags('Activity / Audit Logs')
 @ApiBearerAuth()

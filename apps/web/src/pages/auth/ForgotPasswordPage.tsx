@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Hexagon, ArrowLeft, MailCheck } from 'lucide-react';
-import { ForgotPasswordSchema, ForgotPasswordInput } from '@subpulse/contracts';
+import { ForgotPasswordSchema, ForgotPasswordInput } from '@brightloop/contracts';
 import { apiClient } from '../../services/api';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -89,7 +89,7 @@ export function ForgotPasswordPage() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="name@unknown.local"
+                    placeholder="name@brightloop.local"
                     {...register('email')}
                   />
                   {errors.email && (

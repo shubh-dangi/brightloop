@@ -67,7 +67,7 @@ describe('Authentication & Security', () => {
 
     await expect(
       authService.login({
-        email: 'nonexistent@unknown.local',
+        email: 'nonexistent@brightloop.local',
         password: 'Password123!',
       }),
     ).rejects.toThrow(UnauthorizedException);
@@ -80,7 +80,7 @@ describe('Authentication & Security', () => {
 
     mockPrisma.user.findUnique.mockResolvedValue({
       id: 'user-1',
-      email: 'test@unknown.local',
+      email: 'test@brightloop.local',
       passwordHash: correctHash,
       memberships: [
         {
@@ -93,7 +93,7 @@ describe('Authentication & Security', () => {
 
     await expect(
       authService.login({
-        email: 'test@unknown.local',
+        email: 'test@brightloop.local',
         password: 'IncorrectPassword',
       }),
     ).rejects.toThrow(UnauthorizedException);

@@ -26,7 +26,7 @@ import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
 import { Alert, AlertDescription } from '../../components/ui/alert';
 import { formatDate } from '../../lib/utils';
-import { MemberDto } from '@subpulse/contracts';
+import { MemberDto } from '@brightloop/contracts';
 
 export function TeamMembersPage() {
   const { role: currentUserRole } = useAuthStore();
@@ -60,7 +60,7 @@ export function TeamMembersPage() {
           user: {
             id: 'usr-1',
             name: 'Taylor Reed (Owner)',
-            email: 'owner@subpulse.local',
+            email: 'owner@brightloop.local',
             isEmailVerified: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -76,7 +76,7 @@ export function TeamMembersPage() {
           user: {
             id: 'usr-2',
             name: 'Morgan Blake (Admin)',
-            email: 'admin@subpulse.local',
+            email: 'admin@brightloop.local',
             isEmailVerified: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -92,7 +92,7 @@ export function TeamMembersPage() {
           user: {
             id: 'usr-3',
             name: 'Jordan Hayes (Member)',
-            email: 'member@subpulse.local',
+            email: 'member@brightloop.local',
             isEmailVerified: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -280,7 +280,7 @@ export function TeamMembersPage() {
                 <Input
                   id="inviteEmail"
                   type="email"
-                  placeholder="colleague@subpulse.local"
+                  placeholder="colleague@brightloop.local"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   required

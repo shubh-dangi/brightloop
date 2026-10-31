@@ -17,7 +17,7 @@ import {
   RecordStatus,
   RecordPriority,
   CreateRecordInput,
-} from '@subpulse/contracts';
+} from '@brightloop/contracts';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
@@ -72,7 +72,7 @@ export function RecordDetailPage() {
           protocol: 'HTTPS / TLS 1.3',
         },
         createdById: 'usr-1',
-        creator: { id: 'usr-1', name: 'Taylor Reed (Owner)', email: 'owner@unknown.local' },
+        creator: { id: 'usr-1', name: 'Taylor Reed (Owner)', email: 'owner@brightloop.local' },
         createdAt: new Date(Date.now() - 7 * 86400000).toISOString(),
         updatedAt: new Date().toISOString(),
       });
