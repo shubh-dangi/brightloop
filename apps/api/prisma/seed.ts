@@ -378,6 +378,118 @@ async function main() {
     update: {},
   });
 
+  // Seed Clean User Credentials requested by user
+  const adminPass = await argon2.hash('admin@123', {
+    type: argon2.argon2id,
+    memoryCost: 65536,
+    timeCost: 3,
+  });
+  const staffPass = await argon2.hash('staff@123', {
+    type: argon2.argon2id,
+    memoryCost: 65536,
+    timeCost: 3,
+  });
+  const ownerPass = await argon2.hash('owner@123', {
+    type: argon2.argon2id,
+    memoryCost: 65536,
+    timeCost: 3,
+  });
+  const customerPass = await argon2.hash('customer@123', {
+    type: argon2.argon2id,
+    memoryCost: 65536,
+    timeCost: 3,
+  });
+
+  await prisma.user.upsert({
+    where: { email: 'admin@gmail.com' },
+    create: {
+      name: 'Admin User',
+      email: 'admin@gmail.com',
+      passwordHash: adminPass,
+      isEmailVerified: true,
+      memberships: {
+        create: {
+          organizationId: org.id,
+          roleId: adminRole.id,
+          status: 'ACTIVE',
+        },
+      },
+    },
+    update: { passwordHash: adminPass },
+  });
+
+  await prisma.user.upsert({
+    where: { email: 'staff@gmail.com' },
+    create: {
+      name: 'Staff Operations User',
+      email: 'staff@gmail.com',
+      passwordHash: staffPass,
+      isEmailVerified: true,
+      memberships: {
+        create: {
+          organizationId: org.id,
+          roleId: memberRole.id,
+          status: 'ACTIVE',
+        },
+      },
+    },
+    update: { passwordHash: staffPass },
+  });
+
+  await prisma.user.upsert({
+    where: { email: 'owner@gmail.com' },
+    create: {
+      name: 'Workspace Owner',
+      email: 'owner@gmail.com',
+      passwordHash: ownerPass,
+      isEmailVerified: true,
+      memberships: {
+        create: {
+          organizationId: org.id,
+          roleId: ownerRole.id,
+          status: 'ACTIVE',
+        },
+      },
+    },
+    update: { passwordHash: ownerPass },
+  });
+
+  await prisma.user.upsert({
+    where: { email: 'customer1@gmail.com' },
+    create: {
+      name: 'Customer 1 (John Miller - Bakery Shop)',
+      email: 'customer1@gmail.com',
+      passwordHash: customerPass,
+      isEmailVerified: true,
+      memberships: {
+        create: {
+          organizationId: org.id,
+          roleId: customerRole.id,
+          status: 'ACTIVE',
+        },
+      },
+    },
+    update: { passwordHash: customerPass },
+  });
+
+  await prisma.user.upsert({
+    where: { email: 'customer2@gmail.com' },
+    create: {
+      name: 'Customer 2 (Marcus Vance - Apex Corp)',
+      email: 'customer2@gmail.com',
+      passwordHash: customerPass,
+      isEmailVerified: true,
+      memberships: {
+        create: {
+          organizationId: org.id,
+          roleId: customerRole.id,
+          status: 'ACTIVE',
+        },
+      },
+    },
+    update: { passwordHash: customerPass },
+  });
+
   // 5. Seed Domain Entities: Products & Variants
   const productSoftware = await prisma.product.upsert({
     where: { id: 'prod-software-suite-001' },

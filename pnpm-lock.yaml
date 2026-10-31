@@ -187,6 +187,9 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.758.0
         version: 3.1160.0
+      '@brightloop/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       '@nestjs/common':
         specifier: ^11.0.11
         version: 11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0)
@@ -223,9 +226,6 @@ importers:
       '@prisma/client':
         specifier: ^6.4.1
         version: 6.19.3(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)
-      '@brightloop/contracts':
-        specifier: workspace:*
-        version: link:../../packages/contracts
       argon2:
         specifier: ^0.41.1
         version: 0.41.1
@@ -272,12 +272,12 @@ importers:
         specifier: ^4.8.1
         version: 4.8.4(supports-color@7.2.0)
     devDependencies:
-      '@nestjs/testing':
-        specifier: ^11.0.11
-        version: 11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8)(@nestjs/platform-express@11.2.8)
       '@brightloop/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@nestjs/testing':
+        specifier: ^11.0.11
+        version: 11.2.8(@nestjs/common@11.2.8(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.8)(@nestjs/platform-express@11.2.8)
       '@types/cookie-parser':
         specifier: ^1.4.8
         version: 1.4.10(@types/express@5.0.6)
@@ -320,6 +320,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@brightloop/contracts':
+        specifier: file:../../packages/contracts
+        version: link:../../packages/contracts
       '@hookform/resolvers':
         specifier: ^4.1.2
         version: 4.1.3(react-hook-form@7.91.0(@types/react@19.3.0)(react@19.3.1))
@@ -356,9 +359,6 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.8
         version: 1.4.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@brightloop/contracts':
-        specifier: workspace:*
-        version: link:../../packages/contracts
       '@tanstack/react-query':
         specifier: ^5.66.9
         version: 5.105.0(@types/react@19.3.0)(react@19.3.1)
@@ -415,7 +415,7 @@ importers:
         version: 5.0.16(@types/react@19.3.0)(react@19.3.1)
     devDependencies:
       '@brightloop/config':
-        specifier: workspace:*
+        specifier: file:../../packages/config
         version: link:../../packages/config
       '@tailwindcss/vite':
         specifier: ^4.0.9

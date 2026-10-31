@@ -27,8 +27,8 @@ export function LoginPage() {
   } = useForm<LoginInput>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
-      email: 'owner@brightloop.local',
-      password: 'Password123!',
+      email: 'admin@gmail.com',
+      password: 'admin@123',
     },
   });
 
@@ -51,10 +51,10 @@ export function LoginPage() {
     }
   };
 
-  const fillDemo = async (email: string) => {
+  const fillDemo = async (email: string, password = 'admin@123') => {
     setValue('email', email, { shouldValidate: true });
-    setValue('password', 'Password123!', { shouldValidate: true });
-    await onSubmit({ email, password: 'Password123!' });
+    setValue('password', password, { shouldValidate: true });
+    await onSubmit({ email, password });
   };
 
   return (
@@ -81,16 +81,7 @@ export function LoginPage() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => fillDemo('owner@brightloop.local')}
-                  className="text-xs font-mono h-8 cursor-pointer px-1"
-                >
-                  Owner
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => fillDemo('admin@brightloop.local')}
+                  onClick={() => fillDemo('admin@gmail.com', 'admin@123')}
                   className="text-xs font-mono h-8 cursor-pointer px-1"
                 >
                   Admin
@@ -99,7 +90,7 @@ export function LoginPage() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => fillDemo('member@brightloop.local')}
+                  onClick={() => fillDemo('staff@gmail.com', 'staff@123')}
                   className="text-xs font-mono h-8 cursor-pointer px-1"
                 >
                   Staff
@@ -108,10 +99,19 @@ export function LoginPage() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => fillDemo('customer@brightloop.local')}
+                  onClick={() => fillDemo('customer1@gmail.com', 'customer@123')}
                   className="text-xs font-mono h-8 cursor-pointer px-1"
                 >
                   Customer
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fillDemo('owner@gmail.com', 'owner@123')}
+                  className="text-xs font-mono h-8 cursor-pointer px-1"
+                >
+                  Owner
                 </Button>
               </div>
             </div>
