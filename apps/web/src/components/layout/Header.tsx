@@ -6,6 +6,7 @@ import {
   Bell,
   User,
   Sliders,
+  Paintbrush,
   LogOut,
   ChevronRight,
   Building2,
@@ -155,6 +156,10 @@ export function Header() {
             <DropdownMenuItem onClick={() => navigate('/profile')} className="cursor-pointer">
               <User className="mr-2 h-3.5 w-3.5" />
               <span>My Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/settings/appearance')} className="cursor-pointer">
+              <Paintbrush className="mr-2 h-3.5 w-3.5" />
+              <span>Appearance & Theme</span>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate('/preferences')} className="cursor-pointer">
               <Sliders className="mr-2 h-3.5 w-3.5" />

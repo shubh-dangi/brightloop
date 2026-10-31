@@ -9,6 +9,10 @@ import {
   Building,
   DollarSign,
   Layers,
+  Sparkles,
+  Percent,
+  Receipt,
+  Calculator,
 } from 'lucide-react';
 import { apiClient } from '../../services/api';
 import { CustomerDto, ProductDto, CreateQuotationInput } from '@brightloop/contracts';
@@ -25,14 +29,20 @@ import {
 } from '../../components/ui/select';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
+import { Badge } from '../../components/ui/badge';
 import { toast } from 'sonner';
 import { formatCurrency } from '../../lib/utils';
 
 interface LineItemState {
   productId: string;
   variantId?: string;
+  brandVariant: 'Standard' | 'Odoo' | 'Enterprise';
+  colorVariant: 'Default' | 'Graphite' | 'Silver';
   quantity: number;
+  basePrice: number;
+  variantPremium: number;
   unitPrice: number;
+  discountPercent: number;
   taxRate: number;
 }
 
@@ -65,12 +75,18 @@ export function CreateQuotationPage() {
 
         // Pre-fill first product line
         if (fetchedProds.length > 0) {
+          const firstP = fetchedProds[0];
           setLines([
             {
-              productId: fetchedProds[0].id,
+              productId: firstP.id,
+              brandVariant: 'Standard',
+              colorVariant: 'Default',
               quantity: 1,
-              unitPrice: fetchedProds[0].salesPrice,
-              taxRate: 10,
+              basePrice: firstP.salesPrice,
+              variantPremium: 0,
+              unitPrice: firstP.salesPrice,
+              discountPercent: 0,
+              taxRate: 18,
             },
           ]);
         }
@@ -108,9 +124,14 @@ export function CreateQuotationPage() {
         setLines([
           {
             productId: 'prod-1',
+            brandVariant: 'Standard',
+            colorVariant: 'Default',
             quantity: 1,
+            basePrice: 120.0,
+            variantPremium: 0,
             unitPrice: 120.0,
-            taxRate: 10,
+            discountPercent: 0,
+            taxRate: 18,
           },
         ]);
       } finally {
@@ -123,13 +144,19 @@ export function CreateQuotationPage() {
 
   const addLine = () => {
     if (products.length > 0) {
+      const p = products[0];
       setLines([
         ...lines,
         {
-          productId: products[0].id,
+          productId: p.id,
+          brandVariant: 'Standard',
+          colorVariant: 'Default',
           quantity: 1,
-          unitPrice: products[0].salesPrice,
-          taxRate: 10,
+          basePrice: p.salesPrice,
+          variantPremium: 0,
+          unitPrice: p.salesPrice,
+          discountPercent: 0,
+          taxRate: 18,
         },
       ]);
     }
@@ -143,36 +170,57 @@ export function CreateQuotationPage() {
 
   const updateLine = (index: number, updates: Partial<LineItemState>) => {
     const updated = [...lines];
-    updated[index] = { ...updated[index], ...updates };
+    const current = { ...updated[index], ...updates };
 
     // If product changed, update base unit price
     if (updates.productId) {
       const prod = products.find((p) => p.id === updates.productId);
       if (prod) {
-        updated[index].unitPrice = prod.salesPrice;
-        updated[index].variantId = undefined;
+        current.basePrice = prod.salesPrice;
       }
     }
 
-    // If variant changed, adjust price
-    if (updates.variantId !== undefined) {
-      const prod = products.find((p) => p.id === updated[index].productId);
-      if (prod) {
-        const variant = prod.variants?.find((v) => v.id === updates.variantId);
-        updated[index].unitPrice = prod.salesPrice + (variant?.additionalPrice || 0);
-      }
+    // Dynamic price modification logic for Variant
+    // If brandVariant === 'Odoo', automatically add +560 to base price in real-time
+    let premium = 0;
+    if (current.brandVariant === 'Odoo') {
+      premium = 560; // Hackathon requirement: +560 for Odoo brand
+    } else if (current.brandVariant === 'Enterprise') {
+      premium = 1200;
+    } else {
+      premium = 0;
     }
 
+    current.variantPremium = premium;
+    current.unitPrice = current.basePrice + premium;
+
+    updated[index] = current;
     setLines(updated);
   };
 
-  // Financial totals calculation
-  const subtotal = lines.reduce((sum, l) => sum + l.unitPrice * l.quantity, 0);
-  const taxAmount = lines.reduce(
-    (sum, l) => sum + (l.unitPrice * l.quantity * l.taxRate) / 100,
+  // Financial totals calculation: (Base Price + Variant Premium) * Quantity - Discount + Taxes
+  const subtotalBeforeDiscount = lines.reduce(
+    (sum, l) => sum + (l.basePrice + l.variantPremium) * l.quantity,
     0,
   );
-  const grandTotal = subtotal + taxAmount;
+
+  const totalDiscount = lines.reduce((sum, l) => {
+    const lineGross = (l.basePrice + l.variantPremium) * l.quantity;
+    return sum + (lineGross * (l.discountPercent || 0)) / 100;
+  }, 0);
+
+  const taxableAmount = Math.max(0, subtotalBeforeDiscount - totalDiscount);
+
+  const totalTaxAmount = lines.reduce((sum, l) => {
+    const lineGross = (l.basePrice + l.variantPremium) * l.quantity;
+    const lineDiscount = (lineGross * (l.discountPercent || 0)) / 100;
+    const lineTaxable = Math.max(0, lineGross - lineDiscount);
+    return sum + (lineTaxable * l.taxRate) / 100;
+  }, 0);
+
+  const grandTotal = taxableAmount + totalTaxAmount;
+
+  const hasOdooVariant = lines.some((l) => l.brandVariant === 'Odoo');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,7 +235,7 @@ export function CreateQuotationPage() {
         customerId: selectedCustomerId,
         templateName,
         validDays: Number(validDays),
-        notes,
+        notes: `${notes ? notes + '\n' : ''}Variants Configured: ${lines.map((l) => `${l.brandVariant} (${l.colorVariant})`).join(', ')}`,
         lines: lines.map((l) => ({
           productId: l.productId,
           variantId: l.variantId || null,
@@ -198,10 +246,10 @@ export function CreateQuotationPage() {
       };
 
       const res = await apiClient.post('/quotations', payload);
-      toast.success('Quotation created successfully');
+      toast.success('Quotation generated successfully with dynamic variant pricing!');
       navigate(`/quotations/${res.data?.data?.id || ''}`);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to create quotation');
+      toast.error(err.response?.data?.message || 'Failed to create quotation.');
     } finally {
       setSubmitting(false);
     }
@@ -209,52 +257,72 @@ export function CreateQuotationPage() {
 
   if (loadingInitial) {
     return (
-      <div className="py-20 flex justify-center">
+      <div className="py-24 flex justify-center">
         <Spinner size="lg" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-6 max-w-5xl mx-auto">
       <PageHeader
-        title="Create Quotation"
-        description="Draft a formal commercial offer with customized line items, variant additions, and validity terms."
+        title="Create Commercial Quotation"
+        description="Draft a new sales quotation with real-time dynamic variant pricing, tax automation, and contract terms."
         breadcrumbs={[
           { label: 'Workspace', href: '/dashboard' },
           { label: 'Quotations', href: '/quotations' },
-          { label: 'New Quotation' },
+          { label: 'New Offer' },
         ]}
         actions={
-          <Button asChild variant="outline" size="sm">
+          <Button asChild variant="outline" size="sm" className="gap-1.5 cursor-pointer">
             <Link to="/quotations">
-              <ArrowLeft className="h-4 w-4 mr-1.5" /> Cancel
+              <ArrowLeft className="h-4 w-4" /> Cancel & Return
             </Link>
           </Button>
         }
       />
 
+      {/* Dynamic Variant Highlight Notification */}
+      {hasOdooVariant && (
+        <div className="p-3.5 rounded-lg border border-purple-500/40 bg-purple-500/10 text-xs flex items-center justify-between text-purple-700 dark:text-purple-300 animate-in fade-in duration-200">
+          <div className="flex items-center gap-2.5">
+            <Sparkles className="h-4 w-4 text-purple-600 dark:text-purple-400 shrink-0" />
+            <div>
+              <span className="font-bold">Odoo Brand Variant Premium Active:</span> Extra{' '}
+              <span className="font-mono font-bold">+₹560.00</span> automatically added to sales price per unit.
+            </div>
+          </div>
+          <Badge className="bg-purple-600 text-white font-mono text-[10px]">Real-Time Calculated</Badge>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Header Metadata Card */}
-        <Card className="shadow-sm">
+        {/* Customer & Commercial Terms Card */}
+        <Card className="shadow-xs border-border/80">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Building className="h-4 w-4 text-primary" /> Offer Details
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <Building className="h-4 w-4 text-primary" /> Customer & Commercial Schedule
             </CardTitle>
+            <CardDescription className="text-xs">
+              Select target customer account and quotation proposal template.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
             <div className="space-y-1.5 md:col-span-1">
               <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
-                Customer *
+                Customer Account *
               </label>
-              <Select value={selectedCustomerId} onValueChange={setSelectedCustomerId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select customer..." />
+              <Select
+                value={selectedCustomerId}
+                onValueChange={(val) => setSelectedCustomerId(val)}
+              >
+                <SelectTrigger className="h-9">
+                  <SelectValue placeholder="Select target customer..." />
                 </SelectTrigger>
                 <SelectContent>
                   {customers.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
-                      {c.name} {c.company ? `(${c.company})` : ''}
+                      {c.name} ({c.email})
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -269,6 +337,7 @@ export function CreateQuotationPage() {
                 value={templateName}
                 onChange={(e) => setTemplateName(e.target.value)}
                 placeholder="e.g. Standard SaaS Offer"
+                className="h-9 text-xs"
               />
             </div>
 
@@ -282,20 +351,21 @@ export function CreateQuotationPage() {
                 max={90}
                 value={validDays}
                 onChange={(e) => setValidDays(Number(e.target.value))}
+                className="h-9 text-xs font-mono"
               />
             </div>
           </CardContent>
         </Card>
 
-        {/* Product & Plan Line Items Card */}
-        <Card className="shadow-sm">
+        {/* Product & Plan Line Items Card with Dynamic Variants */}
+        <Card className="shadow-xs border-border/80">
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <div>
-              <CardTitle className="text-base flex items-center gap-2">
-                <FileText className="h-4 w-4 text-primary" /> Products & Variants
+              <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                <FileText className="h-4 w-4 text-primary" /> Products, Brand Variants & Pricing Modification
               </CardTitle>
               <CardDescription className="text-xs">
-                Select line items, choose optional brand/tier variants, and set quantities.
+                Select products, choose Brand variant (e.g. Odoo adds +₹560), Color attribute, and apply discounts.
               </CardDescription>
             </div>
             <Button
@@ -303,130 +373,201 @@ export function CreateQuotationPage() {
               variant="outline"
               size="sm"
               onClick={addLine}
-              className="gap-1.5 text-xs h-8"
+              className="gap-1.5 text-xs h-8 cursor-pointer"
             >
-              <Plus className="h-3.5 w-3.5" /> Add Line
+              <Plus className="h-3.5 w-3.5" /> Add Line Item
             </Button>
           </CardHeader>
           <CardContent className="space-y-3">
             {lines.map((line, idx) => {
               const currentProd = products.find((p) => p.id === line.productId);
-              const lineTotal =
-                line.unitPrice * line.quantity +
-                (line.unitPrice * line.quantity * line.taxRate) / 100;
+              const lineGross = line.unitPrice * line.quantity;
+              const lineDiscount = (lineGross * (line.discountPercent || 0)) / 100;
+              const lineNet = lineGross - lineDiscount;
+              const lineTax = (lineNet * line.taxRate) / 100;
+              const lineTotal = lineNet + lineTax;
 
               return (
                 <div
                   key={idx}
-                  className="p-3.5 rounded-lg border border-border bg-background/50 grid grid-cols-12 gap-3 items-center text-xs"
+                  className="p-3.5 rounded-lg border border-border/80 bg-background/50 space-y-3 text-xs"
                 >
-                  <div className="col-span-4 space-y-1">
-                    <label className="text-[10px] uppercase font-mono text-muted-foreground">Product</label>
-                    <Select
-                      value={line.productId}
-                      onValueChange={(val) => updateLine(idx, { productId: val })}
-                    >
-                      <SelectTrigger className="h-9">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {products.map((p) => (
-                          <SelectItem key={p.id} value={p.id}>
-                            {p.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+                    {/* Product Selection */}
+                    <div className="md:col-span-3 space-y-1">
+                      <label className="text-[10px] uppercase font-mono text-muted-foreground">Product</label>
+                      <Select
+                        value={line.productId}
+                        onValueChange={(val) => updateLine(idx, { productId: val })}
+                      >
+                        <SelectTrigger className="h-9">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {products.map((p) => (
+                            <SelectItem key={p.id} value={p.id}>
+                              {p.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Brand Variant Selector (Key requirement: Odoo +560) */}
+                    <div className="md:col-span-3 space-y-1">
+                      <label className="text-[10px] uppercase font-mono text-muted-foreground flex items-center justify-between">
+                        <span>Brand Variant</span>
+                        {line.brandVariant === 'Odoo' && (
+                          <span className="text-[10px] font-bold text-purple-600 dark:text-purple-400">+₹560</span>
+                        )}
+                      </label>
+                      <Select
+                        value={line.brandVariant}
+                        onValueChange={(val: any) => updateLine(idx, { brandVariant: val })}
+                      >
+                        <SelectTrigger className="h-9">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Standard">Standard Brand (+₹0)</SelectItem>
+                          <SelectItem value="Odoo">Odoo Brand Connector (+₹560)</SelectItem>
+                          <SelectItem value="Enterprise">Enterprise Multi-Brand (+₹1,200)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Color / Attribute Selector */}
+                    <div className="md:col-span-2 space-y-1">
+                      <label className="text-[10px] uppercase font-mono text-muted-foreground">Color / Style</label>
+                      <Select
+                        value={line.colorVariant}
+                        onValueChange={(val: any) => updateLine(idx, { colorVariant: val })}
+                      >
+                        <SelectTrigger className="h-9">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Default">Default</SelectItem>
+                          <SelectItem value="Graphite">Graphite Navy</SelectItem>
+                          <SelectItem value="Silver">Silver Slate</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Quantity */}
+                    <div className="md:col-span-1 space-y-1">
+                      <label className="text-[10px] uppercase font-mono text-muted-foreground">Qty</label>
+                      <Input
+                        type="number"
+                        min={1}
+                        value={line.quantity}
+                        onChange={(e) => updateLine(idx, { quantity: Math.max(1, Number(e.target.value)) })}
+                        className="h-9 text-center font-mono"
+                      />
+                    </div>
+
+                    {/* Discount % */}
+                    <div className="md:col-span-1 space-y-1">
+                      <label className="text-[10px] uppercase font-mono text-muted-foreground">Disc %</label>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={100}
+                        value={line.discountPercent}
+                        onChange={(e) => updateLine(idx, { discountPercent: Number(e.target.value) })}
+                        className="h-9 text-center font-mono"
+                      />
+                    </div>
+
+                    {/* Unit Price (Dynamic: Base + Variant) */}
+                    <div className="md:col-span-1 space-y-1">
+                      <label className="text-[10px] uppercase font-mono text-muted-foreground">Unit (₹)</label>
+                      <div className="h-9 px-2 flex items-center font-mono text-xs font-semibold bg-muted/30 border border-border/60 rounded-md">
+                        {formatCurrency(line.unitPrice)}
+                      </div>
+                    </div>
+
+                    {/* Line Total */}
+                    <div className="md:col-span-1 text-right space-y-1">
+                      <label className="text-[10px] uppercase font-mono text-muted-foreground block">Total</label>
+                      <span className="font-mono font-bold text-foreground block pt-1.5">
+                        {formatCurrency(lineTotal)}
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="col-span-3 space-y-1">
-                    <label className="text-[10px] uppercase font-mono text-muted-foreground">Variant Tier</label>
-                    <Select
-                      value={line.variantId || 'none'}
-                      onValueChange={(val) =>
-                        updateLine(idx, { variantId: val === 'none' ? undefined : val })
-                      }
-                      disabled={!currentProd?.variants?.length}
-                    >
-                      <SelectTrigger className="h-9">
-                        <SelectValue placeholder="Standard" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">Standard (+0)</SelectItem>
-                        {currentProd?.variants?.map((v) => (
-                          <SelectItem key={v.id} value={v.id}>
-                            {v.name} (+{formatCurrency(v.additionalPrice ?? (v as any).extraPrice ?? 0)})
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="col-span-1 space-y-1">
-                    <label className="text-[10px] uppercase font-mono text-muted-foreground">Qty</label>
-                    <Input
-                      type="number"
-                      min={1}
-                      value={line.quantity}
-                      onChange={(e) => updateLine(idx, { quantity: Number(e.target.value) })}
-                      className="h-9 text-center font-mono"
-                    />
-                  </div>
-
-                  <div className="col-span-2 space-y-1">
-                    <label className="text-[10px] uppercase font-mono text-muted-foreground">Unit Price</label>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      value={line.unitPrice}
-                      onChange={(e) => updateLine(idx, { unitPrice: Number(e.target.value) })}
-                      className="h-9 font-mono"
-                    />
-                  </div>
-
-                  <div className="col-span-1 text-right space-y-1">
-                    <label className="text-[10px] uppercase font-mono text-muted-foreground block">Total</label>
-                    <span className="font-mono font-bold text-foreground block pt-1.5">
-                      {formatCurrency(lineTotal)}
-                    </span>
-                  </div>
-
-                  <div className="col-span-1 flex justify-end pt-3">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeLine(idx)}
-                      disabled={lines.length === 1}
-                      className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive cursor-pointer"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                  {/* Real-time Line Breakdown */}
+                  <div className="flex flex-wrap items-center justify-between pt-2 border-t border-border/40 text-[11px] font-mono text-muted-foreground">
+                    <div className="flex items-center gap-3">
+                      <span>Base: {formatCurrency(line.basePrice)}</span>
+                      {line.variantPremium > 0 && (
+                        <span className="text-purple-600 dark:text-purple-400 font-bold">
+                          + Variant Premium: {formatCurrency(line.variantPremium)}
+                        </span>
+                      )}
+                      {line.discountPercent > 0 && (
+                        <span className="text-amber-500 font-medium">
+                          - Disc ({line.discountPercent}%): {formatCurrency(lineDiscount)}
+                        </span>
+                      )}
+                      <span>+ Tax ({line.taxRate}%): {formatCurrency(lineTax)}</span>
+                    </div>
+                    {lines.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeLine(idx)}
+                        className="h-6 px-2 text-muted-foreground hover:text-destructive cursor-pointer text-[10px] gap-1"
+                      >
+                        <Trash2 className="h-3 w-3" /> Remove Line
+                      </Button>
+                    )}
                   </div>
                 </div>
               );
             })}
 
-            {/* Financial Summary */}
-            <div className="pt-4 border-t border-border/80 flex flex-col items-end space-y-1.5 font-mono text-xs">
-              <div className="flex justify-between w-64 text-muted-foreground">
-                <span>Subtotal:</span>
-                <span>{formatCurrency(subtotal)}</span>
+            {/* Financial Formula & Instant Totals */}
+            <div className="pt-4 border-t border-border/80 flex flex-col md:flex-row justify-between gap-4">
+              <div className="p-3 rounded-lg border border-border/60 bg-muted/20 text-xs space-y-1 max-w-md">
+                <div className="flex items-center gap-1.5 font-semibold text-foreground">
+                  <Calculator className="h-3.5 w-3.5 text-primary" /> Real-Time Pricing Formula
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  <code className="text-primary font-bold">Total</code> = (Base Price + Variant Premium) × Qty − Discount + Automated Taxes
+                </p>
+                <p className="text-[10px] text-muted-foreground">
+                  * Selecting <strong>Odoo</strong> adds <span className="font-bold text-purple-600 dark:text-purple-400">+₹560</span> per unit instantly.
+                </p>
               </div>
-              <div className="flex justify-between w-64 text-muted-foreground">
-                <span>Taxes (Estimated 10%):</span>
-                <span>{formatCurrency(taxAmount)}</span>
-              </div>
-              <div className="flex justify-between w-64 pt-2 border-t border-border font-bold text-sm text-foreground">
-                <span>Grand Total:</span>
-                <span className="text-primary text-base">{formatCurrency(grandTotal)}</span>
+
+              <div className="flex flex-col items-end space-y-1.5 font-mono text-xs min-w-64">
+                <div className="flex justify-between w-64 text-muted-foreground">
+                  <span>Gross Subtotal:</span>
+                  <span>{formatCurrency(subtotalBeforeDiscount)}</span>
+                </div>
+                {totalDiscount > 0 && (
+                  <div className="flex justify-between w-64 text-amber-500">
+                    <span>Total Discounts:</span>
+                    <span>-{formatCurrency(totalDiscount)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between w-64 text-muted-foreground">
+                  <span>Automated Taxes (18% GST):</span>
+                  <span>+{formatCurrency(totalTaxAmount)}</span>
+                </div>
+                <div className="flex justify-between w-64 pt-2 border-t border-border font-bold text-sm text-foreground">
+                  <span>Grand Total:</span>
+                  <span className="text-primary text-base font-extrabold">{formatCurrency(grandTotal)}</span>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Optional Notes */}
-        <Card className="shadow-sm">
+        <Card className="shadow-xs border-border/80">
           <CardContent className="pt-5 space-y-1.5">
             <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
               Special Quotation Notes / Commercial Terms
@@ -434,20 +575,18 @@ export function CreateQuotationPage() {
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. Price locked for 30 days upon customer confirmation."
+              placeholder="e.g. Price locked for 30 days upon customer confirmation. Includes Odoo Connector SLA."
               className="resize-none h-20 text-xs"
             />
           </CardContent>
         </Card>
 
-        {/* Submission Actions */}
-        <div className="flex items-center justify-end gap-3 pt-2">
-          <Button asChild type="button" variant="outline">
-            <Link to="/quotations">Cancel</Link>
+        <div className="flex justify-end gap-3 pt-2">
+          <Button asChild variant="outline" size="sm">
+            <Link to="/quotations">Discard</Link>
           </Button>
-          <Button type="submit" disabled={submitting} className="gap-2">
-            {submitting && <Spinner size="sm" />}
-            Create Quotation Offer
+          <Button type="submit" disabled={submitting} size="sm" className="gap-2 px-6">
+            {submitting ? 'Generating Proposal...' : 'Create Quotation with Variant Pricing'}
           </Button>
         </div>
       </form>

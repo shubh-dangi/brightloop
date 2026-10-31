@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../";
 
 @theme {
   --color-background: var(--background);
@@ -61,116 +62,118 @@
 
 @layer base {
   :root {
-    /* Nexora-Calibrated Frost Blue × Royal Blue Light Theme */
-    --background: #F4F8FF;
-    --background-secondary: #EDF4FF;
-    --background-subtle: #F8FAFF;
-    --foreground: #111827;
-    --sidebar: #FFFFFF;
-    --sidebar-foreground: #111827;
-    --sidebar-border: #E1EAF6;
+    /* LIGHT THEME (Odoo Corporate Purple #714B67 & Clean Slate #F8FAFC) */
+    --background: #F8FAFC;
+    --background-secondary: #F1F5F9;
+    --background-subtle: #FFFFFF;
+    --foreground: #1E293B;
+    --sidebar: #1E293B;
+    --sidebar-foreground: #F8FAFC;
+    --sidebar-border: #334155;
     --topbar: #FFFFFF;
-    --topbar-border: #E1EAF6;
+    --topbar-border: #E2E8F0;
     --card: #FFFFFF;
-    --card-foreground: #111827;
+    --card-foreground: #1E293B;
     --surface-elevated: #FFFFFF;
-    --surface-hover: #F5F8FF;
-    --surface-active: #EAF1FF;
+    --surface-hover: #F1F5F9;
+    --surface-active: #E2E8F0;
     --popover: #FFFFFF;
-    --popover-foreground: #111827;
-    --primary: #356FF6;
+    --popover-foreground: #1E293B;
+    --primary: #714B67;
     --primary-foreground: #FFFFFF;
-    --primary-hover: #285DE0;
-    --primary-active: #204FC7;
-    --primary-soft: #E8F0FF;
-    --primary-subtle: #F0F6FF;
-    --secondary: #EDF4FF;
-    --secondary-foreground: #111827;
-    --muted: #EDF4FF;
-    --muted-foreground: #526178;
-    --muted-text: #8290A5;
-    --disabled: #AAB5C4;
-    --accent: #E8F0FF;
-    --accent-foreground: #356FF6;
-    --accent-soft: #E8F0FF;
-    --accent-subtle: #F4F8FF;
-    --destructive: #DC4C55;
+    --primary-hover: #5D3D54;
+    --primary-active: #4B3144;
+    --primary-soft: #F5EEF3;
+    --primary-subtle: #FAF5F8;
+    --secondary: #F1F5F9;
+    --secondary-foreground: #1E293B;
+    --muted: #F1F5F9;
+    --muted-foreground: #64748B;
+    --muted-text: #64748B;
+    --disabled: #94A3B8;
+    --accent: #F5EEF3;
+    --accent-foreground: #714B67;
+    --accent-soft: #F5EEF3;
+    --accent-subtle: #FAF5F8;
+    --destructive: #991B1B;
     --destructive-foreground: #FFFFFF;
-    --destructive-soft: #FFF0F1;
-    --border: #E1EAF6;
-    --strong-border: #CEDCED;
-    --divider: #EAF0F8;
-    --input: #E1EAF6;
+    --destructive-soft: #FEE2E2;
+    --border: #E2E8F0;
+    --strong-border: #CBD5E1;
+    --divider: #E2E8F0;
+    --input: #E2E8F0;
     --input-bg: #FFFFFF;
-    --ring: #356FF6;
+    --ring: #714B67;
     --radius: 8px;
 
-    /* Semantic Status Tokens - Light */
-    --success: #0F9D72;
-    --success-soft: #E8F8F1;
-    --warning: #B7791F;
-    --warning-soft: #FFF5DF;
-    --danger: #DC4C55;
-    --danger-soft: #FFF0F1;
-    --info: #2879D8;
-    --info-soft: #EAF3FF;
-    --neutral: #6B7280;
-    --neutral-soft: #F3F4F6;
+    /* Semantic Status Tokens - Light (Paid #10B981, Draft #64748B, Overdue #991B1B) */
+    --success: #10B981;
+    --success-soft: #D1FAE5;
+    --warning: #F59E0B;
+    --warning-soft: #FEF3C7;
+    --danger: #991B1B;
+    --danger-soft: #FEE2E2;
+    --info: #06B6D4;
+    --info-soft: #CFFAFE;
+    --neutral: #64748B;
+    --neutral-soft: #F1F5F9;
   }
 
   .dark {
-    /* Precise Dark Mode Mirroring of Light Mode (Depth, Hierarchy & Contrast) */
-    --background: #0B111E;
-    --background-secondary: #0E1626;
-    --background-subtle: #111B2E;
+    /* DARK THEME (Deep Slate Dark #0F172A & Vibrant Purple Highlight #A78BFA) */
+    --background: #0F172A;
+    --background-secondary: #0B1120;
+    --background-subtle: #162032;
     --foreground: #F8FAFC;
-    --sidebar: #0E1626;
+    --sidebar: #0B1120;
     --sidebar-foreground: #F8FAFC;
-    --sidebar-border: #1C2D44;
-    --topbar: #0E1626;
-    --topbar-border: #1C2D44;
-    --card: #131F33;
+    --sidebar-border: #1E293B;
+    --topbar: #0B1120;
+    --topbar-border: #1E293B;
+    --card: #1E293B;
     --card-foreground: #F8FAFC;
-    --surface-elevated: #18263E;
-    --surface-hover: #192841;
-    --surface-active: #1D3150;
-    --popover: #18263E;
+    --surface-elevated: #1E293B;
+    --surface-hover: #26354A;
+    --surface-active: #2E4059;
+    --popover: #1E293B;
     --popover-foreground: #F8FAFC;
-    --primary: #3B82F6;
-    --primary-foreground: #FFFFFF;
-    --primary-hover: #2563EB;
-    --primary-active: #1D4ED8;
-    --primary-soft: #172B4D;
-    --primary-subtle: #101E36;
-    --secondary: #18263E;
+    --primary: #A78BFA;
+    --primary-foreground: #0F172A;
+    --primary-hover: #C4B5FD;
+    --primary-active: #8B5CF6;
+    --primary-soft: #2E234B;
+    --primary-subtle: #1F1735;
+    --secondary: #1E293B;
     --secondary-foreground: #F8FAFC;
-    --muted: #18263E;
+    --muted: #1E293B;
     --muted-foreground: #94A3B8;
     --muted-text: #64748B;
     --disabled: #475569;
-    --accent: #172B4D;
-    --accent-foreground: #60A5FA;
-    --accent-soft: #172B4D;
-    --accent-subtle: #101E36;
-    --destructive: #F43F5E;
+    --accent: #2E234B;
+    --accent-foreground: #A78BFA;
+    --accent-soft: #2E234B;
+    --accent-subtle: #1F1735;
+    --destructive: #EF4444;
     --destructive-foreground: #FFFFFF;
-    --destructive-soft: #38121B;
-    --border: #1C2D44;
-    --strong-border: #2B4263;
-    --divider: #162438;
-    --input: #1C2D44;
-    --input-bg: #0E1626;
-    --ring: #3B82F6;
+    --destructive-soft: #451A1A;
+    --border: #334155;
+    --strong-border: #475569;
+    --divider: #1E293B;
+    --input: #334155;
+    --input-bg: #0F172A;
+    --ring: #A78BFA;
 
-    /* Semantic Status Tokens - Dark (Calibrated Soft Tints & High Contrast) */
-    --success: #10B981;
-    --success-soft: #082F22;
-    --warning: #F59E0B;
-    --warning-soft: #362407;
-    --danger: #F43F5E;
-    --danger-soft: #38121B;
-    --info: #38BDF8;
-    --info-soft: #0C2B45;
+    /* Semantic Status & Neon Accents - Dark (Neon Cyan #06B6D4, Mint #34D399) */
+    --chart-cyan: #06B6D4;
+    --chart-mint: #34D399;
+    --success: #34D399;
+    --success-soft: #064E3B;
+    --warning: #FBBF24;
+    --warning-soft: #78350F;
+    --danger: #F87171;
+    --danger-soft: #450A0A;
+    --info: #06B6D4;
+    --info-soft: #164E63;
     --neutral: #94A3B8;
     --neutral-soft: #1E293B;
   }
@@ -183,7 +186,7 @@
     background-color: var(--background);
     color: var(--foreground);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum" 1;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: 'Bell MT', 'Bell', Georgia, 'Times New Roman', serif;
   }
 }
 

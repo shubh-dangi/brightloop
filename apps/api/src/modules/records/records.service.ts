@@ -1,8 +1,6 @@
-import {
-  Injectable,
+import { Inject, Injectable,
   NotFoundException,
-  ForbiddenException,
-} from '@nestjs/common';
+  ForbiddenException, } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import {
   RecordStatus,
@@ -25,7 +23,7 @@ export interface RecordQueryParams {
 
 @Injectable()
 export class RecordsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private prisma: PrismaService) {}
 
   async findAll(orgId: string, query: RecordQueryParams) {
     const page = Math.max(1, Number(query.page) || 1);

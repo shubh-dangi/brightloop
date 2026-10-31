@@ -5,6 +5,7 @@ import {
   BadRequestException,
   NotFoundException,
   Logger,
+  Inject,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -26,9 +27,9 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
-    private prisma: PrismaService,
-    private jwtService: JwtService,
-    private configService: ConfigService,
+    @Inject(PrismaService) private prisma: PrismaService,
+    @Inject(JwtService) private jwtService: JwtService,
+    @Inject(ConfigService) private configService: ConfigService,
   ) {}
 
   async signup(dto: SignupDto): Promise<AuthResponseData> {

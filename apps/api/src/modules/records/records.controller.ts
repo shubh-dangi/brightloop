@@ -1,5 +1,4 @@
-import {
-  Controller,
+import { Inject, Controller,
   Get,
   Post,
   Patch,
@@ -7,8 +6,7 @@ import {
   Param,
   Body,
   Query,
-  UseGuards,
-} from '@nestjs/common';
+  UseGuards, } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { RecordsService, RecordQueryParams } from './records.service';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
@@ -25,7 +23,7 @@ import {
 @ApiBearerAuth()
 @Controller('records')
 export class RecordsController {
-  constructor(private readonly recordsService: RecordsService) {}
+  constructor(@Inject(RecordsService) private readonly recordsService: RecordsService) {}
 
   @Get()
   @RequirePermissions(PermissionKey.RECORDS_READ)

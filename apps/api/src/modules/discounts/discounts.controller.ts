@@ -1,10 +1,8 @@
-import {
-  Controller,
+import { Inject, Controller,
   Get,
   Post,
   Param,
-  Body,
-} from '@nestjs/common';
+  Body, } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { DiscountsService } from './discounts.service';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
@@ -18,7 +16,7 @@ import {
 @ApiTags('Discounts')
 @Controller('discounts')
 export class DiscountsController {
-  constructor(private readonly discountsService: DiscountsService) {}
+  constructor(@Inject(DiscountsService) private readonly discountsService: DiscountsService) {}
 
   @Get()
   @RequirePermissions(PermissionKey.DISCOUNTS_READ)

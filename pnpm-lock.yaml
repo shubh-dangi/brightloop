@@ -403,6 +403,9 @@ importers:
       '@brightloop/config':
         specifier: file:../../packages/config
         version: link:../../packages/config
+      '@tailwindcss/oxide-wasm32-wasi':
+        specifier: ^4.3.3
+        version: 4.3.3
       '@tailwindcss/vite':
         specifier: ^4.0.9
         version: 4.3.3(vite@6.4.5(@types/node@22.20.5)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.15))
@@ -4640,8 +4643,7 @@ snapshots:
   '@tailwindcss/oxide-linux-x64-musl@4.3.3':
     optional: true
 
-  '@tailwindcss/oxide-wasm32-wasi@4.3.3':
-    optional: true
+  '@tailwindcss/oxide-wasm32-wasi@4.3.3': {}
 
   '@tailwindcss/oxide-win32-arm64-msvc@4.3.3':
     optional: true

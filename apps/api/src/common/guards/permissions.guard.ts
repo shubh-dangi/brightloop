@@ -3,6 +3,8 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  Inject,
+  Optional,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { PERMISSIONS_KEY } from '../decorators/permissions.decorator';
@@ -10,7 +12,14 @@ import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  private reflector: Reflector;
+
+  constructor(@Optional() @Inject(Reflector) reflector?: Reflector) {
+    this.reflector =
+      reflector && typeof reflector.getAllAndOverride === 'function'
+        ? reflector
+        : new Reflector();
+  }
 
   canActivate(context: ExecutionContext): boolean {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [

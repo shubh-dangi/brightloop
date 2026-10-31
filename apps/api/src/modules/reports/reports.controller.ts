@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Inject, Controller, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { ReportsService } from './reports.service';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
@@ -9,7 +9,7 @@ import { PermissionKey } from '@brightloop/contracts';
 @ApiTags('Reports')
 @Controller('reports')
 export class ReportsController {
-  constructor(private readonly reportsService: ReportsService) {}
+  constructor(@Inject(ReportsService) private readonly reportsService: ReportsService) {}
 
   @Get('operational')
   @RequirePermissions(PermissionKey.REPORTS_OPERATIONAL)

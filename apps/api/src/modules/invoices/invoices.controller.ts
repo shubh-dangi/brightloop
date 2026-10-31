@@ -1,11 +1,9 @@
-import {
-  Controller,
+import { Inject, Controller,
   Get,
   Post,
   Patch,
   Param,
-  Query,
-} from '@nestjs/common';
+  Query, } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { InvoicesService } from './invoices.service';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
@@ -17,7 +15,7 @@ import { PermissionKey } from '@brightloop/contracts';
 @ApiTags('Invoices')
 @Controller('invoices')
 export class InvoicesController {
-  constructor(private readonly invoicesService: InvoicesService) {}
+  constructor(@Inject(InvoicesService) private readonly invoicesService: InvoicesService) {}
 
   @Get()
   @RequirePermissions(PermissionKey.INVOICES_READ)

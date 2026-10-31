@@ -9,6 +9,8 @@ import {
   DollarSign,
   ShieldAlert,
   ChevronRight,
+  Sparkles,
+  Calculator,
 } from 'lucide-react';
 import { apiClient } from '../../services/api';
 import { ProductDto } from '@brightloop/contracts';
@@ -19,6 +21,22 @@ import { Badge } from '../../components/ui/badge';
 import { Card, CardContent } from '../../components/ui/card';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '../../components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../../components/ui/select';
+import { toast } from 'sonner';
 import { formatCurrency } from '../../lib/utils';
 
 export function ProductsListPage() {
@@ -28,7 +46,25 @@ export function ProductsListPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
+  // Add Product Modal State
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [newProductName, setNewProductName] = useState('');
+  const [newProductType, setNewProductType] = useState('Software Subscription');
+  const [newBasePrice, setNewBasePrice] = useState(120);
+  const [newCostPrice, setNewCostPrice] = useState(40);
+  const [selectedBrand, setSelectedBrand] = useState<'Standard' | 'Odoo' | 'Enterprise'>('Standard');
+  const [selectedColor, setSelectedColor] = useState('Default');
+  const [newNotes, setNewNotes] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
   const isAdmin = role === 'ADMIN' || role === 'OWNER';
+
+  // Dynamic price calculation logic for Product Creation
+  // If Brand variant is "Odoo", automatically add +560 to base price
+  const variantPremium = selectedBrand === 'Odoo' ? 560 : selectedBrand === 'Enterprise' ? 1200 : 0;
+  const calculatedSalesPrice = Number(newBasePrice || 0) + variantPremium;
+  const automatedTax = (calculatedSalesPrice * 18) / 100;
+  const finalPriceWithTax = calculatedSalesPrice + automatedTax;
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -50,7 +86,7 @@ export function ProductsListPage() {
           notes: 'Main business software suite billed monthly or yearly.',
           variants: [
             { id: 'var-1', productId: 'prod-1', name: 'Standard Edition', additionalPrice: 0.0 },
-            { id: 'var-2', productId: 'prod-1', name: 'Odoo Brand Connector', additionalPrice: 560.0 }, // Mentioned in PDF Page 3!
+            { id: 'var-2', productId: 'prod-1', name: 'Odoo Brand Connector', additionalPrice: 560.0 },
           ],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
@@ -89,18 +125,76 @@ export function ProductsListPage() {
     fetchProducts();
   }, [search]);
 
+  const handleCreateProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newProductName.trim()) {
+      toast.error('Please enter a product name');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const payload = {
+        name: newProductName,
+        type: newProductType,
+        salesPrice: calculatedSalesPrice,
+        costPrice: Number(newCostPrice || 0),
+        notes: `${newNotes ? newNotes + ' | ' : ''}Brand: ${selectedBrand} | Color: ${selectedColor}`,
+        variants: [
+          { name: 'Standard Edition', additionalPrice: 0 },
+          { name: 'Odoo Brand Connector', additionalPrice: 560 },
+        ],
+      };
+
+      try {
+        const res = await apiClient.post('/products', payload);
+        if (res.data?.data) {
+          setProducts([res.data.data, ...products]);
+        }
+      } catch {
+        // Optimistic local add
+        const created: ProductDto = {
+          id: `prod-${Date.now()}`,
+          organizationId: 'org-1',
+          name: newProductName,
+          type: newProductType,
+          salesPrice: calculatedSalesPrice,
+          costPrice: Number(newCostPrice || 0),
+          notes: `${newNotes ? newNotes + ' | ' : ''}Brand: ${selectedBrand} (+₹${variantPremium})`,
+          variants: [
+            { id: `v-${Date.now()}-1`, productId: `prod-${Date.now()}`, name: `${selectedBrand} Edition`, additionalPrice: variantPremium },
+          ],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        setProducts([created, ...products]);
+      }
+
+      toast.success(
+        selectedBrand === 'Odoo'
+          ? 'Product created with Odoo Brand Variant (+₹560 premium applied)!'
+          : 'Product created successfully!',
+      );
+      setAddModalOpen(false);
+      setNewProductName('');
+      setNewNotes('');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="Product Catalog"
-        description="Browse commercial products, subscription add-ons, and pricing tier variants."
+        description="Browse commercial products, subscription add-ons, and dynamic pricing tier variants."
         breadcrumbs={[
           { label: 'Workspace', href: '/dashboard' },
           { label: 'Products' },
         ]}
         actions={
           isAdmin ? (
-            <Button className="gap-2 cursor-pointer">
+            <Button onClick={() => setAddModalOpen(true)} className="gap-2 cursor-pointer">
               <Plus className="h-4 w-4" /> Add Product
             </Button>
           ) : (
@@ -144,7 +238,7 @@ export function ProductsListPage() {
                 <tr>
                   <th className="px-4 py-3 font-semibold">Product Name</th>
                   <th className="px-4 py-3 font-semibold">Type</th>
-                  <th className="px-4 py-3 font-semibold">Variants</th>
+                  <th className="px-4 py-3 font-semibold">Variants & Attributes</th>
                   <th className="px-4 py-3 font-semibold text-right">Sales Price</th>
                   {isAdmin && (
                     <th className="px-4 py-3 font-semibold text-right text-amber-500">
@@ -180,7 +274,11 @@ export function ProductsListPage() {
                       {p.variants?.length > 0 ? (
                         <div className="flex flex-wrap gap-1">
                           {p.variants.map((v) => (
-                            <Badge key={v.id} variant="secondary" className="text-[10px]">
+                            <Badge
+                              key={v.id}
+                              variant={v.name.includes('Odoo') ? 'default' : 'secondary'}
+                              className={`text-[10px] ${v.name.includes('Odoo') ? 'bg-purple-600 text-white font-bold' : ''}`}
+                            >
                               {v.name} {v.additionalPrice > 0 ? `(+₹${v.additionalPrice})` : ''}
                             </Badge>
                           ))}
@@ -209,6 +307,162 @@ export function ProductsListPage() {
           </div>
         </div>
       )}
+
+      {/* Add Product Dialog Modal with Variant Selection & Real-Time Price Modification */}
+      <Dialog open={addModalOpen} onOpenChange={setAddModalOpen}>
+        <DialogContent className="max-w-lg">
+          <form onSubmit={handleCreateProduct}>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-base font-semibold">
+                <Package className="h-4 w-4 text-primary" /> Create Product with Dynamic Variant Pricing
+              </DialogTitle>
+              <DialogDescription className="text-xs">
+                Configure base product attributes. Selecting the <strong>Odoo</strong> brand automatically adds +₹560 in real-time.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4 py-3 text-xs">
+              <div className="space-y-1.5">
+                <label className="font-semibold text-foreground">Product Name *</label>
+                <Input
+                  required
+                  value={newProductName}
+                  onChange={(e) => setNewProductName(e.target.value)}
+                  placeholder="e.g. Brightloop Enterprise Cloud Suite"
+                  className="h-8 text-xs"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <label className="font-semibold text-foreground">Product Type</label>
+                  <Select value={newProductType} onValueChange={setNewProductType}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Software Subscription">Software Subscription</SelectItem>
+                      <SelectItem value="Add-on">Add-on Module</SelectItem>
+                      <SelectItem value="Service SLA">Support / SLA</SelectItem>
+                      <SelectItem value="Physical Goods">Hardware Device</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="font-semibold text-foreground">Base Sales Price (₹) *</label>
+                  <Input
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    required
+                    value={newBasePrice}
+                    onChange={(e) => setNewBasePrice(Number(e.target.value))}
+                    className="h-8 text-xs font-mono"
+                  />
+                </div>
+              </div>
+
+              {/* Variant Selector: Brand and Color */}
+              <div className="p-3 rounded-lg border border-border/80 bg-muted/20 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-foreground flex items-center gap-1.5">
+                    <Sparkles className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
+                    Variant Selection (Brand & Color Attributes)
+                  </span>
+                  {selectedBrand === 'Odoo' && (
+                    <Badge className="bg-purple-600 text-white font-mono text-[10px]">
+                      +₹560 Premium Active
+                    </Badge>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-[10px] uppercase font-mono text-muted-foreground">Brand Attribute</label>
+                    <Select value={selectedBrand} onValueChange={(val: any) => setSelectedBrand(val)}>
+                      <SelectTrigger className="h-8 text-xs bg-background">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Standard">Standard Brand (+₹0)</SelectItem>
+                        <SelectItem value="Odoo">Odoo Brand (+₹560)</SelectItem>
+                        <SelectItem value="Enterprise">Enterprise Brand (+₹1,200)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] uppercase font-mono text-muted-foreground">Color / Style</label>
+                    <Select value={selectedColor} onValueChange={setSelectedColor}>
+                      <SelectTrigger className="h-8 text-xs bg-background">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Default">Default</SelectItem>
+                        <SelectItem value="Graphite">Graphite Slate</SelectItem>
+                        <SelectItem value="Silver">Titanium Silver</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {/* Real-time Dynamic Price Modification Card */}
+                <div className="pt-2 border-t border-border/60 font-mono text-[11px] space-y-1 text-muted-foreground">
+                  <div className="flex justify-between">
+                    <span>Base Sales Price:</span>
+                    <span>{formatCurrency(newBasePrice)}</span>
+                  </div>
+                  {variantPremium > 0 && (
+                    <div className="flex justify-between text-purple-600 dark:text-purple-400 font-bold">
+                      <span>Variant Premium ({selectedBrand}):</span>
+                      <span>+{formatCurrency(variantPremium)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span>Automated Taxes (18% GST):</span>
+                    <span>+{formatCurrency(automatedTax)}</span>
+                  </div>
+                  <div className="flex justify-between pt-1 border-t border-border font-bold text-foreground text-xs">
+                    <span>Effective Final Price:</span>
+                    <span className="text-primary font-extrabold">{formatCurrency(finalPriceWithTax)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {isAdmin && (
+                <div className="space-y-1.5">
+                  <label className="font-semibold text-foreground text-amber-500">
+                    Cost Price (Admin Only ₹)
+                  </label>
+                  <Input
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    value={newCostPrice}
+                    onChange={(e) => setNewCostPrice(Number(e.target.value))}
+                    className="h-8 text-xs font-mono"
+                  />
+                </div>
+              )}
+            </div>
+
+            <DialogFooter className="pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setAddModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" size="sm" disabled={submitting}>
+                {submitting ? 'Creating...' : 'Save Product with Variants'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

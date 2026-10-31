@@ -1,13 +1,11 @@
-import {
-  Controller,
+import { Inject, Controller,
   Get,
   Patch,
   Post,
   Delete,
   Param,
   Query,
-  UseGuards,
-} from '@nestjs/common';
+  UseGuards, } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { NotificationsService } from './notifications.service';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
@@ -18,7 +16,7 @@ import { TenantContext } from '../../common/guards/tenant.guard';
 @ApiBearerAuth()
 @Controller('notifications')
 export class NotificationsController {
-  constructor(private readonly notificationsService: NotificationsService) {}
+  constructor(@Inject(NotificationsService) private readonly notificationsService: NotificationsService) {}
 
   @Get()
   @ApiOperation({ summary: 'List notifications for current user/workspace' })

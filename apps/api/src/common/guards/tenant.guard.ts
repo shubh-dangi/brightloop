@@ -4,6 +4,8 @@ import {
   ExecutionContext,
   ForbiddenException,
   UnauthorizedException,
+  Inject,
+  Optional,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
@@ -18,7 +20,14 @@ export interface TenantContext {
 
 @Injectable()
 export class TenantGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  private reflector: Reflector;
+
+  constructor(@Optional() @Inject(Reflector) reflector?: Reflector) {
+    this.reflector =
+      reflector && typeof reflector.getAllAndOverride === 'function'
+        ? reflector
+        : new Reflector();
+  }
 
   canActivate(context: ExecutionContext): boolean {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [

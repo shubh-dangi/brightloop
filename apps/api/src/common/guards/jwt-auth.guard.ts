@@ -1,6 +1,8 @@
 import {
   ExecutionContext,
+  Inject,
   Injectable,
+  Optional,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -9,8 +11,14 @@ import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(private reflector: Reflector) {
+  private reflector: Reflector;
+
+  constructor(@Optional() @Inject(Reflector) reflector?: Reflector) {
     super();
+    this.reflector =
+      reflector && typeof reflector.getAllAndOverride === 'function'
+        ? reflector
+        : new Reflector();
   }
 
   canActivate(context: ExecutionContext) {

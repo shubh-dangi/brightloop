@@ -1,15 +1,13 @@
-import {
-  Injectable,
+import { Inject, Injectable,
   NotFoundException,
   BadRequestException,
-  ForbiddenException,
-} from '@nestjs/common';
+  ForbiddenException, } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { MemberStatus, SystemRole } from '@brightloop/contracts';
 
 @Injectable()
 export class OrganizationsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private prisma: PrismaService) {}
 
   async getCurrent(orgId: string) {
     const org = await this.prisma.organization.findUnique({

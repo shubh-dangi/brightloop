@@ -1,13 +1,11 @@
-import {
-  Controller,
+import { Inject, Controller,
   Get,
   Post,
   Patch,
   Delete,
   Param,
   Body,
-  UseGuards,
-} from '@nestjs/common';
+  UseGuards, } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { RolesService } from './roles.service';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
@@ -19,7 +17,7 @@ import { PermissionKey } from '@brightloop/contracts';
 @ApiBearerAuth()
 @Controller('roles')
 export class RolesController {
-  constructor(private readonly rolesService: RolesService) {}
+  constructor(@Inject(RolesService) private readonly rolesService: RolesService) {}
 
   @Get()
   @RequirePermissions(PermissionKey.ROLES_MANAGE)

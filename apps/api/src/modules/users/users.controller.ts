@@ -1,11 +1,9 @@
-import {
-  Controller,
+import { Inject, Controller,
   Get,
   Patch,
   Post,
   Body,
-  UseGuards,
-} from '@nestjs/common';
+  UseGuards, } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
@@ -14,7 +12,7 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 @ApiBearerAuth()
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(@Inject(UsersService) private readonly usersService: UsersService) {}
 
   @Get('profile')
   @ApiOperation({ summary: 'Get current user profile' })

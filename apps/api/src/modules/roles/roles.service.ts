@@ -1,13 +1,11 @@
-import {
-  Injectable,
+import { Inject, Injectable,
   NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+  BadRequestException, } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 
 @Injectable()
 export class RolesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private prisma: PrismaService) {}
 
   async listRoles(orgId: string) {
     const roles = await this.prisma.role.findMany({

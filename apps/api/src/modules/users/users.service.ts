@@ -1,14 +1,12 @@
-import {
-  Injectable,
+import { Inject, Injectable,
   NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+  BadRequestException, } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { PrismaService } from '../../database/prisma.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private prisma: PrismaService) {}
 
   async getProfile(userId: string) {
     const user = await this.prisma.user.findUnique({

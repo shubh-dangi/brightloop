@@ -100,13 +100,6 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
           },
         ]
       : []),
-    {
-      label: 'Preferences',
-      items: [
-        { title: 'Appearance & Theme', href: '/settings/appearance', icon: Paintbrush },
-        { title: 'User Preferences', href: '/preferences', icon: Sliders },
-      ],
-    },
   ];
 
   const customerNavGroups: NavGroup[] = [
@@ -136,14 +129,6 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
       items: [
         { title: 'Browse Products', href: '/products', icon: Package },
         { title: 'Plans Available', href: '/plans', icon: Layers },
-      ],
-    },
-    {
-      label: 'Account',
-      items: [
-        { title: 'My Profile', href: '/profile', icon: UserCircle },
-        { title: 'Appearance', href: '/settings/appearance', icon: Paintbrush },
-        { title: 'Preferences', href: '/preferences', icon: Sliders },
       ],
     },
   ];

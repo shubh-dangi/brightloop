@@ -1,12 +1,10 @@
-import {
-  Controller,
+import { Inject, Controller,
   Get,
   Post,
   Patch,
   Param,
   Body,
-  Query,
-} from '@nestjs/common';
+  Query, } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { SubscriptionsService } from './subscriptions.service';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
@@ -21,7 +19,7 @@ import {
 @ApiTags('Subscriptions')
 @Controller('subscriptions')
 export class SubscriptionsController {
-  constructor(private readonly subscriptionsService: SubscriptionsService) {}
+  constructor(@Inject(SubscriptionsService) private readonly subscriptionsService: SubscriptionsService) {}
 
   @Get()
   @RequirePermissions(PermissionKey.SUBSCRIPTIONS_READ)

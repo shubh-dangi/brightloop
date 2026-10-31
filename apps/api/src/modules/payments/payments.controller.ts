@@ -1,11 +1,9 @@
-import {
-  Controller,
+import { Inject, Controller,
   Get,
   Post,
   Param,
   Body,
-  Query,
-} from '@nestjs/common';
+  Query, } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { PaymentsService } from './payments.service';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
@@ -20,7 +18,7 @@ import {
 @ApiTags('Payments')
 @Controller('payments')
 export class PaymentsController {
-  constructor(private readonly paymentsService: PaymentsService) {}
+  constructor(@Inject(PaymentsService) private readonly paymentsService: PaymentsService) {}
 
   @Get()
   @RequirePermissions(PermissionKey.PAYMENTS_READ)

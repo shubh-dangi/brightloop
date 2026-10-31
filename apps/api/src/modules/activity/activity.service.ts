@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 
 export interface ActivityQueryParams {
@@ -10,7 +10,7 @@ export interface ActivityQueryParams {
 
 @Injectable()
 export class ActivityService {
-  constructor(private prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private prisma: PrismaService) {}
 
   async findAll(orgId: string, query: ActivityQueryParams) {
     const page = Math.max(1, Number(query.page) || 1);

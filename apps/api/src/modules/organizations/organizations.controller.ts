@@ -1,13 +1,11 @@
-import {
-  Controller,
+import { Inject, Controller,
   Get,
   Patch,
   Post,
   Delete,
   Param,
   Body,
-  UseGuards,
-} from '@nestjs/common';
+  UseGuards, } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { OrganizationsService } from './organizations.service';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
@@ -21,7 +19,7 @@ import { SystemRole, PermissionKey } from '@brightloop/contracts';
 @ApiBearerAuth()
 @Controller('organizations')
 export class OrganizationsController {
-  constructor(private readonly orgsService: OrganizationsService) {}
+  constructor(@Inject(OrganizationsService) private readonly orgsService: OrganizationsService) {}
 
   @Get('current')
   @ApiOperation({ summary: 'Get current organization details & settings' })

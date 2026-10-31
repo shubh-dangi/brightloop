@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Inject, Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { ActivityService, ActivityQueryParams } from './activity.service';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
@@ -10,7 +10,7 @@ import { PermissionKey } from '@brightloop/contracts';
 @ApiBearerAuth()
 @Controller('activity')
 export class ActivityController {
-  constructor(private readonly activityService: ActivityService) {}
+  constructor(@Inject(ActivityService) private readonly activityService: ActivityService) {}
 
   @Get()
   @RequirePermissions(PermissionKey.AUDIT_READ)

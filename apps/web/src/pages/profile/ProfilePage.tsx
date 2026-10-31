@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { User, Lock, ShieldCheck } from 'lucide-react';
+import { User, Lock, ShieldCheck, Paintbrush, Sliders, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { UpdateProfileSchema, ChangePasswordSchema, UpdateProfileInput, ChangePasswordInput } from '@brightloop/contracts';
 import { useAuthStore } from '../../stores/authStore';
 import { apiClient } from '../../services/api';
@@ -13,6 +14,7 @@ import { PageHeader } from '../../components/layout/PageHeader';
 import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
 import { Badge } from '../../components/ui/badge';
 import { formatDate } from '../../lib/utils';
+import { ThemeSwitcher } from '../../components/layout/ThemeSwitcher';
 
 export function ProfilePage() {
   const { user, setUser } = useAuthStore();
@@ -231,6 +233,65 @@ export function ProfilePage() {
           </form>
         </Card>
       </div>
+
+      {/* Preferences & Appearance Card — Moved to User Profile */}
+      <Card className="border-border/80 bg-card">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-semibold flex items-center justify-between text-foreground">
+            <span className="flex items-center gap-1.5">
+              <Paintbrush className="h-4 w-4 text-primary" /> Appearance & Theme Settings
+            </span>
+            <div className="flex items-center gap-2">
+              <Button asChild variant="outline" size="sm" className="h-7 text-[11px] gap-1">
+                <Link to="/settings/appearance">
+                  Full Appearance <ExternalLink className="h-3 w-3" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="sm" className="h-7 text-[11px] gap-1">
+                <Link to="/preferences">
+                  Preferences <Sliders className="h-3 w-3" />
+                </Link>
+              </Button>
+            </div>
+          </CardTitle>
+          <CardDescription className="text-xs text-muted-foreground">
+            Switch between Light mode (Odoo Purple & Clean Slate) and Dark mode (Deep Slate & Vibrant Purple)
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4 text-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3 rounded-lg border border-border/70 bg-muted/20">
+            <div>
+              <p className="font-semibold text-foreground">Active Interface Theme</p>
+              <p className="text-[11px] text-muted-foreground">
+                Persisted securely across sessions in your browser's local storage.
+              </p>
+            </div>
+            <ThemeSwitcher variant="segmented" size="sm" />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div className="p-3 rounded-lg border border-border/70 bg-background/50 space-y-1.5">
+              <div className="flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-[#714B67] border border-border/40" />
+                <span className="font-semibold text-[11px]">Light Palette</span>
+              </div>
+              <p className="text-[10px] text-muted-foreground leading-relaxed">
+                Background <code className="text-primary font-mono font-bold">#F8FAFC</code> (Clean Slate), Buttons <code className="text-primary font-mono font-bold">#714B67</code> (Odoo Purple), Sidebar <code className="text-primary font-mono font-bold">#1E293B</code>, Status Tags <span className="text-emerald-500 font-bold">#10B981</span>.
+              </p>
+            </div>
+
+            <div className="p-3 rounded-lg border border-border/70 bg-background/50 space-y-1.5">
+              <div className="flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-[#A78BFA] border border-border/40" />
+                <span className="font-semibold text-[11px]">Dark Palette</span>
+              </div>
+              <p className="text-[10px] text-muted-foreground leading-relaxed">
+                Background <code className="text-primary font-mono font-bold">#0F172A</code> (Deep Slate), Cards <code className="text-primary font-mono font-bold">#1E293B</code>, Highlights <code className="text-primary font-mono font-bold">#A78BFA</code>, Charts <span className="text-cyan-400 font-bold">#06B6D4</span> & <span className="text-emerald-400 font-bold">#34D399</span>.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

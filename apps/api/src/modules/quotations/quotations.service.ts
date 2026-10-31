@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateQuotationInput, QuotationStatus } from '@brightloop/contracts';
 
 @Injectable()
 export class QuotationsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private prisma: PrismaService) {}
 
   async findAll(orgId: string, userRole?: string, userEmail?: string, search?: string) {
     const where: any = { organizationId: orgId };
