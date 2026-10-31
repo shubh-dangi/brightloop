@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength, Matches } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SignupDto {
@@ -14,6 +14,9 @@ export class SignupDto {
   @ApiProperty({ example: 'Password123!' })
   @IsString()
   @MinLength(8)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d|.*[^A-Za-z0-9]).{8,}$/, {
+    message: 'Password must contain uppercase, lowercase, and at least one number or symbol',
+  })
   password!: string;
 
   @ApiPropertyOptional({ example: 'Brightloop Workspace' })
@@ -49,6 +52,9 @@ export class ResetPasswordDto {
   @ApiProperty({ example: 'NewPassword123!' })
   @IsString()
   @MinLength(8)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d|.*[^A-Za-z0-9]).{8,}$/, {
+    message: 'Password must contain uppercase, lowercase, and at least one number or symbol',
+  })
   password!: string;
 }
 
