@@ -18,7 +18,7 @@ import { Badge } from '../../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
-import { formatDate } from '../../lib/utils';
+import { formatDate, formatCurrency } from '../../lib/utils';
 
 export function DiscountsListPage() {
   const { role } = useAuthStore();
@@ -163,7 +163,7 @@ export function DiscountsListPage() {
                     <div className="flex justify-between text-muted-foreground">
                       <span>Minimum Purchase:</span>
                       <span className="font-mono font-medium text-foreground">
-                        {disc.minPurchase > 0 ? `₹${disc.minPurchase.toFixed(2)}` : 'None'}
+                        {disc.minPurchase > 0 ? formatCurrency(disc.minPurchase) : 'None'}
                       </span>
                     </div>
                     <div className="flex justify-between text-muted-foreground">
@@ -252,13 +252,13 @@ export function DiscountsListPage() {
                     <div className="flex justify-between font-mono">
                       <span className="text-muted-foreground">Discount Applied:</span>
                       <span className="text-emerald-500 font-bold">
-                        -${calcResult.discountAmount?.toFixed(2)}
+                        -{formatCurrency(calcResult.discountAmount)}
                       </span>
                     </div>
                     <div className="flex justify-between font-mono pt-1 border-t border-border">
                       <span className="font-semibold text-foreground">Discounted Total:</span>
                       <span className="font-bold text-primary">
-                        ${calcResult.finalAmount?.toFixed(2)}
+                        {formatCurrency(calcResult.finalAmount)}
                       </span>
                     </div>
                   </>

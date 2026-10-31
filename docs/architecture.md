@@ -12,13 +12,13 @@ The project is structured as a Turborepo-managed monorepo with `pnpm` workspaces
 Brightloop/
 ├── apps/
 │   ├── web/          # React 19 + Vite + TypeScript + Tailwind v4 + Radix UI
-│   └── api/          # NestJS LTS + TypeScript + Prisma + PostgreSQL + Redis
+│   └── api/          # NestJS LTS + TypeScript + Prisma + PostgreSQL
 ├── packages/
 │   ├── contracts/    # Shared DTOs, schemas, enums, API request/response types
 │   └── config/       # Shared TypeScript compiler options and tooling configurations
 ├── infra/
-│   ├── docker/       # Docker Compose manifests for PostgreSQL and Redis
-│   └── scripts/      # Environment validation and setup helpers
+│   ├── docker/       # Docker Compose manifests for PostgreSQL
+│   └── ci/           # GitHub Actions CI workflow
 ├── docs/             # Comprehensive documentation
 ├── .github/          # CI/CD workflows
 ├── turbo.json        # Turborepo task graph

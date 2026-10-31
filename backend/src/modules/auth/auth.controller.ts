@@ -12,7 +12,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post("signup")
-  @ApiOperation({ summary: "Register a new user (Customer or Staff with validation)" })
+  @ApiOperation({ summary: "Register a new user (Customer role with validation)" })
   @ApiResponse({ status: 201, description: "User registered and tokens generated." })
   @ApiResponse({ status: 400, description: "Validation failure (password rules, email format)." })
   @ApiResponse({ status: 409, description: "Email already registered." })
@@ -45,6 +45,20 @@ export class AuthController {
     return this.authService.logout(dto.refreshToken);
   }
 
+  @Post("forgot-password")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Request password reset link" })
+  async forgotPassword(@Body("email") email: string) {
+    return this.authService.forgotPassword(email);
+  }
+
+  @Post("reset-password")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Reset password using verified token" })
+  async resetPassword(@Body() body: { token: string; password: string }) {
+    return this.authService.resetPassword(body.token, body.password);
+  }
+
   @Get("me")
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
@@ -54,4 +68,3 @@ export class AuthController {
     return this.authService.getMe(user.userId);
   }
 }
-

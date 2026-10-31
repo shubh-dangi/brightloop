@@ -85,7 +85,6 @@ graph TD
     subgraph DataLayer ["Data & Storage Layer"]
         PrismaORM["Prisma 6.x ORM Engine"]
         PostgresDB[(PostgreSQL 16 Primary DB)]
-        RedisCache[(Redis 7 In-Memory Cache)]
         S3Storage["AWS S3 / Presigned Document Store"]
     end
 
@@ -113,7 +112,7 @@ graph TD
     AnalyticsService --> PrismaORM
 
     PrismaORM --> PostgresDB
-    AuthModule --> RedisCache
+    AuthModule --> PostgresDB
     InvoiceEngine --> S3Storage
 ```
 
@@ -388,9 +387,7 @@ All endpoints are versioned under `/api/v1` and return standardized envelopes:
 ## 10. Error Handling & Resilience UX
 
 Brightloop strictly forbids technical data leaks (e.g. database stack traces or SQL failures in UI):
-- **Centralized Error Parsing (`parseApiError`)**: Transforms raw status codes (400, 401, 403, 404, 409, 422, 429, 500) into human-reassuring messages.
 - **Field-Level Inline Validation (`<FieldError />`)**: Renders inline field feedback with `role="alert"` and `aria-live="polite"`. Form inputs are **never wiped out** upon failed submission.
-- **Destructive Confirmation (`<ConfirmDialog />`)**: Mandatory confirmation modal prior to deleting entities, canceling subscriptions, or processing refunds.
 - **Global Error Boundary (`<ErrorBoundary />`)**: Recovers gracefully from unexpected client errors with "Try Again", "Reload Window", and "Dashboard" fallback options.
 - **Offline Resilience (`<OfflineBanner />`)**: Dynamic status banner warning when connectivity is lost, with instant confirmation toast upon reconnection.
 
@@ -402,7 +399,7 @@ Brightloop strictly forbids technical data leaks (e.g. database stack traces or 
 Ensure your local development environment has:
 - **Node.js**: `v20.x` or `v22.x LTS`
 - **pnpm**: `v9.x` or higher (`corepack enable pnpm`)
-- **Docker & Docker Compose**: (for local PostgreSQL & Redis)
+- **Docker & Docker Compose**: (for local PostgreSQL)
 
 ### 2. Clone & Install Dependencies
 ```bash
@@ -420,7 +417,7 @@ Copy the pre-configured template:
 cp .env.example .env
 ```
 
-### 4. Start Infrastructure (PostgreSQL & Redis)
+### 4. Start Infrastructure (PostgreSQL)
 ```bash
 # Spin up Docker containers
 pnpm docker:up
@@ -470,7 +467,6 @@ The database seed provisions four standard accounts for testing role hierarchies
 | `JWT_ACCESS_EXPIRES_IN` | No | `15m` | Lifetime of short-lived JWT token |
 | `JWT_REFRESH_EXPIRES_IN`| No | `7d` | Lifetime of persistent refresh token |
 | `CORS_ORIGIN` | Yes | `http://localhost:5173` | Allowed frontend origin for strict CORS |
-| `REDIS_URL` | No | `redis://localhost:6379` | Redis connection URL for session store |
 | `APP_URL` | Yes | `http://localhost:5173` | Frontend application base URL |
 | `API_URL` | Yes | `http://localhost:4000` | Backend application base URL |
 | `VITE_API_URL` | No | `/api/v1` | Frontend API client base URL |
@@ -545,7 +541,7 @@ brightloop/
 │   │   ├── src/
 │   │   │   ├── components/            # UI primitives, layout shell, feedback, dialogs
 │   │   │   │   ├── auth/              # AuthLayout, BrandingPanel, AuthErrorMessage
-│   │   │   │   ├── common/            # ErrorBoundary, FieldError, ConfirmDialog, OfflineBanner
+│   │   │   │   ├── common/            # ErrorBoundary, FieldError, OfflineBanner
 │   │   │   │   ├── feedback/          # EmptyState, ErrorState, MetricCard
 │   │   │   │   ├── layout/            # Header, Sidebar, AppShell, ThemeSwitcher
 │   │   │   │   └── ui/                # Radix UI primitives (Button, Dialog, DropdownMenu)
@@ -588,7 +584,7 @@ brightloop/
 │   └── README_DOCUMENTATION_AUDIT.md
 │
 ├── infra/
-│   └── docker/                        # Docker Compose manifests (Postgres 16 & Redis 7)
+│   └── docker/                        # Docker Compose manifests (Postgres 16)
 ├── THEME.md                           # Dual-Theme Frost Blue × Midnight Dark specification
 ├── NAME.md                            # Brand identity & product naming guide
 ├── turbo.json                         # Turborepo build orchestration

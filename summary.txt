@@ -262,22 +262,22 @@ B. FRONTEND 1-CLICK DEMO BUTTON ACCOUNTS:
 PART 7: QUICK COMMANDS REFERENCE
 ================================================================================
 - Start Backend Server:
-  cd backend && node dist/src/main.js
+  pnpm dev:api
   (API at http://localhost:4000/api/v1 | Swagger Docs at http://localhost:4000/api/docs)
 
 - Start Frontend Web App:
-  node frontend/serve.js
+  pnpm dev:web
   (UI live at http://localhost:5173 | Proxies /api to Port 4000)
 
 - Run Automated Test Suite:
-  cd backend && npm test
-  (Runs 9/9 E2E integration tests in <400ms)
+  pnpm test
+  (66 tests across web + api)
 
 - Open Visual Database Studio:
-  cd backend && npm run prisma:studio
+  pnpm --filter @brightloop/api exec prisma studio
 
 - Re-seed Database to Clean State:
-  cd backend && npm run seed
+  pnpm db:seed
 
 ================================================================================
 PART 8: AUTOMATED TEST SUITE & RUNTIME ARCHITECTURE

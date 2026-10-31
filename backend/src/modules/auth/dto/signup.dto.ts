@@ -22,11 +22,6 @@ export class SignupDto {
   @IsNotEmpty()
   name: string;
 
-  @ApiPropertyOptional({ example: "CUSTOMER", enum: ["ADMIN", "STAFF", "CUSTOMER"] })
-  @IsOptional()
-  @IsString()
-  role?: string;
-
   @ApiPropertyOptional({ example: "+1 555-0199" })
   @IsOptional()
   @IsString()
@@ -37,4 +32,3 @@ export class SignupDto {
   @IsString()
   companyName?: string;
 }
-

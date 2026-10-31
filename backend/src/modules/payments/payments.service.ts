@@ -53,5 +53,33 @@ export class PaymentsService {
       orderBy: { transactionDate: "desc" },
     });
   }
-}
 
+  async listAllPayments(actor?: any) {
+    const where: any = {};
+    if (actor && actor.role === "CUSTOMER") {
+      where.invoice = { customerId: actor.userId };
+    }
+    return this.prisma.payment.findMany({
+      where,
+      include: {
+        invoice: {
+          select: {
+            id: true,
+            invoiceNumber: true,
+            grandTotal: true,
+            status: true,
+            customer: {
+              select: {
+                id: true,
+                name: true,
+                companyName: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { transactionDate: "desc" },
+    });
+  }
+}

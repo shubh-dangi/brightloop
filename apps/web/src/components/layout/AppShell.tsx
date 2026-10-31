@@ -11,11 +11,11 @@ export function AppShell() {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex">
-      {/* Desktop Persistent Sidebar */}
-      <div className="hidden lg:block shrink-0">
+    <div className="h-screen w-screen overflow-hidden bg-background text-foreground flex select-none">
+      {/* Desktop Persistent Fixed Sidebar */}
+      <aside className="hidden lg:flex shrink-0 h-full z-30">
         <Sidebar />
-      </div>
+      </aside>
 
       {/* Mobile Sidebar Overlay Drawer */}
       {mobileMenuOpen && (
@@ -28,13 +28,15 @@ export function AppShell() {
         </div>
       )}
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      {/* Main Content Area: Fixed Header + Smoothly Scrollable Main */}
+      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 max-w-7xl w-full mx-auto">
-          <PageMotion key={location.pathname}>
-            <Outlet />
-          </PageMotion>
+        <main className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 select-text">
+          <div className="max-w-7xl w-full mx-auto p-4 md:p-6 lg:p-8">
+            <PageMotion key={location.pathname}>
+              <Outlet />
+            </PageMotion>
+          </div>
         </main>
       </div>
 

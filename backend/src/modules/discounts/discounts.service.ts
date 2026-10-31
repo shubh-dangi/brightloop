@@ -75,9 +75,13 @@ export class DiscountsService {
       discountAmount = Math.min(rule.value, subtotal);
     }
 
+    const finalAmount = Math.max(0, subtotal - discountAmount);
+
     return {
+      valid: true,
       rule,
       discountAmount,
+      finalAmount,
     };
   }
 
@@ -88,4 +92,3 @@ export class DiscountsService {
     });
   }
 }
-

@@ -20,7 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../..
 import { Badge } from '../../components/ui/badge';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
-import { formatDate } from '../../lib/utils';
+import { formatDate, formatCurrency } from '../../lib/utils';
 
 export function CustomerDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -159,7 +159,7 @@ export function CustomerDetailPage() {
             <div>
               <span className="text-muted-foreground block text-[11px] font-mono uppercase">Company</span>
               <span className="text-foreground font-medium flex items-center gap-1.5 pt-0.5">
-                <Building className="h-3.5 w-3.5 text-muted-foreground" /> {customer.company || 'N/A'}
+                <Building className="h-3.5 w-3.5 text-muted-foreground" /> {customer.company || customer.companyName || 'N/A'}
               </span>
             </div>
             {customer.phone && (
@@ -217,14 +217,14 @@ export function CustomerDetailPage() {
                             {sub.subscriptionNumber}
                           </span>
                           <Badge variant="outline" className="text-[10px] uppercase font-mono">
-                            {sub.billingFrequency}
+                            {sub.billingInterval || sub.billingFrequency}
                           </Badge>
                         </div>
                         <p className="text-xs text-muted-foreground">{sub.plan?.name}</p>
                       </div>
                       <div className="text-right">
                         <span className="font-mono font-bold text-sm text-foreground">
-                          ₹{sub.totalAmount?.toFixed(2)}
+                          {formatCurrency(sub.totalAmount ?? sub.grandTotal)}
                         </span>
                         <span className="block text-[10px] text-emerald-500 font-semibold uppercase">
                           {sub.status}
@@ -273,7 +273,7 @@ export function CustomerDetailPage() {
                       </div>
                       <div className="text-right">
                         <span className="font-mono font-bold text-sm text-foreground">
-                          ₹{inv.totalAmount?.toFixed(2)}
+                          {formatCurrency(inv.totalAmount ?? inv.grandTotal)}
                         </span>
                         <Badge
                           variant={inv.status === 'PAID' ? 'secondary' : 'default'}

@@ -34,7 +34,7 @@ import {
 } from '../../components/ui/select';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
-import { formatDate } from '../../lib/utils';
+import { formatDate, formatCurrency } from '../../lib/utils';
 import { toast } from 'sonner';
 
 export function QuotationDetailPage() {
@@ -275,9 +275,9 @@ export function QuotationDetailPage() {
                           </Badge>
                         )}
                       </td>
-                      <td className="py-2.5 text-center font-mono">{line.quantity}</td>
-                      <td className="py-2.5 text-right font-mono">₹{line.unitPrice?.toFixed(2)}</td>
-                      <td className="py-2.5 text-right font-mono font-bold">₹{line.lineTotal?.toFixed(2)}</td>
+                      <td className="py-2.5 text-center font-mono">{line.quantity || 1}</td>
+                      <td className="py-2.5 text-right font-mono">{formatCurrency(line.unitPrice)}</td>
+                      <td className="py-2.5 text-right font-mono font-bold">{formatCurrency(line.lineTotal ?? line.amount ?? ((line.unitPrice || 0) * (line.quantity || 1)))}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -288,15 +288,15 @@ export function QuotationDetailPage() {
             <div className="pt-3 border-t border-border flex flex-col items-end space-y-1 font-mono text-xs">
               <div className="flex justify-between w-56 text-muted-foreground">
                 <span>Subtotal:</span>
-                <span>₹{quotation.subtotal?.toFixed(2)}</span>
+                <span>{formatCurrency(quotation.subtotal)}</span>
               </div>
               <div className="flex justify-between w-56 text-muted-foreground">
                 <span>Tax Amount:</span>
-                <span>₹{quotation.taxAmount?.toFixed(2)}</span>
+                <span>{formatCurrency(quotation.taxAmount ?? quotation.taxTotal)}</span>
               </div>
               <div className="flex justify-between w-56 pt-2 border-t border-border font-bold text-sm text-foreground">
                 <span>Grand Total:</span>
-                <span className="text-primary text-base">₹{quotation.totalAmount?.toFixed(2)}</span>
+                <span className="text-primary text-base font-bold">{formatCurrency(quotation.totalAmount ?? quotation.grandTotal)}</span>
               </div>
             </div>
           </CardContent>

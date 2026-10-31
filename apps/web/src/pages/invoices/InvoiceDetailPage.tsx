@@ -20,7 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../..
 import { Badge } from '../../components/ui/badge';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
-import { formatDate } from '../../lib/utils';
+import { formatDate, formatCurrency } from '../../lib/utils';
 import { RecordPaymentModal } from '../payments/RecordPaymentModal';
 import { toast } from 'sonner';
 
@@ -255,41 +255,55 @@ export function InvoiceDetailPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/60">
-                    {invoice.lines?.map((line: any) => (
-                      <tr key={line.id}>
-                        <td className="py-2.5 font-semibold text-foreground">{line.description}</td>
-                        <td className="py-2.5 text-center font-mono">{line.quantity}</td>
-                        <td className="py-2.5 text-right font-mono">₹{line.unitPrice?.toFixed(2)}</td>
-                        <td className="py-2.5 text-right font-mono font-bold">₹{line.lineTotal?.toFixed(2)}</td>
-                      </tr>
-                    ))}
+                    {invoice.lines?.map((line: any) => {
+                      const linePrice = line.unitPrice ?? 0;
+                      const lineTotal = line.lineTotal ?? line.amount ?? (linePrice * (line.quantity || 1));
+                      return (
+                        <tr key={line.id}>
+                          <td className="py-2.5 font-semibold text-foreground">{line.description || line.product?.name || 'Service Line'}</td>
+                          <td className="py-2.5 text-center font-mono">{line.quantity || 1}</td>
+                          <td className="py-2.5 text-right font-mono">{formatCurrency(linePrice)}</td>
+                          <td className="py-2.5 text-right font-mono font-bold">{formatCurrency(lineTotal)}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
 
               {/* Financial Balances */}
-              <div className="pt-3 border-t border-border flex flex-col items-end space-y-1 font-mono text-xs">
-                <div className="flex justify-between w-60 text-muted-foreground">
-                  <span>Subtotal:</span>
-                  <span>₹{invoice.subtotal?.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between w-60 text-muted-foreground">
-                  <span>Taxes (Automatic):</span>
-                  <span>₹{invoice.taxAmount?.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between w-60 pt-1 font-bold text-foreground">
-                  <span>Total Invoiced:</span>
-                  <span>₹{invoice.totalAmount?.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between w-60 text-emerald-500 font-semibold">
-                  <span>Paid to Date:</span>
-                  <span>-₹{invoice.paidAmount?.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between w-60 pt-2 border-t border-border font-bold text-sm text-foreground">
-                  <span>Outstanding Balance:</span>
-                  <span className="text-amber-500 text-base">₹{invoice.outstandingAmount?.toFixed(2)}</span>
-                </div>
-              </div>
+              {(() => {
+                const subtotal = invoice.subtotal ?? 0;
+                const tax = invoice.taxTotal ?? invoice.taxAmount ?? 0;
+                const total = invoice.grandTotal ?? invoice.totalAmount ?? (subtotal + tax);
+                const paid = invoice.payments?.reduce((acc: number, p: any) => acc + (p.amount || 0), 0) ?? invoice.paidAmount ?? (invoice.status === 'PAID' ? total : 0);
+                const outstanding = Math.max(0, total - paid);
+
+                return (
+                  <div className="pt-3 border-t border-border flex flex-col items-end space-y-1 font-mono text-xs">
+                    <div className="flex justify-between w-60 text-muted-foreground">
+                      <span>Subtotal:</span>
+                      <span>{formatCurrency(subtotal)}</span>
+                    </div>
+                    <div className="flex justify-between w-60 text-muted-foreground">
+                      <span>Taxes (Automatic):</span>
+                      <span>{formatCurrency(tax)}</span>
+                    </div>
+                    <div className="flex justify-between w-60 pt-1 font-bold text-foreground">
+                      <span>Total Invoiced:</span>
+                      <span>{formatCurrency(total)}</span>
+                    </div>
+                    <div className="flex justify-between w-60 text-emerald-500 font-semibold">
+                      <span>Paid to Date:</span>
+                      <span>-{formatCurrency(paid)}</span>
+                    </div>
+                    <div className="flex justify-between w-60 pt-2 border-t border-border font-bold text-sm text-foreground">
+                      <span>Outstanding Balance:</span>
+                      <span className="text-amber-500 text-base">{formatCurrency(outstanding)}</span>
+                    </div>
+                  </div>
+                );
+              })()}
             </CardContent>
           </Card>
         </div>

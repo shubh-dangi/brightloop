@@ -12,8 +12,10 @@ import {
   Filter,
   PauseCircle,
   XCircle,
+  RefreshCw,
 } from 'lucide-react';
 import { apiClient } from '../../services/api';
+import { useAuthStore } from '../../stores/authStore';
 import { SubscriptionDto, SubscriptionStatus, BillingFrequency } from '@brightloop/contracts';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -21,11 +23,14 @@ import { Badge } from '../../components/ui/badge';
 import { Card, CardContent } from '../../components/ui/card';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
-import { formatDate } from '../../lib/utils';
+import { formatDate, formatCurrency } from '../../lib/utils';
 
 export function SubscriptionsListPage() {
   const navigate = useNavigate();
-  const [subscriptions, setSubscriptions] = useState<SubscriptionDto[]>([]);
+  const { role } = useAuthStore();
+  const isCustomer = role === 'CUSTOMER';
+
+  const [subscriptions, setSubscriptions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
@@ -39,99 +44,53 @@ export function SubscriptionsListPage() {
           status: statusFilter !== 'ALL' ? statusFilter : undefined,
         },
       });
-      setSubscriptions(res.data?.data || []);
+      setSubscriptions(Array.isArray(res.data?.data) ? res.data.data : []);
     } catch {
       // Demo dataset fallback
       setSubscriptions([
         {
           id: 'sub-acme-001',
-          organizationId: 'org-1',
-          subscriptionNumber: 'SUB-2026-001',
+          subscriptionNumber: 'SUB-2026-0001',
           customerId: 'cust-1',
           customer: {
             id: 'cust-1',
-            organizationId: 'org-1',
-            name: 'Acme Corporation',
-            email: 'procurement@acme-corp.com',
-            company: 'Acme Global Holdings',
-            createdById: '',
-            createdAt: '',
-            updatedAt: '',
+            name: isCustomer ? 'My Account' : 'Acme Corporation',
+            companyName: 'Miller Artisan Bakery',
+            email: 'john@bakeryshop.com',
           },
-          planId: 'plan-1',
           plan: {
             id: 'plan-1',
-            name: 'Monthly Growth Plan',
-            price: 120,
-            billingFrequency: BillingFrequency.MONTHLY,
-            organizationId: '',
-            productId: '',
-            minQuantity: 1,
-            autoCloseOnEnd: false,
-            allowEarlyClose: true,
-            allowPause: true,
-            allowRenewal: true,
-            createdAt: '',
-            updatedAt: '',
+            name: 'SME Monthly Plan',
+            price: 199,
+            billingInterval: 'MONTHLY',
           },
           startDate: new Date(Date.now() - 30 * 86400000).toISOString(),
           expiryDate: new Date(Date.now() + 335 * 86400000).toISOString(),
-          billingFrequency: BillingFrequency.MONTHLY,
-          paymentTerms: 'Net 30',
-          subtotal: 120.0,
-          discountAmount: 0.0,
-          taxAmount: 12.0,
-          totalAmount: 132.0,
-          status: SubscriptionStatus.ACTIVE,
-          lines: [],
-          createdById: 'usr-3',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          paymentTerms: 'Net 15',
+          totalAmount: 1416.0,
+          status: 'ACTIVE',
         },
         {
           id: 'sub-apex-002',
-          organizationId: 'org-1',
-          subscriptionNumber: 'SUB-2026-002',
+          subscriptionNumber: 'SUB-2026-0002',
           customerId: 'cust-2',
           customer: {
             id: 'cust-2',
-            organizationId: 'org-1',
-            name: 'Apex Retailers Inc.',
-            email: 'billing@apexretail.com',
-            company: 'Apex Retail Solutions',
-            createdById: '',
-            createdAt: '',
-            updatedAt: '',
+            name: 'Marcus Vance',
+            companyName: 'Apex Global Enterprises',
+            email: 'customer2@gmail.com',
           },
-          planId: 'plan-2',
           plan: {
             id: 'plan-2',
-            name: 'Annual Enterprise Plan',
-            price: 1200,
-            billingFrequency: BillingFrequency.YEARLY,
-            organizationId: '',
-            productId: '',
-            minQuantity: 5,
-            autoCloseOnEnd: false,
-            allowEarlyClose: false,
-            allowPause: true,
-            allowRenewal: true,
-            createdAt: '',
-            updatedAt: '',
+            name: 'Enterprise Annual Contract',
+            price: 1800,
+            billingInterval: 'YEARLY',
           },
           startDate: new Date(Date.now() - 10 * 86400000).toISOString(),
-          expiryDate: new Date(Date.now() + 355 * 86400000).toISOString(),
-          billingFrequency: BillingFrequency.YEARLY,
+          expiryDate: null,
           paymentTerms: 'Net 30',
-          subtotal: 1200.0,
-          discountAmount: 120.0,
-          taxAmount: 108.0,
-          totalAmount: 1188.0,
-          status: SubscriptionStatus.ACTIVE,
-          lines: [],
-          createdById: 'usr-3',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          totalAmount: 2076.8,
+          status: 'ACTIVE',
         },
       ]);
     } finally {
@@ -146,12 +105,39 @@ export function SubscriptionsListPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Subscription Contracts"
-        description="Monitor active customer subscriptions, scheduled billing terms, and contract lifecycles."
+        title={isCustomer ? 'My Subscriptions' : 'Subscription Contracts'}
+        description={
+          isCustomer
+            ? 'Manage your active recurring software subscriptions, renewal cadences, and contracted add-ons.'
+            : 'Monitor customer subscriptions, scheduled billing terms, and contract lifecycles.'
+        }
         breadcrumbs={[
           { label: 'Workspace', href: '/dashboard' },
           { label: 'Subscriptions' },
         ]}
+        actions={
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={fetchSubscriptions}
+              className="gap-1.5 cursor-pointer text-xs h-9"
+            >
+              <RefreshCw className="h-3.5 w-3.5" />
+              Refresh
+            </Button>
+            {!isCustomer && (
+              <Button
+                size="sm"
+                onClick={() => navigate('/quotations/new')}
+                className="gap-1.5 cursor-pointer text-xs h-9"
+              >
+                <Plus className="h-4 w-4" />
+                New Quote
+              </Button>
+            )}
+          </div>
+        }
       />
 
       <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -164,14 +150,14 @@ export function SubscriptionsListPage() {
             className="pl-9 h-10 bg-card border-border/80"
           />
         </div>
-        <div className="flex items-center gap-1.5 w-full sm:w-auto">
+        <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
           {['ALL', 'ACTIVE', 'PAUSED', 'CLOSED'].map((st) => (
             <Button
               key={st}
               size="sm"
               variant={statusFilter === st ? 'default' : 'outline'}
               onClick={() => setStatusFilter(st)}
-              className="text-xs h-9 cursor-pointer"
+              className="text-xs h-9 cursor-pointer font-mono"
             >
               {st}
             </Button>
@@ -188,8 +174,19 @@ export function SubscriptionsListPage() {
           <CreditCard className="mx-auto h-12 w-12 text-muted-foreground/50 mb-3" />
           <h3 className="text-lg font-semibold">No subscriptions found</h3>
           <p className="text-sm text-muted-foreground">
-            Convert confirmed quotations into active customer subscriptions.
+            {isCustomer
+              ? 'You do not have any active subscriptions yet. Browse our plans to get started.'
+              : 'Convert confirmed quotations into active customer subscriptions.'}
           </p>
+          {isCustomer && (
+            <Button
+              className="mt-4 text-xs"
+              size="sm"
+              onClick={() => navigate('/plans')}
+            >
+              Explore Available Plans
+            </Button>
+          )}
         </Card>
       ) : (
         <div className="rounded-xl border border-border bg-card overflow-hidden shadow-sm">
@@ -207,51 +204,61 @@ export function SubscriptionsListPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
-                {subscriptions.map((s) => (
-                  <tr
-                    key={s.id}
-                    onClick={() => navigate(`/subscriptions/${s.id}`)}
-                    className="hover:bg-muted/40 transition-colors cursor-pointer group"
-                  >
-                    <td className="px-4 py-3.5 font-mono font-bold text-foreground group-hover:text-primary transition-colors">
-                      {s.subscriptionNumber}
-                    </td>
-                    <td className="px-4 py-3.5">
-                      <div className="font-semibold text-foreground text-sm">{s.customer?.name}</div>
-                      <span className="text-[11px] text-muted-foreground">{s.customer?.company}</span>
-                    </td>
-                    <td className="px-4 py-3.5 text-foreground/90 font-medium">
-                      {s.plan?.name}
-                    </td>
-                    <td className="px-4 py-3.5 font-mono">
-                      <Badge variant="outline" className="text-[10px] uppercase">
-                        {s.billingFrequency}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3.5 text-center">
-                      <Badge
-                        variant={
-                          s.status === 'ACTIVE'
-                            ? 'secondary'
-                            : s.status === 'PAUSED'
-                            ? 'default'
-                            : 'outline'
-                        }
-                        className="font-mono text-[10px] uppercase"
-                      >
-                        {s.status}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3.5 text-right font-mono font-bold text-sm text-foreground">
-                      ₹{s.totalAmount.toFixed(2)}
-                    </td>
-                    <td className="px-4 py-3.5 text-right">
-                      <span className="inline-flex items-center gap-1 text-primary text-xs font-medium group-hover:translate-x-0.5 transition-transform">
-                        Details <ChevronRight className="h-3.5 w-3.5" />
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {subscriptions.map((s) => {
+                  const subCadence = s.plan?.billingInterval || s.billingFrequency || 'MONTHLY';
+                  const customerName = s.customer?.name || 'Customer';
+                  const customerCompany = s.customer?.companyName || s.customer?.company || s.customer?.email || '';
+                  const planName = s.plan?.name || 'Subscription Plan';
+                  const subStatus = (s.status || 'ACTIVE').toUpperCase();
+
+                  return (
+                    <tr
+                      key={s.id}
+                      onClick={() => navigate(`/subscriptions/${s.id}`)}
+                      className="hover:bg-muted/40 transition-colors cursor-pointer group"
+                    >
+                      <td className="px-4 py-3.5 font-mono font-bold text-foreground group-hover:text-primary transition-colors">
+                        {s.subscriptionNumber}
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <div className="font-semibold text-foreground text-sm">{customerName}</div>
+                        {customerCompany && (
+                          <span className="text-[11px] text-muted-foreground">{customerCompany}</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3.5 text-foreground/90 font-medium">
+                        {planName}
+                      </td>
+                      <td className="px-4 py-3.5 font-mono">
+                        <Badge variant="outline" className="text-[10px] uppercase font-mono">
+                          {subCadence}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3.5 text-center">
+                        <Badge
+                          variant={
+                            subStatus === 'ACTIVE'
+                              ? 'secondary'
+                              : subStatus === 'PAUSED'
+                              ? 'default'
+                              : 'outline'
+                          }
+                          className="font-mono text-[10px] uppercase"
+                        >
+                          {subStatus}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3.5 text-right font-mono font-bold text-sm text-foreground">
+                        {formatCurrency(s.totalAmount)}
+                      </td>
+                      <td className="px-4 py-3.5 text-right">
+                        <span className="inline-flex items-center gap-1 text-primary text-xs font-medium group-hover:translate-x-0.5 transition-transform">
+                          Details <ChevronRight className="h-3.5 w-3.5" />
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

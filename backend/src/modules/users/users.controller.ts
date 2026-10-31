@@ -1,10 +1,11 @@
-import { Controller, Post, Get, Body, Param, Query, UseGuards } from "@nestjs/common";
+import { Controller, Post, Get, Patch, Body, Param, Query, UseGuards } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from "@nestjs/swagger";
 import { UsersService } from "./users.service";
 import { CreateStaffDto } from "./dto/create-staff.dto";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { RolesGuard } from "../../common/guards/roles.guard";
 import { Roles } from "../../common/decorators/roles.decorator";
+import { CurrentUser, UserPayload } from "../../common/decorators/current-user.decorator";
 
 @ApiTags("Users & Staff Management")
 @Controller("users")
@@ -22,6 +23,24 @@ export class UsersController {
     return this.usersService.createStaff(dto);
   }
 
+  @Patch("profile")
+  @ApiOperation({ summary: "Update authenticated user profile" })
+  async updateProfile(
+    @CurrentUser() user: UserPayload,
+    @Body() body: { name?: string; phone?: string; companyName?: string; avatarUrl?: string }
+  ) {
+    return this.usersService.updateProfile(user.userId, body);
+  }
+
+  @Post("change-password")
+  @ApiOperation({ summary: "Change authenticated user password" })
+  async changePassword(
+    @CurrentUser() user: UserPayload,
+    @Body() body: { currentPassword: string; newPassword: string }
+  ) {
+    return this.usersService.changePassword(user.userId, body.currentPassword, body.newPassword);
+  }
+
   @Get()
   @Roles("ADMIN", "STAFF")
   @ApiOperation({ summary: "List users filtered by role (Customers or Staff)" })
@@ -37,4 +56,3 @@ export class UsersController {
     return this.usersService.getUserById(id);
   }
 }
-

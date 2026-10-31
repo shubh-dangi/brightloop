@@ -9,7 +9,7 @@ This guide walks you through setting up and running the Brightloop SaaS Starter 
 - **Node.js**: v20+ or v22+ LTS (`node -v`)
 - **Package Manager**: pnpm v9+ or v12+ (`pnpm -v`)
 - **Git**: Installed and available in PATH
-- **Docker & Docker Compose** (Optional for local PostgreSQL and Redis)
+- **Docker & Docker Compose** (Optional for local PostgreSQL)
 
 ---
 
@@ -40,7 +40,7 @@ This guide walks you through setting up and running the Brightloop SaaS Starter 
 ## 3. Database & Infrastructure
 
 ### Option A: Using Docker Compose
-Start PostgreSQL and Redis with healthchecks:
+Start PostgreSQL with healthchecks:
 ```bash
 docker compose up -d
 ```

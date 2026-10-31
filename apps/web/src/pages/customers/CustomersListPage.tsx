@@ -182,7 +182,7 @@ export function CustomersListPage() {
                     <td className="px-4 py-3.5 text-foreground/90 font-medium">
                       <div className="flex items-center gap-1.5">
                         <Building className="h-3 w-3 text-muted-foreground" />
-                        {c.company || 'Individual'}
+                        {c.company || (c as any).companyName || 'Individual'}
                       </div>
                     </td>
                     <td className="px-4 py-3.5 text-center">

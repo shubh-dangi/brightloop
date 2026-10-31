@@ -20,6 +20,7 @@ import { Badge } from '../../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
+import { formatCurrency } from '../../lib/utils';
 
 export function PlansListPage() {
   const { role } = useAuthStore();
@@ -154,12 +155,12 @@ export function PlansListPage() {
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between mb-1.5">
                   <Badge variant="secondary" className="font-mono uppercase text-[10px]">
-                    {plan.billingFrequency}
+                    {(plan as any).billingInterval || plan.billingFrequency || 'MONTHLY'}
                   </Badge>
                   <span className="font-mono font-bold text-lg text-foreground">
-                    ₹{plan.price.toFixed(2)}
+                    {formatCurrency(plan.price)}
                     <span className="text-xs text-muted-foreground font-normal">
-                      /{plan.billingFrequency.toLowerCase()}
+                      /{String((plan as any).billingInterval || plan.billingFrequency || 'MONTHLY').toLowerCase()}
                     </span>
                   </span>
                 </div>

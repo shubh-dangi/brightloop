@@ -26,6 +26,7 @@ import {
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
 import { toast } from 'sonner';
+import { formatCurrency } from '../../lib/utils';
 
 interface LineItemState {
   productId: string;
@@ -354,7 +355,7 @@ export function CreateQuotationPage() {
                         <SelectItem value="none">Standard (+0)</SelectItem>
                         {currentProd?.variants?.map((v) => (
                           <SelectItem key={v.id} value={v.id}>
-                            {v.name} (+₹{v.additionalPrice})
+                            {v.name} (+{formatCurrency(v.additionalPrice ?? (v as any).extraPrice ?? 0)})
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -386,7 +387,7 @@ export function CreateQuotationPage() {
                   <div className="col-span-1 text-right space-y-1">
                     <label className="text-[10px] uppercase font-mono text-muted-foreground block">Total</label>
                     <span className="font-mono font-bold text-foreground block pt-1.5">
-                      ₹{lineTotal.toFixed(2)}
+                      {formatCurrency(lineTotal)}
                     </span>
                   </div>
 
@@ -410,15 +411,15 @@ export function CreateQuotationPage() {
             <div className="pt-4 border-t border-border/80 flex flex-col items-end space-y-1.5 font-mono text-xs">
               <div className="flex justify-between w-64 text-muted-foreground">
                 <span>Subtotal:</span>
-                <span>₹{subtotal.toFixed(2)}</span>
+                <span>{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between w-64 text-muted-foreground">
                 <span>Taxes (Estimated 10%):</span>
-                <span>₹{taxAmount.toFixed(2)}</span>
+                <span>{formatCurrency(taxAmount)}</span>
               </div>
               <div className="flex justify-between w-64 pt-2 border-t border-border font-bold text-sm text-foreground">
                 <span>Grand Total:</span>
-                <span className="text-primary text-base">₹{grandTotal.toFixed(2)}</span>
+                <span className="text-primary text-base">{formatCurrency(grandTotal)}</span>
               </div>
             </div>
           </CardContent>

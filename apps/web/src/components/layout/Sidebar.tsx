@@ -155,29 +155,55 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
     <TooltipProvider delayDuration={80}>
       <aside
         className={cn(
-          'relative flex flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-all duration-200 z-30 select-none h-screen',
+          'relative flex flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-all duration-200 z-30 select-none h-full shrink-0',
           isMobile
             ? 'w-64 fixed inset-y-0 left-0 shadow-2xl bg-sidebar'
             : collapsed
-              ? 'w-[60px]'
-              : 'w-60',
+              ? 'w-[64px]'
+              : 'w-64',
         )}
       >
         {/* Workspace Brand Header */}
-        <div className="flex h-14 items-center justify-between border-b border-border/80 px-3.5">
+        <div className="flex h-16 shrink-0 items-center justify-between border-b border-sidebar-border px-3.5 bg-sidebar">
           <Link
             to="/dashboard"
-            className="flex items-center gap-2.5 overflow-hidden group cursor-pointer"
+            className="flex items-center gap-2.5 overflow-hidden group cursor-pointer min-w-0"
             onClick={() => isMobile && setMobileMenuOpen(false)}
           >
-            <BrightloopLogo size="sm" iconOnly={collapsed} />
+            {/* High-visibility Vibrant Gradient Logo */}
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white shadow-md shadow-blue-500/25 ring-1 ring-white/20 transition-transform group-hover:scale-105">
+              <svg
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 2v4" />
+                <path d="m4.93 10.93 2.83 2.83" />
+                <path d="M2 18h4" />
+                <path d="M20 18h2" />
+                <path d="m19.07 4.93-2.83 2.83" />
+                <circle cx="12" cy="14" r="6" strokeWidth="2.2" />
+                <path d="M12 11a3 3 0 1 0 3 3" />
+              </svg>
+            </div>
+
             {!collapsed && (
-              <div className="flex flex-col overflow-hidden text-left leading-none">
-                <span className="text-[13px] font-semibold tracking-tight text-foreground truncate">
+              <div className="flex flex-col overflow-hidden text-left min-w-0">
+                <span className="text-[15px] font-extrabold tracking-tight text-foreground truncate drop-shadow-xs">
                   Brightloop
                 </span>
-                <span className="text-[11px] text-muted-foreground truncate pt-0.5">
-                  {isCustomer ? 'Customer Portal' : currentOrganization?.name || 'Workspace'}
+                <span className="text-[11px] font-semibold truncate pt-0.5 font-mono">
+                  {isCustomer ? (
+                    <span className="text-emerald-600 dark:text-emerald-400">Customer Portal</span>
+                  ) : isAdmin ? (
+                    <span className="text-purple-600 dark:text-purple-400">Admin Console</span>
+                  ) : (
+                    <span className="text-blue-600 dark:text-blue-400">Staff Operations</span>
+                  )}
                 </span>
               </div>
             )}
@@ -186,7 +212,7 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
           {isMobile ? (
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
+              className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer transition-colors"
               aria-label="Close navigation"
             >
               <X className="h-4 w-4" />
@@ -194,7 +220,7 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
           ) : (
             <button
               onClick={toggleSidebar}
-              className="hidden lg:flex h-6 w-6 items-center justify-center rounded border border-border/80 bg-background/50 text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer transition-colors"
+              className="hidden lg:flex h-6 w-6 items-center justify-center rounded-md border border-border/80 bg-background/50 text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer transition-colors shadow-xs"
               title={collapsed ? 'Expand sidebar (Ctrl+\\)' : 'Collapse sidebar (Ctrl+\\)'}
               aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             >
@@ -272,81 +298,51 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
           ))}
         </div>
 
-        {/* Role Switcher for Testing (Admin / Staff / Customer) */}
-        {!collapsed && (
-          <div className="px-3 py-2 border-t border-border/60 bg-muted/20">
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/80 mb-1.5 font-mono flex items-center justify-between">
-              <span>View As</span>
-              <span className="text-[9px] text-primary font-bold">RBAC</span>
-            </div>
-            <div className="grid grid-cols-3 gap-1">
-              <button
-                type="button"
-                onClick={() => setRole('ADMIN')}
-                className={cn(
-                  'px-1.5 py-1 text-[10px] font-medium rounded transition-colors text-center cursor-pointer',
-                  role === 'ADMIN' || role === 'OWNER'
-                    ? 'bg-primary text-primary-foreground font-bold shadow-xs'
-                    : 'bg-surface-elevated hover:bg-surface-hover text-muted-foreground'
-                )}
-                title="Full Admin privileges"
-              >
-                Admin
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole('MEMBER')}
-                className={cn(
-                  'px-1.5 py-1 text-[10px] font-medium rounded transition-colors text-center cursor-pointer',
-                  role === 'MEMBER'
-                    ? 'bg-primary text-primary-foreground font-bold shadow-xs'
-                    : 'bg-surface-elevated hover:bg-surface-hover text-muted-foreground'
-                )}
-                title="Internal Staff (Cost prices hidden)"
-              >
-                Staff
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole('CUSTOMER')}
-                className={cn(
-                  'px-1.5 py-1 text-[10px] font-medium rounded transition-colors text-center cursor-pointer',
-                  role === 'CUSTOMER'
-                    ? 'bg-primary text-primary-foreground font-bold shadow-xs'
-                    : 'bg-surface-elevated hover:bg-surface-hover text-muted-foreground'
-                )}
-                title="Customer Portal Self-Service"
-              >
-                Customer
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* Bottom User & Role Indicator */}
-        <div className="border-t border-border/80 p-2.5 bg-background/30">
+        <div className="shrink-0 border-t border-sidebar-border p-3 bg-muted/20">
           <Link
             to="/profile"
             className={cn(
-              'flex items-center gap-2.5 rounded-md p-1.5 text-xs text-muted-foreground hover:bg-muted/70 hover:text-foreground transition-colors cursor-pointer',
+              'flex items-center gap-2.5 rounded-lg p-1.5 text-xs text-foreground hover:bg-muted/70 transition-colors cursor-pointer',
               collapsed && 'justify-center p-1',
             )}
           >
-            <div className="h-6 w-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-[10px] shrink-0 font-mono">
+            <div
+              className={cn(
+                'h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 font-mono shadow-xs',
+                isAdmin
+                  ? 'bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/30'
+                  : isCustomer
+                  ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                  : 'bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/30',
+              )}
+            >
               {(user?.name || 'U').charAt(0).toUpperCase()}
             </div>
             {!collapsed && (
-              <div className="flex flex-col truncate flex-1 leading-none">
+              <div className="flex flex-col truncate flex-1 min-w-0 leading-tight">
                 <span className="font-semibold text-foreground truncate text-xs">
-                  {user?.name || (isCustomer ? 'Customer User' : 'Staff User')}
+                  {user?.name || (isCustomer ? 'Customer User' : isAdmin ? 'Admin User' : 'Staff Member')}
                 </span>
-                <span className="text-[10px] text-muted-foreground truncate pt-0.5 font-mono">
-                  {role || 'MEMBER'}
+                <span className="text-[10px] text-muted-foreground truncate font-mono">
+                  {user?.email || ''}
                 </span>
               </div>
             )}
             {!collapsed && (
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" title="System Connected" />
+              <Badge
+                variant="outline"
+                className={cn(
+                  'ml-auto text-[9px] px-1.5 py-0 font-mono uppercase tracking-wider shrink-0 font-bold',
+                  isAdmin
+                    ? 'border-purple-500/40 text-purple-600 dark:text-purple-400 bg-purple-500/10'
+                    : isCustomer
+                    ? 'border-emerald-500/40 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10'
+                    : 'border-blue-500/40 text-blue-600 dark:text-blue-400 bg-blue-500/10',
+                )}
+              >
+                {role || 'USER'}
+              </Badge>
             )}
           </Link>
         </div>

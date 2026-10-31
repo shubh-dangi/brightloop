@@ -28,60 +28,16 @@ interface AuthState {
   setRole: (role: string) => void;
 }
 
-// Fallback initial demo session so the app can be fully explored immediately
-const DEMO_USER: UserDto = {
-  id: 'usr-demo-owner',
-  name: 'Taylor Reed (Owner)',
-  email: 'owner@brightloop.local',
-  isEmailVerified: true,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-};
-
-const DEMO_ORG: OrganizationDto = {
-  id: 'org-demo-workspace',
-  name: 'Brightloop Primary Workspace',
-  slug: 'brightloop-primary-workspace',
-  createdAt: new Date().toISOString(),
-};
+const SESSION_HINT_KEY = 'brightloop.session';
 
 export const useAuthStore = create<AuthState>((set, get) => ({
-  user: DEMO_USER,
-  currentOrganization: DEMO_ORG,
-  organizations: [DEMO_ORG],
-  role: 'OWNER',
-  permissions: [
-    'org:read',
-    'org:update',
-    'records:read',
-    'records:create',
-    'records:update',
-    'records:delete',
-    'members:read',
-    'members:invite',
-    'roles:manage',
-    'settings:update',
-    'audit:read',
-    'customers:read',
-    'customers:create',
-    'customers:update',
-    'products:read',
-    'products:create',
-    'plans:read',
-    'plans:create',
-    'quotations:read',
-    'quotations:create',
-    'subscriptions:read',
-    'subscriptions:create',
-    'invoices:read',
-    'payments:read',
-    'payments:record',
-    'discounts:read',
-    'reports:operational',
-    'reports:financial',
-  ],
-  isAuthenticated: true,
-  isLoading: false,
+  user: null,
+  currentOrganization: null,
+  organizations: [],
+  role: null,
+  permissions: [],
+  isAuthenticated: false,
+  isLoading: true,
   error: null,
 
   login: async (data: LoginInput) => {

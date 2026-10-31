@@ -42,21 +42,36 @@ export class SubscriptionsService {
     const startDate = dto.startDate ? new Date(dto.startDate) : new Date();
     const nextBillingDate = this.calculateNextBillingDate(startDate, plan.billingInterval);
 
-    // Calculate line amounts
+    // SECURITY: Validate product catalog and compute official unit price (Price tampering prevention)
     let totalAmount = 0;
-    const computedLines = dto.lines.map((line) => {
-      const lineTax = (line.unitPrice * (line.taxRate || 0)) / 100;
-      const lineTotal = (line.unitPrice + lineTax) * line.quantity;
+    const computedLines = [];
+
+    for (const line of dto.lines) {
+      const product = await this.prisma.product.findUnique({ where: { id: line.productId } });
+      if (!product) throw new NotFoundException(`Product not found: ${line.productId}`);
+
+      let variantExtra = 0;
+      if (line.variantId) {
+        const variant = await this.prisma.productVariant.findUnique({ where: { id: line.variantId } });
+        if (variant) variantExtra = variant.extraPrice;
+      }
+
+      // Base unit price comes from verified catalog, fallback to DTO if product price is 0
+      const unitPrice = product.salesPrice > 0 ? (product.salesPrice + variantExtra) : (line.unitPrice || 0);
+      const taxRate = line.taxRate && line.taxRate >= 0 ? line.taxRate : 0;
+      const lineTax = (unitPrice * taxRate) / 100;
+      const lineTotal = (unitPrice + lineTax) * (line.quantity || 1);
+
       totalAmount += lineTotal;
-      return {
+      computedLines.push({
         productId: line.productId,
         variantId: line.variantId,
-        quantity: line.quantity,
-        unitPrice: line.unitPrice,
-        taxRate: line.taxRate || 0,
+        quantity: line.quantity || 1,
+        unitPrice,
+        taxRate,
         amount: lineTotal,
-      };
-    });
+      });
+    }
 
     const count = await this.prisma.subscription.count();
     const subscriptionNumber = `SUB-${new Date().getFullYear()}-${String(count + 1).padStart(4, "0")}`;
@@ -173,4 +188,3 @@ export class SubscriptionsService {
     return updated;
   }
 }
-

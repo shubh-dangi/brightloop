@@ -19,6 +19,7 @@ import { Badge } from '../../components/ui/badge';
 import { Card, CardContent } from '../../components/ui/card';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
+import { formatCurrency } from '../../lib/utils';
 
 export function ProductsListPage() {
   const navigate = useNavigate();
@@ -189,11 +190,11 @@ export function ProductsListPage() {
                       )}
                     </td>
                     <td className="px-4 py-3.5 text-right font-mono font-bold text-sm text-foreground">
-                      ₹{p.salesPrice.toFixed(2)}
+                      {formatCurrency(p.salesPrice)}
                     </td>
                     {isAdmin && (
                       <td className="px-4 py-3.5 text-right font-mono text-xs text-amber-400">
-                        {p.costPrice ? `₹${p.costPrice.toFixed(2)}` : '—'}
+                        {p.costPrice !== null && p.costPrice !== undefined ? formatCurrency(p.costPrice) : '—'}
                       </td>
                     )}
                     <td className="px-4 py-3.5 text-right">

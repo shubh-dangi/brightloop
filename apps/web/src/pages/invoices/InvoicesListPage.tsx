@@ -19,7 +19,7 @@ import { Badge } from '../../components/ui/badge';
 import { Card, CardContent } from '../../components/ui/card';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
-import { formatDate } from '../../lib/utils';
+import { formatDate, formatCurrency } from '../../lib/utils';
 
 export function InvoicesListPage() {
   const navigate = useNavigate();
@@ -197,10 +197,17 @@ export function InvoicesListPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
-                {invoices.map((inv) => {
+                {invoices.map((inv: any) => {
+                  const invoiceTotal = inv.grandTotal ?? inv.totalAmount ?? 0;
+                  const paidAmount =
+                    inv.payments?.reduce((acc: number, p: any) => acc + (p.amount || 0), 0) ??
+                    inv.paidAmount ??
+                    (inv.status === 'PAID' ? invoiceTotal : 0);
+                  const outstanding = Math.max(0, invoiceTotal - paidAmount);
                   const isOverdue =
                     inv.status !== 'PAID' &&
                     inv.status !== 'CANCELLED' &&
+                    inv.dueDate &&
                     new Date(inv.dueDate) < new Date();
 
                   return (
@@ -213,11 +220,21 @@ export function InvoicesListPage() {
                         {inv.invoiceNumber}
                       </td>
                       <td className="px-4 py-3.5">
-                        <div className="font-semibold text-foreground text-sm">{inv.customer?.name}</div>
-                        <span className="text-[11px] text-muted-foreground">{inv.customer?.company}</span>
+                        <div className="font-semibold text-foreground text-sm">
+                          {inv.customer?.name || 'Customer'}
+                        </div>
+                        <span className="text-[11px] text-muted-foreground">
+                          {inv.customer?.companyName || inv.customer?.company || ''}
+                        </span>
                       </td>
                       <td className="px-4 py-3.5 font-mono">
-                        <span className={isOverdue ? 'text-destructive font-semibold flex items-center gap-1' : 'text-muted-foreground'}>
+                        <span
+                          className={
+                            isOverdue
+                              ? 'text-destructive font-semibold flex items-center gap-1'
+                              : 'text-muted-foreground'
+                          }
+                        >
                           {isOverdue && <AlertCircle className="h-3 w-3" />}
                           {formatDate(inv.dueDate)}
                         </span>
@@ -237,10 +254,10 @@ export function InvoicesListPage() {
                         </Badge>
                       </td>
                       <td className="px-4 py-3.5 text-right font-mono font-bold text-sm text-foreground">
-                        ₹{inv.totalAmount.toFixed(2)}
+                        {formatCurrency(invoiceTotal)}
                       </td>
                       <td className="px-4 py-3.5 text-right font-mono font-bold text-sm text-amber-500">
-                        ₹{inv.outstandingAmount.toFixed(2)}
+                        {formatCurrency(outstanding)}
                       </td>
                       <td className="px-4 py-3.5 text-right">
                         <span className="inline-flex items-center gap-1 text-primary text-xs font-medium group-hover:translate-x-0.5 transition-transform">

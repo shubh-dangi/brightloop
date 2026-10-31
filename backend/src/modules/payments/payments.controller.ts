@@ -5,6 +5,7 @@ import { RecordPaymentDto } from "./dto/record-payment.dto";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { RolesGuard } from "../../common/guards/roles.guard";
 import { Roles } from "../../common/decorators/roles.decorator";
+import { CurrentUser, UserPayload } from "../../common/decorators/current-user.decorator";
 
 @ApiTags("Payments Collection")
 @Controller("payments")
@@ -21,10 +22,15 @@ export class PaymentsController {
     return this.paymentsService.recordPayment(dto);
   }
 
+  @Get()
+  @ApiOperation({ summary: "List all payments (Staff/Admin sees all, Customer sees their own)" })
+  async listAllPayments(@CurrentUser() user: UserPayload) {
+    return this.paymentsService.listAllPayments(user);
+  }
+
   @Get("invoice/:invoiceId")
   @ApiOperation({ summary: "Get all payment records for a specific invoice" })
   async listPaymentsByInvoice(@Param("invoiceId") invoiceId: string) {
     return this.paymentsService.listPaymentsByInvoice(invoiceId);
   }
 }
-

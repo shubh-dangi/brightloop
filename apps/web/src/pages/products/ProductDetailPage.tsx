@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../..
 import { Badge } from '../../components/ui/badge';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
+import { formatCurrency } from '../../lib/utils';
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -104,14 +105,14 @@ export function ProductDetailPage() {
             <div>
               <span className="text-muted-foreground block text-[11px] font-mono uppercase">Base Sales Price</span>
               <span className="font-mono font-bold text-lg text-foreground pt-0.5 block">
-                ₹{product.salesPrice?.toFixed(2)}
+                {formatCurrency(product.salesPrice)}
               </span>
             </div>
             {isAdmin && product.costPrice !== null && (
               <div className="p-2.5 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-500">
                 <span className="block text-[10px] uppercase font-mono font-semibold">Cost Price (Admin Only)</span>
                 <span className="font-mono font-bold text-sm text-amber-400">
-                  ₹{product.costPrice?.toFixed(2)}
+                  {formatCurrency(product.costPrice)}
                 </span>
               </div>
             )}
@@ -137,21 +138,24 @@ export function ProductDetailPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {product.variants?.length === 0 ? (
-                <p className="text-xs text-muted-foreground py-2">No variants for this product.</p>
+              {!product.variants || product.variants.length === 0 ? (
+                <p className="text-xs text-muted-foreground py-2 font-mono">No variants for this product.</p>
               ) : (
                 <div className="space-y-2">
-                  {product.variants?.map((v: any) => (
-                    <div
-                      key={v.id}
-                      className="p-3 rounded-lg border border-border/70 bg-background/50 flex items-center justify-between text-xs"
-                    >
-                      <span className="font-semibold text-foreground">{v.name}</span>
-                      <span className="font-mono font-bold text-primary">
-                        {v.additionalPrice > 0 ? `+₹${v.additionalPrice.toFixed(2)}` : 'Standard Tier (+0.00)'}
-                      </span>
-                    </div>
-                  ))}
+                  {product.variants.map((v: any) => {
+                    const extra = v.extraPrice ?? v.additionalPrice ?? 0;
+                    return (
+                      <div
+                        key={v.id}
+                        className="p-3 rounded-lg border border-border/70 bg-background/50 flex items-center justify-between text-xs"
+                      >
+                        <span className="font-semibold text-foreground">{v.name}</span>
+                        <span className="font-mono font-bold text-primary">
+                          {extra > 0 ? `+${formatCurrency(extra)}` : 'Standard Tier (+₹0.00)'}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </CardContent>
@@ -168,11 +172,11 @@ export function ProductDetailPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {product.plans?.length === 0 ? (
-                <p className="text-xs text-muted-foreground py-2">No plans configured yet.</p>
+              {!product.plans || product.plans.length === 0 ? (
+                <p className="text-xs text-muted-foreground py-2 font-mono">No plans configured yet.</p>
               ) : (
                 <div className="space-y-2">
-                  {product.plans?.map((pl: any) => (
+                  {product.plans.map((pl: any) => (
                     <div
                       key={pl.id}
                       className="p-3 rounded-lg border border-border/70 bg-background/50 flex items-center justify-between text-xs"
@@ -180,11 +184,11 @@ export function ProductDetailPage() {
                       <div>
                         <span className="font-semibold text-foreground">{pl.name}</span>
                         <Badge variant="outline" className="ml-2 font-mono text-[10px]">
-                          {pl.billingFrequency}
+                          {pl.billingInterval || pl.billingFrequency || 'MONTHLY'}
                         </Badge>
                       </div>
                       <span className="font-mono font-bold text-foreground">
-                        ₹{pl.price?.toFixed(2)}
+                        {formatCurrency(pl.price)}
                       </span>
                     </div>
                   ))}

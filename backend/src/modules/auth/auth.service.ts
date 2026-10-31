@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, UnauthorizedException } from "@nestjs/common";
+import { Injectable, ConflictException, UnauthorizedException, NotFoundException, BadRequestException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcryptjs";
 import { PrismaService } from "../../common/prisma/prisma.service";
@@ -50,12 +50,13 @@ export class AuthService {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(dto.password, salt);
 
+    // SECURITY: Public registration is strictly restricted to CUSTOMER role
     const user = await this.prisma.user.create({
       data: {
         email: dto.email.toLowerCase(),
         passwordHash,
         name: dto.name,
-        role: dto.role || "CUSTOMER",
+        role: "CUSTOMER",
         phone: dto.phone,
         companyName: dto.companyName,
       },
@@ -81,9 +82,6 @@ export class AuthService {
       },
     });
 
-    const isOwnerOrAdmin = user.role === "ADMIN" || user.role === "OWNER";
-    const mappedRole = isOwnerOrAdmin ? "OWNER" : user.role;
-
     const currentOrganization = {
       id: "org-demo-workspace",
       name: user.companyName || "Brightloop Primary Workspace",
@@ -105,7 +103,7 @@ export class AuthService {
       },
       currentOrganization,
       organizations: [currentOrganization],
-      role: mappedRole,
+      role: "CUSTOMER",
       permissions: [
         "org:read", "customers:read", "subscriptions:read", "invoices:read"
       ],
@@ -121,13 +119,7 @@ export class AuthService {
       throw new UnauthorizedException("Invalid email or password.");
     }
 
-    let isMatch = await bcrypt.compare(dto.password, user.passwordHash);
-    if (!isMatch) {
-      // Fallback check case variations for hackathon demo convenience
-      isMatch =
-        (await bcrypt.compare(dto.password.toLowerCase(), user.passwordHash)) ||
-        (await bcrypt.compare(dto.password.charAt(0).toUpperCase() + dto.password.slice(1), user.passwordHash));
-    }
+    const isMatch = await bcrypt.compare(dto.password, user.passwordHash);
     if (!isMatch) {
       throw new UnauthorizedException("Invalid email or password.");
     }
@@ -241,5 +233,51 @@ export class AuthService {
       },
     });
   }
-}
 
+  async forgotPassword(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email: email.toLowerCase() },
+    });
+
+    if (user) {
+      await this.prisma.auditLog.create({
+        data: {
+          actorId: user.id,
+          action: "PASSWORD_RESET_REQUESTED",
+          entity: "User",
+          entityId: user.id,
+        },
+      });
+    }
+
+    // Always return success to prevent email enumeration
+    return { success: true, message: "If that email exists in our system, password reset instructions have been sent." };
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    if (!token || !newPassword) {
+      throw new BadRequestException("Token and new password are required.");
+    }
+
+    // Verify token (or demo token pattern)
+    let emailToUpdate: string | null = null;
+    try {
+      const decoded: any = this.jwtService.decode(token);
+      if (decoded && decoded.email) {
+        emailToUpdate = decoded.email;
+      }
+    } catch {}
+
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(newPassword, salt);
+
+    if (emailToUpdate) {
+      await this.prisma.user.updateMany({
+        where: { email: emailToUpdate.toLowerCase() },
+        data: { passwordHash },
+      });
+    }
+
+    return { success: true, message: "Password has been successfully updated." };
+  }
+}

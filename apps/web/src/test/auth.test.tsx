@@ -1,13 +1,18 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { LoginPage } from '../pages/auth/LoginPage';
 import { SignupPage } from '../pages/auth/SignupPage';
 import { ForgotPasswordPage } from '../pages/auth/ForgotPasswordPage';
 import { ResetPasswordPage } from '../pages/auth/ResetPasswordPage';
+import { useAuthStore } from '../stores/authStore';
 
 describe('Brightloop Authentication Suite', () => {
+  beforeEach(() => {
+    useAuthStore.setState({ isLoading: false, error: null });
+  });
+
   it('renders LoginPage with branding and login form fields', () => {
     render(
       <MemoryRouter>

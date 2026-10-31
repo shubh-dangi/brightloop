@@ -6,13 +6,13 @@ import { RolesGuard } from "../../common/guards/roles.guard";
 import { Roles } from "../../common/decorators/roles.decorator";
 
 @ApiTags("Finance Lead Analytics & Revenue")
-@Controller("analytics")
+@Controller()
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
 export class AnalyticsController {
   constructor(private readonly analyticsService: AnalyticsService) {}
 
-  @Get("finance")
+  @Get("analytics/finance")
   @Roles("ADMIN", "STAFF")
   @ApiOperation({
     summary: "Finance Lead Real-time Dashboard: MRR, ARR, Active Subs, Revenue Collected vs Owed, and Overdue Debt (<2s performance)",
@@ -22,7 +22,7 @@ export class AnalyticsController {
     return this.analyticsService.getFinanceDashboard();
   }
 
-  @Get("summary")
+  @Get("analytics/summary")
   @ApiOperation({ summary: "Get executive dashboard summary for frontend UI" })
   async getDashboardSummary() {
     const data = await this.analyticsService.getFinanceDashboard();
@@ -32,5 +32,23 @@ export class AnalyticsController {
       activity: [],
     };
   }
-}
 
+  @Get("reports/operational")
+  @Roles("ADMIN", "STAFF")
+  @ApiOperation({ summary: "Get operational reports data for ReportsPage" })
+  async getOperationalReport() {
+    const data = await this.analyticsService.getFinanceDashboard();
+    return {
+      summary: {
+        totalOverdueAmount: data.overview.totalRevenueOutstanding || 0,
+        overdueInvoicesCount: data.overview.overdueInvoicesCount || 0,
+        activeSubscriptionsCount: data.overview.activeSubscriptions || 0,
+        totalCustomers: data.overview.totalCustomers || 0,
+        totalCollected: data.overview.totalRevenueCollected || 0,
+      },
+      overdueInvoices: data.overdueInvoices || [],
+      activeSubscriptions: [],
+      recentPayments: [],
+    };
+  }
+}

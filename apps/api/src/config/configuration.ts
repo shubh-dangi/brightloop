@@ -6,11 +6,6 @@ export default () => ({
   database: {
     url: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/brightloop_db?schema=public',
   },
-  redis: {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: parseInt(process.env.REDIS_PORT || '6379', 10),
-    password: process.env.REDIS_PASSWORD || undefined,
-  },
   jwt: {
     accessSecret:
       process.env.JWT_ACCESS_SECRET ||

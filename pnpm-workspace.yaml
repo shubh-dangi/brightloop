@@ -10,3 +10,5 @@ allowBuilds:
   esbuild: true
   msgpackr-extract: true
   prisma: true
+minimumReleaseAgeExclude:
+  - '@rollup/wasm-node@4.67.2'

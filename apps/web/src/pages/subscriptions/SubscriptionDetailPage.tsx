@@ -12,20 +12,26 @@ import {
   RotateCw,
   Receipt,
   FileText,
+  Clock,
+  ShieldCheck,
+  RefreshCw,
 } from 'lucide-react';
 import { apiClient } from '../../services/api';
-import { SubscriptionDto, SubscriptionStatus } from '@brightloop/contracts';
+import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
-import { formatDate } from '../../lib/utils';
+import { formatDate, formatCurrency } from '../../lib/utils';
 import { toast } from 'sonner';
 
 export function SubscriptionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { role } = useAuthStore();
+  const isCustomer = role === 'CUSTOMER';
+
   const [subscription, setSubscription] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
@@ -39,55 +45,46 @@ export function SubscriptionDetailPage() {
       // Fallback demo subscription
       setSubscription({
         id: id || 'sub-acme-001',
-        subscriptionNumber: 'SUB-2026-001',
+        subscriptionNumber: 'SUB-2026-0001',
         customer: {
           id: 'cust-1',
-          name: 'Acme Corporation',
-          email: 'procurement@acme-corp.com',
-          company: 'Acme Global Holdings',
+          name: 'John Miller',
+          email: 'customer1@gmail.com',
+          companyName: 'Miller Artisan Bakery',
         },
         plan: {
           id: 'plan-1',
-          name: 'Monthly Growth Plan',
-          price: 120.0,
-          billingFrequency: 'MONTHLY',
-          allowEarlyClose: true,
-          allowPause: true,
-          allowRenewal: true,
+          name: 'SME Monthly Plan',
+          price: 199.0,
+          billingInterval: 'MONTHLY',
         },
         startDate: new Date(Date.now() - 30 * 86400000).toISOString(),
-        expiryDate: new Date(Date.now() + 335 * 86400000).toISOString(),
-        billingFrequency: 'MONTHLY',
-        paymentTerms: 'Net 30',
-        subtotal: 120.0,
-        taxAmount: 12.0,
-        totalAmount: 132.0,
+        expiryDate: null,
+        nextBillingDate: new Date(Date.now() + 30 * 86400000).toISOString(),
+        paymentTerms: 'Net 15',
+        totalAmount: 1416.0,
         status: 'ACTIVE',
         lines: [
           {
             id: 'sl-1',
-            productName: 'Brightloop Business Software',
             quantity: 1,
-            unitPrice: 120.0,
-            taxRate: 10,
-            taxAmount: 12.0,
-            lineTotal: 132.0,
+            unitPrice: 1200.0,
+            taxRate: 18,
+            amount: 1416.0,
+            product: {
+              name: 'Brightloop ERP Cloud',
+              notes: 'Core business ERP system with inventory, finance and sales modules.',
+            },
+            variant: null,
           },
         ],
         invoices: [
           {
             id: 'inv-1',
-            invoiceNumber: 'INV-2026-001',
-            totalAmount: 132.0,
+            invoiceNumber: 'INV-2026-0001',
+            grandTotal: 1416.0,
             status: 'PAID',
             dueDate: new Date(Date.now() - 5 * 86400000).toISOString(),
-          },
-          {
-            id: 'inv-2',
-            invoiceNumber: 'INV-2026-002',
-            totalAmount: 132.0,
-            status: 'CONFIRMED',
-            dueDate: new Date(Date.now() + 15 * 86400000).toISOString(),
           },
         ],
       });
@@ -103,7 +100,8 @@ export function SubscriptionDetailPage() {
   const handleAction = async (action: 'pause' | 'resume' | 'close' | 'renew') => {
     setActionLoading(true);
     try {
-      await apiClient.patch(`/subscriptions/${id}/${action}`);
+      const endpointAction = action === 'resume' ? 'renew' : action;
+      await apiClient.patch(`/subscriptions/${id}/${endpointAction}`);
       toast.success(`Subscription ${action} action applied successfully`);
       fetchDetail();
     } catch (err: any) {
@@ -132,15 +130,21 @@ export function SubscriptionDetailPage() {
     );
   }
 
+  const customerName = subscription.customer?.name || 'Customer';
+  const customerCompany = subscription.customer?.companyName || subscription.customer?.company || '';
+  const planName = subscription.plan?.name || 'Subscription Plan';
+  const billingCadence = subscription.plan?.billingInterval || subscription.billingFrequency || 'MONTHLY';
+  const status = (subscription.status || 'ACTIVE').toUpperCase();
+
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <PageHeader
-        title={`Subscription ${subscription.subscriptionNumber}`}
-        description={`Recurring contract provisioning for ${subscription.customer?.name} (${subscription.customer?.company}).`}
+        title={`Subscription ${subscription.subscriptionNumber || ''}`}
+        description={`Recurring contract provisioning for ${customerName}${customerCompany ? ` (${customerCompany})` : ''}.`}
         breadcrumbs={[
           { label: 'Workspace', href: '/dashboard' },
           { label: 'Subscriptions', href: '/subscriptions' },
-          { label: subscription.subscriptionNumber },
+          { label: subscription.subscriptionNumber || 'Details' },
         ]}
         actions={
           <div className="flex items-center gap-2">
@@ -150,51 +154,55 @@ export function SubscriptionDetailPage() {
               </Link>
             </Button>
 
-            {subscription.status === 'ACTIVE' && subscription.plan?.allowPause && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleAction('pause')}
-                disabled={actionLoading}
-                className="gap-1.5"
-              >
-                <PauseCircle className="h-4 w-4 text-amber-500" /> Pause
-              </Button>
-            )}
+            {!isCustomer && (
+              <>
+                {status === 'ACTIVE' && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleAction('pause')}
+                    disabled={actionLoading}
+                    className="gap-1.5 cursor-pointer"
+                  >
+                    <PauseCircle className="h-4 w-4 text-amber-500" /> Pause
+                  </Button>
+                )}
 
-            {subscription.status === 'PAUSED' && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleAction('resume')}
-                disabled={actionLoading}
-                className="gap-1.5 text-emerald-500"
-              >
-                <PlayCircle className="h-4 w-4" /> Resume
-              </Button>
-            )}
+                {status === 'PAUSED' && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleAction('resume')}
+                    disabled={actionLoading}
+                    className="gap-1.5 text-emerald-500 cursor-pointer"
+                  >
+                    <PlayCircle className="h-4 w-4" /> Resume
+                  </Button>
+                )}
 
-            {subscription.status !== 'CLOSED' && subscription.plan?.allowEarlyClose && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleAction('close')}
-                disabled={actionLoading}
-                className="gap-1.5 text-destructive"
-              >
-                <XCircle className="h-4 w-4" /> Close Early
-              </Button>
-            )}
+                {status !== 'CLOSED' && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleAction('close')}
+                    disabled={actionLoading}
+                    className="gap-1.5 text-destructive cursor-pointer"
+                  >
+                    <XCircle className="h-4 w-4" /> Close
+                  </Button>
+                )}
 
-            {subscription.plan?.allowRenewal && (
-              <Button
-                size="sm"
-                onClick={() => handleAction('renew')}
-                disabled={actionLoading}
-                className="gap-1.5"
-              >
-                <RotateCw className="h-4 w-4" /> Advance Renewal
-              </Button>
+                {status !== 'CLOSED' && (
+                  <Button
+                    size="sm"
+                    onClick={() => handleAction('renew')}
+                    disabled={actionLoading}
+                    className="gap-1.5 cursor-pointer"
+                  >
+                    <RotateCw className="h-4 w-4" /> Advance Renewal
+                  </Button>
+                )}
+              </>
             )}
           </div>
         }
@@ -211,29 +219,49 @@ export function SubscriptionDetailPage() {
           <CardContent className="space-y-3.5 text-xs">
             <div>
               <span className="text-muted-foreground block text-[11px] font-mono uppercase">Customer</span>
-              <span className="font-semibold text-sm text-foreground">{subscription.customer?.name}</span>
+              <span className="font-semibold text-sm text-foreground">{customerName}</span>
+              {customerCompany && (
+                <span className="text-muted-foreground block text-[11px]">{customerCompany}</span>
+              )}
             </div>
             <div>
               <span className="text-muted-foreground block text-[11px] font-mono uppercase">Assigned Plan</span>
-              <span className="text-foreground font-medium">{subscription.plan?.name}</span>
+              <span className="text-foreground font-medium">{planName}</span>
             </div>
             <div>
               <span className="text-muted-foreground block text-[11px] font-mono uppercase">Current Status</span>
-              <Badge variant="outline" className="mt-1 font-mono uppercase text-[10px]">
-                {subscription.status}
+              <Badge
+                variant={
+                  status === 'ACTIVE'
+                    ? 'secondary'
+                    : status === 'PAUSED'
+                    ? 'default'
+                    : 'outline'
+                }
+                className="mt-1 font-mono uppercase text-[10px]"
+              >
+                {status}
               </Badge>
             </div>
             <div>
               <span className="text-muted-foreground block text-[11px] font-mono uppercase">Billing Cadence</span>
-              <span className="font-mono text-foreground">{subscription.billingFrequency}</span>
+              <span className="font-mono text-foreground">{billingCadence}</span>
             </div>
             <div>
               <span className="text-muted-foreground block text-[11px] font-mono uppercase">Payment Terms</span>
-              <span className="font-mono text-muted-foreground">{subscription.paymentTerms}</span>
+              <span className="font-mono text-muted-foreground">{subscription.paymentTerms || 'Net 30'}</span>
+            </div>
+            <div>
+              <span className="text-muted-foreground block text-[11px] font-mono uppercase">Next Billing Date</span>
+              <span className="font-mono text-foreground font-semibold">
+                {formatDate(subscription.nextBillingDate)}
+              </span>
             </div>
             <div>
               <span className="text-muted-foreground block text-[11px] font-mono uppercase">Renewal Expiry</span>
-              <span className="font-mono text-muted-foreground">{formatDate(subscription.expiryDate)}</span>
+              <span className="font-mono text-muted-foreground">
+                {subscription.expiryDate ? formatDate(subscription.expiryDate) : 'Auto-Renewing'}
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -259,23 +287,37 @@ export function SubscriptionDetailPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/60">
-                    {subscription.lines?.map((line: any) => (
-                      <tr key={line.id}>
-                        <td className="py-2.5 font-semibold text-foreground">
-                          {line.productName || 'Software License'}
-                        </td>
-                        <td className="py-2.5 text-center font-mono">{line.quantity}</td>
-                        <td className="py-2.5 text-right font-mono">₹{line.unitPrice?.toFixed(2)}</td>
-                        <td className="py-2.5 text-right font-mono font-bold">₹{line.lineTotal?.toFixed(2)}</td>
-                      </tr>
-                    ))}
+                    {(subscription.lines || []).map((line: any) => {
+                      const productName =
+                        line.product?.name || line.productName || 'Software License';
+                      const variantName = line.variant?.name ? ` (${line.variant.name})` : '';
+                      const unitPrice = line.unitPrice ?? 0;
+                      const lineAmount =
+                        line.amount ?? line.lineTotal ?? unitPrice * (line.quantity || 1);
+
+                      return (
+                        <tr key={line.id}>
+                          <td className="py-2.5 font-semibold text-foreground">
+                            {productName}
+                            {variantName}
+                          </td>
+                          <td className="py-2.5 text-center font-mono">{line.quantity || 1}</td>
+                          <td className="py-2.5 text-right font-mono">{formatCurrency(unitPrice)}</td>
+                          <td className="py-2.5 text-right font-mono font-bold">
+                            {formatCurrency(lineAmount)}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
 
               <div className="pt-2 border-t border-border flex justify-between font-mono text-xs font-bold">
                 <span className="text-foreground">Total Recurring Rate:</span>
-                <span className="text-primary text-sm">₹{subscription.totalAmount?.toFixed(2)}</span>
+                <span className="text-primary text-sm font-bold">
+                  {formatCurrency(subscription.totalAmount)}
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -291,33 +333,40 @@ export function SubscriptionDetailPage() {
               </div>
             </CardHeader>
             <CardContent>
-              {subscription.invoices?.length === 0 ? (
-                <p className="text-xs text-muted-foreground py-2">No invoices generated yet.</p>
+              {!subscription.invoices || subscription.invoices.length === 0 ? (
+                <p className="text-xs text-muted-foreground py-2 font-mono">No invoices generated yet.</p>
               ) : (
                 <div className="space-y-2">
-                  {subscription.invoices?.map((inv: any) => (
-                    <div
-                      key={inv.id}
-                      onClick={() => navigate(`/invoices/${inv.id}`)}
-                      className="p-3 rounded-lg border border-border/80 bg-background/50 hover:bg-muted/40 transition-colors flex items-center justify-between text-xs cursor-pointer"
-                    >
-                      <div className="space-y-0.5">
-                        <span className="font-mono font-bold text-foreground">{inv.invoiceNumber}</span>
-                        <span className="text-muted-foreground block text-[11px]">
-                          Due {formatDate(inv.dueDate)}
-                        </span>
+                  {subscription.invoices.map((inv: any) => {
+                    const invoiceAmount = inv.grandTotal ?? inv.totalAmount ?? 0;
+                    return (
+                      <div
+                        key={inv.id}
+                        onClick={() => navigate(`/invoices/${inv.id}`)}
+                        className="p-3 rounded-lg border border-border/80 bg-background/50 hover:bg-muted/40 transition-colors flex items-center justify-between text-xs cursor-pointer"
+                      >
+                        <div className="space-y-0.5">
+                          <span className="font-mono font-bold text-foreground">
+                            {inv.invoiceNumber}
+                          </span>
+                          <span className="text-muted-foreground block text-[11px]">
+                            Due {formatDate(inv.dueDate)}
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <span className="font-mono font-bold text-foreground">
+                            {formatCurrency(invoiceAmount)}
+                          </span>
+                          <Badge
+                            variant={inv.status === 'PAID' ? 'secondary' : 'default'}
+                            className="ml-2 text-[10px] font-mono"
+                          >
+                            {inv.status}
+                          </Badge>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <span className="font-mono font-bold text-foreground">₹{inv.totalAmount?.toFixed(2)}</span>
-                        <Badge
-                          variant={inv.status === 'PAID' ? 'secondary' : 'default'}
-                          className="ml-2 text-[10px] font-mono"
-                        >
-                          {inv.status}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </CardContent>

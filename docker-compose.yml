@@ -17,22 +17,6 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis:7-alpine
-    container_name: brightloop_redis
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    volumes:
-      - brightloop_redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
 volumes:
   brightloop_postgres_data:
-    driver: local
-  brightloop_redis_data:
     driver: local

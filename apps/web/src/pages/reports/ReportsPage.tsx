@@ -17,7 +17,7 @@ import { Badge } from '../../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
-import { formatDate } from '../../lib/utils';
+import { formatDate, formatCurrency } from '../../lib/utils';
 
 export function ReportsPage() {
   const { role } = useAuthStore();
@@ -132,12 +132,12 @@ export function ReportsPage() {
               <span className="text-[11px] font-mono uppercase text-muted-foreground">Overdue Balances</span>
               <div className="flex items-center justify-between pt-1">
                 <span className="font-mono font-bold text-2xl text-destructive">
-                  ₹{data?.summary?.totalOverdueAmount?.toFixed(2)}
+                  {formatCurrency(data?.summary?.totalOverdueAmount)}
                 </span>
                 <AlertCircle className="h-5 w-5 text-destructive/80" />
               </div>
               <span className="text-[11px] text-muted-foreground pt-1 block">
-                {data?.summary?.overdueInvoicesCount} invoices past due
+                {data?.summary?.overdueInvoicesCount || 0} invoices past due
               </span>
             </Card>
 
@@ -145,7 +145,7 @@ export function ReportsPage() {
               <span className="text-[11px] font-mono uppercase text-muted-foreground">Active Subscriptions</span>
               <div className="flex items-center justify-between pt-1">
                 <span className="font-mono font-bold text-2xl text-primary">
-                  {data?.summary?.activeSubscriptionsCount}
+                  {data?.summary?.activeSubscriptionsCount || 0}
                 </span>
                 <CreditCard className="h-5 w-5 text-primary/80" />
               </div>
@@ -158,7 +158,7 @@ export function ReportsPage() {
               <span className="text-[11px] font-mono uppercase text-muted-foreground">Total Customers</span>
               <div className="flex items-center justify-between pt-1">
                 <span className="font-mono font-bold text-2xl text-foreground">
-                  {data?.summary?.totalCustomers}
+                  {data?.summary?.totalCustomers || 0}
                 </span>
                 <BarChart3 className="h-5 w-5 text-muted-foreground" />
               </div>
@@ -171,7 +171,7 @@ export function ReportsPage() {
               <span className="text-[11px] font-mono uppercase text-muted-foreground">Recent Collections</span>
               <div className="flex items-center justify-between pt-1">
                 <span className="font-mono font-bold text-2xl text-emerald-500">
-                  ₹{data?.summary?.totalCollected?.toFixed(2)}
+                  {formatCurrency(data?.summary?.totalCollected)}
                 </span>
                 <Banknote className="h-5 w-5 text-emerald-500/80" />
               </div>
@@ -237,15 +237,15 @@ export function ReportsPage() {
                             {inv.customer?.name}
                           </span>
                           <span className="text-[11px] text-muted-foreground">
-                            {inv.customer?.company}
+                            {inv.customer?.company || inv.customer?.companyName}
                           </span>
                         </td>
                         <td className="px-4 py-3.5 font-mono text-destructive font-semibold">
                           {formatDate(inv.dueDate)}
                         </td>
-                        <td className="px-4 py-3.5 text-right font-mono">₹{inv.totalAmount?.toFixed(2)}</td>
+                        <td className="px-4 py-3.5 text-right font-mono">{formatCurrency(inv.totalAmount ?? inv.grandTotal)}</td>
                         <td className="px-4 py-3.5 text-right font-mono font-bold text-destructive text-sm">
-                          ₹{inv.outstandingAmount?.toFixed(2)}
+                          {formatCurrency(inv.outstandingAmount ?? Math.max(0, (inv.grandTotal || inv.totalAmount || 0) - (inv.paidAmount || 0)))}
                         </td>
                       </tr>
                     ))}
@@ -281,11 +281,11 @@ export function ReportsPage() {
                         <td className="px-4 py-3.5 text-foreground/90">{sub.plan?.name}</td>
                         <td className="px-4 py-3.5 font-mono">
                           <Badge variant="outline" className="text-[10px] uppercase">
-                            {sub.billingFrequency}
+                            {sub.billingInterval || sub.billingFrequency}
                           </Badge>
                         </td>
                         <td className="px-4 py-3.5 text-right font-mono font-bold text-foreground">
-                          ₹{sub.totalAmount?.toFixed(2)}
+                          {formatCurrency(sub.totalAmount ?? sub.grandTotal)}
                         </td>
                       </tr>
                     ))}
@@ -327,7 +327,7 @@ export function ReportsPage() {
                           </Badge>
                         </td>
                         <td className="px-4 py-3.5 text-right font-mono font-bold text-emerald-500 text-sm">
-                          ₹{p.amount?.toFixed(2)}
+                          {formatCurrency(p.amount)}
                         </td>
                       </tr>
                     ))}

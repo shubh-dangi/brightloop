@@ -18,7 +18,7 @@ import { Badge } from '../../components/ui/badge';
 import { Card, CardContent } from '../../components/ui/card';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
-import { formatDate } from '../../lib/utils';
+import { formatDate, formatCurrency } from '../../lib/utils';
 import { RecordPaymentModal } from './RecordPaymentModal';
 
 export function PaymentsListPage() {
@@ -134,34 +134,43 @@ export function PaymentsListPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
-                {payments.map((p) => (
-                  <tr key={p.id} className="hover:bg-muted/40 transition-colors">
-                    <td className="px-4 py-3.5 font-mono font-bold text-foreground">
-                      {p.paymentReference}
-                    </td>
-                    <td className="px-4 py-3.5">
-                      <div className="font-semibold text-foreground text-sm">{p.customer?.name}</div>
-                      <span className="text-[11px] text-muted-foreground">{p.customer?.company}</span>
-                    </td>
-                    <td className="px-4 py-3.5 font-mono text-primary font-medium">
-                      {p.invoice?.invoiceNumber}
-                    </td>
-                    <td className="px-4 py-3.5 font-mono">
-                      <Badge variant="outline" className="text-[10px]">
-                        {p.paymentMethod.replace('_', ' ')}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3.5 font-mono text-muted-foreground">
-                      {formatDate(p.paymentDate)}
-                    </td>
-                    <td className="px-4 py-3.5 text-right font-mono font-bold text-sm text-emerald-500">
-                      ₹{p.amount.toFixed(2)}
-                    </td>
-                    <td className="px-4 py-3.5 text-right font-mono text-muted-foreground text-[11px]">
-                      {p.recordedBy?.name || 'Staff'}
-                    </td>
-                  </tr>
-                ))}
+                {payments.map((p: any) => {
+                  const paymentRef = p.paymentReference || p.reference || p.id?.slice(-8).toUpperCase();
+                  const custName = p.customer?.name || p.invoice?.customer?.name || 'Customer';
+                  const custComp = p.customer?.companyName || p.customer?.company || p.invoice?.customer?.companyName || '';
+                  const invNum = p.invoice?.invoiceNumber || '—';
+                  const pMethod = (p.paymentMethod || p.method || 'BANK_TRANSFER').replace('_', ' ');
+                  const pDate = p.paymentDate || p.transactionDate || p.createdAt;
+
+                  return (
+                    <tr key={p.id} className="hover:bg-muted/40 transition-colors">
+                      <td className="px-4 py-3.5 font-mono font-bold text-foreground">
+                        {paymentRef}
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <div className="font-semibold text-foreground text-sm">{custName}</div>
+                        {custComp && <span className="text-[11px] text-muted-foreground">{custComp}</span>}
+                      </td>
+                      <td className="px-4 py-3.5 font-mono text-primary font-medium">
+                        {invNum}
+                      </td>
+                      <td className="px-4 py-3.5 font-mono">
+                        <Badge variant="outline" className="text-[10px] uppercase font-mono">
+                          {pMethod}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3.5 font-mono text-muted-foreground">
+                        {formatDate(pDate)}
+                      </td>
+                      <td className="px-4 py-3.5 text-right font-mono font-bold text-sm text-emerald-500">
+                        {formatCurrency(p.amount)}
+                      </td>
+                      <td className="px-4 py-3.5 text-right font-mono text-muted-foreground text-[11px]">
+                        {p.recordedBy?.name || 'Staff'}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
