@@ -3,6 +3,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AppShell } from '../components/layout/AppShell';
 import { ProtectedRoute } from './ProtectedRoute';
 
+// Public Marketing Landing Page
+import { LandingPage } from '../pages/landing/LandingPage';
+
 // Auth Pages
 import { LoginPage } from '../pages/auth/LoginPage';
 import { SignupPage } from '../pages/auth/SignupPage';
@@ -11,7 +14,7 @@ import { ResetPasswordPage } from '../pages/auth/ResetPasswordPage';
 import { EmailVerificationPage } from '../pages/auth/EmailVerificationPage';
 import { UnauthorizedPage } from '../pages/auth/UnauthorizedPage';
 
-// Core Pages
+// Core Application Pages
 import { DashboardPage } from '../pages/dashboard/DashboardPage';
 import { NotificationsPage } from '../pages/notifications/NotificationsPage';
 import { ActivityPage } from '../pages/activity/ActivityPage';
@@ -37,11 +40,15 @@ import { OfflinePage } from '../pages/system/OfflinePage';
 export function AppRoutes() {
   return (
     <Routes>
-      {/* Public Auth Routes */}
+      {/* Public Marketing Landing Page */}
+      <Route path="/" element={<LandingPage />} />
+
+      {/* Public Authentication Routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="/verify-email" element={<EmailVerificationPage />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
@@ -53,7 +60,6 @@ export function AppRoutes() {
       {/* Protected SaaS App Routes inside AppShell */}
       <Route element={<ProtectedRoute />}>
         <Route element={<AppShell />}>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/records" element={<RecordsListPage />} />
           <Route path="/records/:id" element={<RecordDetailPage />} />
