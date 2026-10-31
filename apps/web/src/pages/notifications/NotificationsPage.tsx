@@ -8,7 +8,7 @@ import { PageHeader } from '../../components/layout/PageHeader';
 import { EmptyState } from '../../components/feedback/EmptyState';
 import { Spinner } from '../../components/ui/spinner';
 import { formatDate } from '../../lib/utils';
-import { NotificationType } from '@unknown/contracts';
+import { NotificationType } from '@subpulse/contracts';
 
 interface NotificationItem {
   id: string;
@@ -37,7 +37,7 @@ export function NotificationsPage() {
         {
           id: 'n-1',
           title: 'Workspace Initialized',
-          message: 'Your UNKNOWN SaaS workspace has been provisioned with default enterprise roles.',
+          message: 'Your Subpulse SaaS workspace has been provisioned with default enterprise roles.',
           type: NotificationType.SUCCESS,
           isRead: false,
           createdAt: new Date().toISOString(),

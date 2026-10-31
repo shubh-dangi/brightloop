@@ -1,30 +1,30 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: unknown_postgres
+    container_name: subpulse_postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: unknown_db
+      POSTGRES_DB: subpulse_db
     ports:
       - "5432:5432"
     volumes:
-      - unknown_postgres_data:/var/lib/postgresql/data
+      - subpulse_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d unknown_db"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d subpulse_db"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: unknown_redis
+    container_name: subpulse_redis
     restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
-      - unknown_redis_data:/data
+      - subpulse_redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -32,7 +32,7 @@ services:
       retries: 5
 
 volumes:
-  unknown_postgres_data:
+  subpulse_postgres_data:
     driver: local
-  unknown_redis_data:
+  subpulse_redis_data:
     driver: local

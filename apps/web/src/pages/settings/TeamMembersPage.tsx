@@ -26,7 +26,7 @@ import { PageHeader } from '../../components/layout/PageHeader';
 import { Spinner } from '../../components/ui/spinner';
 import { Alert, AlertDescription } from '../../components/ui/alert';
 import { formatDate } from '../../lib/utils';
-import { MemberDto } from '@unknown/contracts';
+import { MemberDto } from '@subpulse/contracts';
 
 export function TeamMembersPage() {
   const { role: currentUserRole } = useAuthStore();
@@ -60,7 +60,7 @@ export function TeamMembersPage() {
           user: {
             id: 'usr-1',
             name: 'Taylor Reed (Owner)',
-            email: 'owner@unknown.local',
+            email: 'owner@subpulse.local',
             isEmailVerified: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -76,7 +76,7 @@ export function TeamMembersPage() {
           user: {
             id: 'usr-2',
             name: 'Morgan Blake (Admin)',
-            email: 'admin@unknown.local',
+            email: 'admin@subpulse.local',
             isEmailVerified: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -92,7 +92,7 @@ export function TeamMembersPage() {
           user: {
             id: 'usr-3',
             name: 'Jordan Hayes (Member)',
-            email: 'member@unknown.local',
+            email: 'member@subpulse.local',
             isEmailVerified: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -280,7 +280,7 @@ export function TeamMembersPage() {
                 <Input
                   id="inviteEmail"
                   type="email"
-                  placeholder="colleague@unknown.local"
+                  placeholder="colleague@subpulse.local"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   required

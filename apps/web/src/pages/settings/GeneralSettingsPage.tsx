@@ -11,9 +11,9 @@ import { Alert, AlertDescription } from '../../components/ui/alert';
 
 export function GeneralSettingsPage() {
   const { currentOrganization } = useAuthStore();
-  const [appName, setAppName] = useState('UNKNOWN');
-  const [workspaceName, setWorkspaceName] = useState(currentOrganization?.name || 'UNKNOWN Workspace');
-  const [supportEmail, setSupportEmail] = useState('support@unknown.local');
+  const [appName, setAppName] = useState('Subpulse');
+  const [workspaceName, setWorkspaceName] = useState(currentOrganization?.name || 'Subpulse Workspace');
+  const [supportEmail, setSupportEmail] = useState('support@subpulse.local');
   const [allowInvites, setAllowInvites] = useState(true);
   const [enforce2FA, setEnforce2FA] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -75,7 +75,7 @@ export function GeneralSettingsPage() {
                   onChange={(e) => setAppName(e.target.value)}
                   placeholder="UNKNOWN"
                 />
-                <p className="text-[11px] text-muted-foreground">Default: UNKNOWN</p>
+                <p className="text-[11px] text-muted-foreground">Default: Subpulse</p>
               </div>
 
               <div className="space-y-2">

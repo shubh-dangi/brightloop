@@ -1,8 +1,8 @@
-# UNKNOWN — Enterprise-Grade SaaS Starter Kit
+# Subpulse — Enterprise Subscription Management & Recurring Billing Platform
 
-A production-oriented, multi-tenant SaaS foundation built with **React 19**, **Vite**, **NestJS LTS**, **Prisma ORM**, and **PostgreSQL**.
+Subpulse is a modern, enterprise-grade subscription lifecycle and recurring billing management platform engineered for SaaS businesses.
 
-Neutral, configurable branding with zero business-specific assumptions, designed to serve as the launchpad for scalable B2B/B2C SaaS applications.
+Built on **React 19**, **Vite**, **TypeScript**, **Tailwind CSS v4**, **NestJS LTS**, **Prisma ORM**, and **PostgreSQL**, Subpulse provides an end-to-end commercial operating system spanning product catalogs, variant pricing, quotes, subscriptions, automated invoicing, tax computation, discounts, and revenue analytics (MRR, ARR, and cash realization).
 
 ---
 
@@ -48,7 +48,7 @@ Neutral, configurable branding with zero business-specific assumptions, designed
 ## 📂 Project Structure
 
 ```
-UNKNOWN/
+Subpulse/
 ├── apps/
 │   ├── web/                     # React 19 + Vite Frontend Application
 │   │   ├── src/
@@ -86,6 +86,8 @@ UNKNOWN/
 ├── infra/
 │   └── docker/                  # Docker Compose manifests
 ├── docs/                        # Architecture, Database, API, Setup documentation
+├── NAME.md                      # Product Name & Brand Identity Specification
+├── THEME.md                     # Complete Enterprise UI/UX Design System Specification
 ├── turbo.json
 ├── pnpm-workspace.yaml
 └── package.json
@@ -140,9 +142,9 @@ The database seed provides three pre-configured accounts:
 
 | Role | Email | Password |
 |---|---|---|
-| **Owner** | `owner@unknown.local` | `Password123!` |
-| **Admin** | `admin@unknown.local` | `Password123!` |
-| **Member** | `member@unknown.local` | `Password123!` |
+| **Owner** | `owner@subpulse.local` | `Password123!` |
+| **Admin** | `admin@subpulse.local` | `Password123!` |
+| **Member** | `member@subpulse.local` | `Password123!` |
 
 *(The login screen also features 1-click demo credential filler buttons for rapid testing)*
 
@@ -166,15 +168,5 @@ The database seed provides three pre-configured accounts:
 
 ---
 
-## 🔒 Multi-Tenant Isolation & Security
-
-- **Strict Scoping**: Every tenant-owned record is scoped to its `organizationId`.
-- **Identity Derivation**: Active tenant context is derived from verified user memberships, preventing ID spoofing.
-- **Argon2id**: High-memory-cost password hashing.
-- **Refresh Token Rotation**: Automatic token rotation with family revocation on reuse detection.
-- **Verified by Tests**: Integration tests in `apps/api/test/multi-tenant-isolation.spec.ts` prove tenant isolation.
-
----
-
 ## 📄 License
-MIT License. Free for commercial and private use.
+MIT License.

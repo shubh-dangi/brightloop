@@ -9,7 +9,7 @@ import { PageHeader } from '../../components/layout/PageHeader';
 import { EmptyState } from '../../components/feedback/EmptyState';
 import { Spinner } from '../../components/ui/spinner';
 import { formatDateTime } from '../../lib/utils';
-import { ActivityLogDto } from '@unknown/contracts';
+import { ActivityLogDto } from '@subpulse/contracts';
 
 export function ActivityPage() {
   const [logs, setLogs] = useState<ActivityLogDto[]>([]);

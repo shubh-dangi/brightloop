@@ -10,7 +10,7 @@ import {
   CreateRecordInput,
   UpdateRecordInput,
   GenericRecordDto,
-} from '@unknown/contracts';
+} from '@subpulse/contracts';
 
 export interface RecordQueryParams {
   page?: number;

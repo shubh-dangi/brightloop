@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { User, Lock, ShieldCheck, CheckCircle2 } from 'lucide-react';
-import { UpdateProfileSchema, ChangePasswordSchema, UpdateProfileInput, ChangePasswordInput } from '@unknown/contracts';
+import { UpdateProfileSchema, ChangePasswordSchema, UpdateProfileInput, ChangePasswordInput } from '@subpulse/contracts';
 import { useAuthStore } from '../../stores/authStore';
 import { apiClient } from '../../services/api';
 import { Button } from '../../components/ui/button';

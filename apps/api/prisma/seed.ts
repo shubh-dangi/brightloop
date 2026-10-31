@@ -12,16 +12,16 @@ const permissions = [
   { key: 'members:update', name: 'Update Member Roles', module: 'Members' },
   { key: 'members:remove', name: 'Remove Members', module: 'Members' },
   { key: 'roles:manage', name: 'Manage Roles & Permissions', module: 'Roles' },
-  { key: 'records:read', name: 'View Records', module: 'Records' },
-  { key: 'records:create', name: 'Create Records', module: 'Records' },
-  { key: 'records:update', name: 'Update Records', module: 'Records' },
-  { key: 'records:delete', name: 'Delete Records', module: 'Records' },
+  { key: 'records:read', name: 'View Records & Subscriptions', module: 'Records' },
+  { key: 'records:create', name: 'Create Records & Subscriptions', module: 'Records' },
+  { key: 'records:update', name: 'Update Records & Subscriptions', module: 'Records' },
+  { key: 'records:delete', name: 'Delete Records & Subscriptions', module: 'Records' },
   { key: 'settings:update', name: 'Update System Settings', module: 'Settings' },
   { key: 'audit:read', name: 'View Activity Audit Logs', module: 'Audit' },
 ];
 
 async function main() {
-  console.log('🌱 Starting UNKNOWN database seed...');
+  console.log('🌱 Starting Subpulse database seed...');
 
   // 1. Seed Permissions
   console.log('Inserting system permissions...');
@@ -37,14 +37,14 @@ async function main() {
 
   // 2. Seed Default Organization
   const org = await prisma.organization.upsert({
-    where: { slug: 'unknown-default-workspace' },
+    where: { slug: 'subpulse-primary-workspace' },
     create: {
-      name: 'UNKNOWN Default Workspace',
-      slug: 'unknown-default-workspace',
+      name: 'Subpulse Primary Workspace',
+      slug: 'subpulse-primary-workspace',
       settings: {
         create: {
-          displayName: 'UNKNOWN Workspace',
-          supportEmail: 'support@unknown.local',
+          displayName: 'Subpulse Workspace',
+          supportEmail: 'support@subpulse.local',
           timezone: 'UTC',
           dateFormat: 'YYYY-MM-DD',
           allowMemberInvites: true,
@@ -61,7 +61,7 @@ async function main() {
     create: {
       organizationId: org.id,
       name: 'OWNER',
-      description: 'Full workspace ownership and control',
+      description: 'Full workspace ownership, billing, and system governance',
       isSystem: true,
     },
     update: {},
@@ -72,7 +72,7 @@ async function main() {
     create: {
       organizationId: org.id,
       name: 'ADMIN',
-      description: 'Administrative access over members and records',
+      description: 'Administrative access over members, invoices, and plans',
       isSystem: true,
     },
     update: {},
@@ -83,7 +83,7 @@ async function main() {
     create: {
       organizationId: org.id,
       name: 'MEMBER',
-      description: 'Standard member with record creation and editing rights',
+      description: 'Internal operations staff with subscription and invoice management',
       isSystem: true,
     },
     update: {},
@@ -110,7 +110,6 @@ async function main() {
       update: {},
     });
 
-    // Admin gets everything except org:delete
     if (p.key !== 'org:delete') {
       await prisma.rolePermission.upsert({
         where: {
@@ -121,7 +120,6 @@ async function main() {
       });
     }
 
-    // Member gets records:* and members:read and audit:read
     if (
       p.key.startsWith('records:') ||
       p.key === 'members:read' ||
@@ -137,7 +135,6 @@ async function main() {
       });
     }
 
-    // Viewer gets *:read only
     if (p.key.endsWith(':read')) {
       await prisma.rolePermission.upsert({
         where: {
@@ -149,7 +146,7 @@ async function main() {
     }
   }
 
-  // 4. Seed Demo Users
+  // 4. Seed Demo Users with Argon2id
   const passwordHash = await argon2.hash('Password123!', {
     type: argon2.argon2id,
     memoryCost: 65536,
@@ -157,10 +154,10 @@ async function main() {
   });
 
   const ownerUser = await prisma.user.upsert({
-    where: { email: 'owner@unknown.local' },
+    where: { email: 'owner@subpulse.local' },
     create: {
       name: 'Taylor Reed (Owner)',
-      email: 'owner@unknown.local',
+      email: 'owner@subpulse.local',
       passwordHash,
       isEmailVerified: true,
       userPreference: {
@@ -175,10 +172,10 @@ async function main() {
   });
 
   const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@unknown.local' },
+    where: { email: 'admin@subpulse.local' },
     create: {
       name: 'Morgan Blake (Admin)',
-      email: 'admin@unknown.local',
+      email: 'admin@subpulse.local',
       passwordHash,
       isEmailVerified: true,
       userPreference: {
@@ -193,10 +190,10 @@ async function main() {
   });
 
   const memberUser = await prisma.user.upsert({
-    where: { email: 'member@unknown.local' },
+    where: { email: 'member@subpulse.local' },
     create: {
-      name: 'Jordan Hayes (Member)',
-      email: 'member@unknown.local',
+      name: 'Jordan Hayes (Staff)',
+      email: 'member@subpulse.local',
       passwordHash,
       isEmailVerified: true,
       userPreference: {
@@ -250,67 +247,47 @@ async function main() {
     update: {},
   });
 
-  // 5. Seed Demo GenericRecords
+  // 5. Seed Demo Subscription & Billing Records
   const demoRecords = [
     {
-      title: 'Infrastructure Ingestion Gateway',
-      description: 'Primary ingress pipeline processing multi-region webhook payloads.',
+      title: 'Enterprise Platform Plan - Tier 3',
+      description: 'Annual recurring subscription contract with dedicated infrastructure and priority SLA.',
       status: 'ACTIVE' as const,
       priority: 'CRITICAL' as const,
-      category: 'Infrastructure',
-      tags: ['network', 'gateway', 'core'],
-      metadata: { version: '2.4.0', cluster: 'us-east-1' },
+      category: 'Subscription Plans',
+      tags: ['annual', 'enterprise', 'sla'],
+      metadata: { mrrContribution: 4500, billingAnchorDay: 1, seatsAllocated: 150 },
       createdById: ownerUser.id,
     },
     {
-      title: 'Audit Log Retention Policy',
-      description: 'Quarterly compliance policy enforcing cryptographic storage archival.',
+      title: 'Tax Exemption Compliance Filing - NY',
+      description: 'State resale tax exemption certificate verification for enterprise accounts.',
       status: 'ACTIVE' as const,
       priority: 'HIGH' as const,
-      category: 'Compliance',
-      tags: ['security', 'soc2', 'audit'],
-      metadata: { retentionDays: 365 },
+      category: 'Taxes',
+      tags: ['tax', 'compliance', 'ny'],
+      metadata: { jurisdiction: 'US-NY', exemptStatus: 'Verified' },
       createdById: adminUser.id,
     },
     {
-      title: 'Realtime Telemetry Collector',
-      description: 'Aggregates metrics and CPU usage metrics across worker nodes.',
+      title: 'Realtime Usage Webhook Ingress',
+      description: 'Automated meter event collector recording hourly API consumption for metered add-ons.',
       status: 'ACTIVE' as const,
       priority: 'MEDIUM' as const,
-      category: 'Analytics',
-      tags: ['telemetry', 'monitoring'],
-      metadata: { sampleRate: '10s' },
+      category: 'Metering',
+      tags: ['webhooks', 'metering'],
+      metadata: { batchWindow: '60s', sampleRate: '100%' },
       createdById: memberUser.id,
     },
     {
-      title: 'Legacy Export Migration Spec',
-      description: 'Specification draft for deprecating old CSV batch pipelines.',
+      title: 'Early Adopter Promotional Discount (20%)',
+      description: 'Recurring coupon applied to first 12 billing cycles for Q1 cohorts.',
       status: 'DRAFT' as const,
       priority: 'LOW' as const,
-      category: 'Operations',
-      tags: ['migration', 'draft'],
-      metadata: { targetQuarter: 'Q4' },
+      category: 'Discounts',
+      tags: ['promo', 'discount', 'q1'],
+      metadata: { discountPercent: 20, maxRedemptions: 50 },
       createdById: adminUser.id,
-    },
-    {
-      title: 'Customer Encryption Key Rotation',
-      description: 'Scheduled annual rotation for tenant cryptographic keys.',
-      status: 'ACTIVE' as const,
-      priority: 'HIGH' as const,
-      category: 'Security',
-      tags: ['kms', 'crypto'],
-      metadata: { algorithm: 'AES-256-GCM' },
-      createdById: ownerUser.id,
-    },
-    {
-      title: 'Deprecated V1 API Webhook Sync',
-      description: 'Historical sync record kept for archival and rollback purposes.',
-      status: 'ARCHIVED' as const,
-      priority: 'LOW' as const,
-      category: 'Operations',
-      tags: ['deprecated', 'v1'],
-      metadata: { deprecatedAt: '2025-12-31' },
-      createdById: memberUser.id,
     },
   ];
 
@@ -331,27 +308,21 @@ async function main() {
   // 6. Seed Demo Notifications
   const demoNotifications = [
     {
-      title: 'Workspace Initialized',
-      message: 'UNKNOWN SaaS workspace configured with default enterprise RBAC roles.',
+      title: 'Subpulse Platform Initialized',
+      message: 'Workspace configured with enterprise RBAC roles and subscription billing architecture.',
       type: 'SUCCESS' as const,
       isRead: true,
     },
     {
-      title: 'Security Notice',
-      message: 'New login detected from IP 192.168.1.1 (Taylor Reed).',
-      type: 'SECURITY' as const,
-      isRead: false,
-    },
-    {
-      title: 'System Health Check',
-      message: 'All worker nodes and database replicas are healthy and responsive.',
+      title: 'Recurring Billing Cycle Verified',
+      message: 'Scheduled billing run processed 24 active renewals with zero proration errors.',
       type: 'INFO' as const,
       isRead: false,
     },
     {
-      title: 'Storage Threshold Alert',
-      message: 'Workspace object storage passed 65% of allocated quota.',
-      type: 'WARNING' as const,
+      title: 'Security Alert: New Sign-in',
+      message: 'Session verified via Argon2id authentication from Taylor Reed.',
+      type: 'SECURITY' as const,
       isRead: false,
     },
   ];
@@ -366,46 +337,12 @@ async function main() {
     });
   }
 
-  // 7. Seed Demo Activity Logs
-  const demoLogs = [
-    {
-      action: 'workspace:initialized',
-      entity: 'Organization',
-      entityId: org.id,
-      userId: ownerUser.id,
-      details: { workspace: org.name },
-    },
-    {
-      action: 'member:joined',
-      entity: 'OrganizationMember',
-      entityId: adminUser.id,
-      userId: adminUser.id,
-      details: { role: 'ADMIN' },
-    },
-    {
-      action: 'record:created',
-      entity: 'GenericRecord',
-      entityId: 'rec-1',
-      userId: ownerUser.id,
-      details: { title: 'Infrastructure Ingestion Gateway' },
-    },
-  ];
-
-  for (const log of demoLogs) {
-    await prisma.activityLog.create({
-      data: {
-        ...log,
-        organizationId: org.id,
-      },
-    });
-  }
-
-  console.log('✅ Database seed completed successfully!');
+  console.log('✅ Subpulse database seed completed successfully!');
   console.log('==============================================');
-  console.log('Default Credentials:');
-  console.log('Owner:  owner@unknown.local  | Password123!');
-  console.log('Admin:  admin@unknown.local  | Password123!');
-  console.log('Member: member@unknown.local | Password123!');
+  console.log('Default Demo Accounts:');
+  console.log('Owner:  owner@subpulse.local  | Password123!');
+  console.log('Admin:  admin@subpulse.local  | Password123!');
+  console.log('Staff:  member@subpulse.local | Password123!');
   console.log('==============================================');
 }
 

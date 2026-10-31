@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Hexagon, Eye, EyeOff, ArrowRight, Check, X } from 'lucide-react';
-import { SignupSchema, SignupInput } from '@unknown/contracts';
+import { SignupSchema, SignupInput } from '@subpulse/contracts';
 import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -56,7 +56,7 @@ export function SignupPage() {
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">Create an account</h1>
           <p className="text-sm text-muted-foreground">
-            Get started with your UNKNOWN SaaS workspace today
+            Get started with your Subpulse SaaS workspace today
           </p>
         </div>
 

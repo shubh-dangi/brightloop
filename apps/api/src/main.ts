@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, Logger, VersioningType } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
@@ -9,7 +9,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule, {
-    cors: false, // Configured manually below for precise cookie/origin control
+    cors: false,
   });
 
   const configService = app.get(ConfigService);
@@ -59,9 +59,9 @@ async function bootstrap() {
 
   // Swagger OpenAPI Documentation
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('UNKNOWN SaaS Starter Kit API')
+    .setTitle('Subpulse — Subscription Management & Billing API')
     .setDescription(
-      'Enterprise-grade multi-tenant SaaS API foundation with RBAC, JWT, and generic CRUD architecture.',
+      'Enterprise-grade multi-tenant subscription lifecycle, billing engine, quotation, and revenue management REST API.',
     )
     .setVersion('1.0.0')
     .addBearerAuth()
@@ -73,7 +73,7 @@ async function bootstrap() {
 
   await app.listen(port);
   logger.log(`=======================================================`);
-  logger.log(`🚀 UNKNOWN API Server running on: http://localhost:${port}/api/v1`);
+  logger.log(`🚀 Subpulse API Server running on: http://localhost:${port}/api/v1`);
   logger.log(`📑 Swagger Documentation ready at: http://localhost:${port}/api/docs`);
   logger.log(`=======================================================`);
 }

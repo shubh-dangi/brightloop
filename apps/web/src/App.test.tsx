@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import App from './App';
 
-describe('App Root and Shell', () => {
-  it('renders without crashing and displays the UNKNOWN enterprise workspace', () => {
+describe('Subpulse App Root and Shell', () => {
+  it('renders without crashing and displays the Subpulse enterprise workspace', () => {
     render(<App />);
-    expect(screen.getByText('UNKNOWN')).toBeInTheDocument();
+    expect(screen.getByText('Subpulse')).toBeInTheDocument();
   });
 });

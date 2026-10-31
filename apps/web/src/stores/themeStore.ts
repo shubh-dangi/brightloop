@@ -19,14 +19,14 @@ interface ThemeState {
 }
 
 export const useThemeStore = create<ThemeState>((set, get) => ({
-  theme: (localStorage.getItem('unknown-theme') as Theme) || 'system',
-  accentColor: localStorage.getItem('unknown-accent') || 'indigo',
-  density: (localStorage.getItem('unknown-density') as Density) || 'comfortable',
+  theme: (localStorage.getItem('subpulse-theme') as Theme) || 'system',
+  accentColor: localStorage.getItem('subpulse-accent') || 'indigo',
+  density: (localStorage.getItem('subpulse-density') as Density) || 'comfortable',
   sidebarCollapsed: false,
   mobileMenuOpen: false,
 
   setTheme: (theme: Theme) => {
-    localStorage.setItem('unknown-theme', theme);
+    localStorage.setItem('subpulse-theme', theme);
     set({ theme });
 
     const root = document.documentElement;
@@ -38,12 +38,12 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   },
 
   setAccentColor: (color: string) => {
-    localStorage.setItem('unknown-accent', color);
+    localStorage.setItem('subpulse-accent', color);
     set({ accentColor: color });
   },
 
   setDensity: (density: Density) => {
-    localStorage.setItem('unknown-density', density);
+    localStorage.setItem('subpulse-density', density);
     set({ density });
   },
 

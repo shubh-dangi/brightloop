@@ -6,7 +6,7 @@ import {
   SignupInput,
   AuthResponseData,
   ApiResponse,
-} from '@unknown/contracts';
+} from '@subpulse/contracts';
 import { apiClient, setAuthToken, setActiveOrganizationId } from '../services/api';
 
 interface AuthState {
@@ -31,7 +31,7 @@ interface AuthState {
 const DEMO_USER: UserDto = {
   id: 'usr-demo-owner',
   name: 'Taylor Reed (Owner)',
-  email: 'owner@unknown.local',
+  email: 'owner@subpulse.local',
   isEmailVerified: true,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
@@ -39,8 +39,8 @@ const DEMO_USER: UserDto = {
 
 const DEMO_ORG: OrganizationDto = {
   id: 'org-demo-workspace',
-  name: 'UNKNOWN Workspace',
-  slug: 'unknown-workspace',
+  name: 'Subpulse Primary Workspace',
+  slug: 'subpulse-primary-workspace',
   createdAt: new Date().toISOString(),
 };
 
@@ -49,7 +49,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   currentOrganization: DEMO_ORG,
   organizations: [DEMO_ORG],
   role: 'OWNER',
-  permissions: ['org:read', 'org:update', 'records:read', 'records:create', 'records:update', 'records:delete', 'members:read', 'members:invite', 'roles:manage', 'settings:update', 'audit:read'],
+  permissions: [
+    'org:read',
+    'org:update',
+    'records:read',
+    'records:create',
+    'records:update',
+    'records:delete',
+    'members:read',
+    'members:invite',
+    'roles:manage',
+    'settings:update',
+    'audit:read',
+  ],
   isAuthenticated: true,
   isLoading: false,
   error: null,
@@ -73,7 +85,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         isLoading: false,
       });
     } catch (err: any) {
-      // In offline development without backend running, fallback gracefully
       if (!err.response) {
         console.warn('Backend server offline. Setting simulated authenticated session.');
         set({
@@ -160,7 +171,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }
       return false;
     } catch {
-      // Retain active state if offline demo session
       return get().isAuthenticated;
     }
   },

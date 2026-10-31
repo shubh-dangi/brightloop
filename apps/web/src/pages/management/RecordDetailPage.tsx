@@ -17,7 +17,7 @@ import {
   RecordStatus,
   RecordPriority,
   CreateRecordInput,
-} from '@unknown/contracts';
+} from '@subpulse/contracts';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';

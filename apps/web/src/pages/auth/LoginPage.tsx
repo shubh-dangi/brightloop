@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Hexagon, Eye, EyeOff, ArrowRight, ShieldCheck } from 'lucide-react';
-import { LoginSchema, LoginInput } from '@unknown/contracts';
+import { LoginSchema, LoginInput } from '@subpulse/contracts';
 import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -23,7 +23,7 @@ export function LoginPage() {
   } = useForm<LoginInput>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
-      email: 'owner@unknown.local',
+      email: 'owner@subpulse.local',
       password: 'Password123!',
     },
   });
@@ -55,7 +55,7 @@ export function LoginPage() {
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">Welcome back</h1>
           <p className="text-sm text-muted-foreground">
-            Sign in to access your UNKNOWN enterprise workspace
+            Sign in to access your Subpulse enterprise workspace
           </p>
         </div>
 
@@ -79,7 +79,7 @@ export function LoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="name@unknown.local"
+                  placeholder="name@subpulse.local"
                   {...register('email')}
                   autoComplete="email"
                 />
@@ -133,7 +133,7 @@ export function LoginPage() {
                     variant="outline"
                     size="sm"
                     className="h-7 text-xs"
-                    onClick={() => fillDemo('owner@unknown.local')}
+                    onClick={() => fillDemo('owner@subpulse.local')}
                   >
                     Owner
                   </Button>
@@ -142,7 +142,7 @@ export function LoginPage() {
                     variant="outline"
                     size="sm"
                     className="h-7 text-xs"
-                    onClick={() => fillDemo('admin@unknown.local')}
+                    onClick={() => fillDemo('admin@subpulse.local')}
                   >
                     Admin
                   </Button>
@@ -151,7 +151,7 @@ export function LoginPage() {
                     variant="outline"
                     size="sm"
                     className="h-7 text-xs"
-                    onClick={() => fillDemo('member@unknown.local')}
+                    onClick={() => fillDemo('member@subpulse.local')}
                   >
                     Member
                   </Button>

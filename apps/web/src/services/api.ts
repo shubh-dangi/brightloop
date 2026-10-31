@@ -1,5 +1,5 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { ApiResponse } from '@unknown/contracts';
+import { ApiResponse } from '@subpulse/contracts';
 
 export const apiClient = axios.create({
   baseURL: '/api/v1',

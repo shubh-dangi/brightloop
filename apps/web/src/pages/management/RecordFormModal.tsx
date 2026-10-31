@@ -7,7 +7,7 @@ import {
   RecordStatus,
   RecordPriority,
   GenericRecordDto,
-} from '@unknown/contracts';
+} from '@subpulse/contracts';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';

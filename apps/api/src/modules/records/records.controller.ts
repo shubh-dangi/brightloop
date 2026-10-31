@@ -19,7 +19,7 @@ import {
   PermissionKey,
   CreateRecordInput,
   UpdateRecordInput,
-} from '@unknown/contracts';
+} from '@subpulse/contracts';
 
 @ApiTags('Records (Generic SaaS CRUD)')
 @ApiBearerAuth()

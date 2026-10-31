@@ -68,7 +68,7 @@ export function Header() {
             to="/dashboard"
             className="hover:text-foreground font-medium transition-colors"
           >
-            {currentOrganization?.name || 'UNKNOWN'}
+            {currentOrganization?.name || 'Subpulse'}
           </Link>
           {breadcrumbItems.map((item) => (
             <React.Fragment key={item.url}>
@@ -167,7 +167,7 @@ export function Header() {
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none text-foreground">{user?.name || 'User'}</p>
-                <p className="text-xs leading-none text-muted-foreground truncate">{user?.email || 'user@unknown.local'}</p>
+                <p className="text-xs leading-none text-muted-foreground truncate">{user?.email || 'user@subpulse.local'}</p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />

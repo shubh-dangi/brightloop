@@ -131,7 +131,7 @@ export function DashboardPage() {
     <div className="space-y-6">
       <PageHeader
         title={`Welcome, ${user?.name?.split(' ')[0] || 'User'}`}
-        description={`Overview for ${currentOrganization?.name || 'UNKNOWN Workspace'} • ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`}
+        description={`Overview for ${currentOrganization?.name || 'Subpulse Workspace'} • ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`}
       >
         <div className="flex items-center gap-2">
           {isDemoData && (

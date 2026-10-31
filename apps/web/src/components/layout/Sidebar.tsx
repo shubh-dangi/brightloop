@@ -89,7 +89,7 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
             {!collapsed && (
               <div className="flex flex-col overflow-hidden text-left">
                 <span className="text-sm font-semibold tracking-tight text-foreground truncate">
-                  UNKNOWN
+                  Subpulse
                 </span>
                 <span className="text-xs text-muted-foreground truncate">
                   {currentOrganization?.name || 'Workspace'}

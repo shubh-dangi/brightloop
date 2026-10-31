@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ApiResponse } from '@unknown/contracts';
+import { ApiResponse } from '@subpulse/contracts';
 
 @Injectable()
 export class TransformInterceptor<T>

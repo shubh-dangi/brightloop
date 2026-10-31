@@ -19,7 +19,7 @@ import {
   OrganizationDto,
   SystemRole,
   PermissionKey,
-} from '@unknown/contracts';
+} from '@subpulse/contracts';
 
 @Injectable()
 export class AuthService {
