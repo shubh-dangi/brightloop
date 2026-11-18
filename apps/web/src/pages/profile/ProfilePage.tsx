@@ -276,7 +276,7 @@ export function ProfilePage() {
                 <span className="font-semibold text-[11px]">Light Palette</span>
               </div>
               <p className="text-[10px] text-muted-foreground leading-relaxed">
-                Background <code className="text-primary font-mono font-bold">#F8FAFC</code> (Clean Slate), Buttons <code className="text-primary font-mono font-bold">#9333EA</code> (Vibrant Purple), Sidebar <code className="text-primary font-mono font-bold">#1E293B</code>, Status Tags <span className="text-emerald-500 font-bold">#10B981</span>.
+                Background <code className="text-primary font-mono font-bold">#F8FAFC</code> (Clean Slate), Buttons <code className="text-primary font-mono font-bold">#9333EA</code> (Vibrant Purple), Sidebar <code className="text-primary font-mono font-bold">#FFFFFF</code>, Status Tags <span className="text-emerald-500 font-bold">#10B981</span>.
               </p>
             </div>
 
