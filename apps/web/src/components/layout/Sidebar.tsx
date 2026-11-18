@@ -155,30 +155,8 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
             className="flex items-center gap-2.5 overflow-hidden group cursor-pointer min-w-0"
             onClick={() => isMobile && setMobileMenuOpen(false)}
           >
-            {/* High-visibility Vibrant Gradient Logo */}
-            <div
-              style={{ width: '36px', height: '36px', minWidth: '36px' }}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white shadow-md shadow-blue-500/25 ring-1 ring-white/20 transition-transform group-hover:scale-105"
-            >
-              <svg
-                style={{ width: '20px', height: '20px' }}
-                className="h-5 w-5 shrink-0"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 2v4" />
-                <path d="m4.93 10.93 2.83 2.83" />
-                <path d="M2 18h4" />
-                <path d="M20 18h2" />
-                <path d="m19.07 4.93-2.83 2.83" />
-                <circle cx="12" cy="14" r="6" strokeWidth="2.2" />
-                <path d="M12 11a3 3 0 1 0 3 3" />
-              </svg>
-            </div>
+            {/* Unified Brand Logo */}
+            <BrightloopLogo iconOnly size="md" />
 
             {!collapsed && (
               <div className="flex flex-col overflow-hidden text-left min-w-0">

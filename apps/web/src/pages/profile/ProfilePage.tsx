@@ -282,11 +282,11 @@ export function ProfilePage() {
 
             <div className="p-3 rounded-lg border border-border/70 bg-background/50 space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-[#A78BFA] border border-border/40" />
+                <span className="h-3 w-3 rounded-full bg-[#714B67] border border-border/40" />
                 <span className="font-semibold text-[11px]">Dark Palette</span>
               </div>
               <p className="text-[10px] text-muted-foreground leading-relaxed">
-                Background <code className="text-primary font-mono font-bold">#0F172A</code> (Deep Slate), Cards <code className="text-primary font-mono font-bold">#1E293B</code>, Highlights <code className="text-primary font-mono font-bold">#A78BFA</code>, Charts <span className="text-cyan-400 font-bold">#06B6D4</span> & <span className="text-emerald-400 font-bold">#34D399</span>.
+                Background <code className="text-primary font-mono font-bold">#0F172A</code> (Deep Slate), Cards <code className="text-primary font-mono font-bold">#1E293B</code>, Highlights <code className="text-primary font-mono font-bold">#714B67</code>, Charts <span className="text-cyan-400 font-bold">#06B6D4</span> & <span className="text-emerald-400 font-bold">#34D399</span>.
               </p>
             </div>
           </div>

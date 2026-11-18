@@ -120,7 +120,7 @@
   }
 
   .dark {
-    /* DARK THEME (Deep Slate Dark #0F172A & Vibrant Purple Highlight #A78BFA) */
+    /* DARK THEME (Deep Slate Dark #0F172A & Unified Purple #714B67) */
     --background: #0F172A;
     --background-secondary: #0B1120;
     --background-subtle: #162032;
@@ -137,22 +137,22 @@
     --surface-active: #2E4059;
     --popover: #1E293B;
     --popover-foreground: #F8FAFC;
-    --primary: #A78BFA;
-    --primary-foreground: #0F172A;
-    --primary-hover: #C4B5FD;
-    --primary-active: #8B5CF6;
-    --primary-soft: #2E234B;
-    --primary-subtle: #1F1735;
+    --primary: #714B67;
+    --primary-foreground: #FFFFFF;
+    --primary-hover: #865A7B;
+    --primary-active: #5D3D54;
+    --primary-soft: #2E1F2B;
+    --primary-subtle: #221620;
     --secondary: #1E293B;
     --secondary-foreground: #F8FAFC;
     --muted: #1E293B;
     --muted-foreground: #94A3B8;
     --muted-text: #64748B;
     --disabled: #475569;
-    --accent: #2E234B;
-    --accent-foreground: #A78BFA;
-    --accent-soft: #2E234B;
-    --accent-subtle: #1F1735;
+    --accent: #2E1F2B;
+    --accent-foreground: #D4B2CC;
+    --accent-soft: #2E1F2B;
+    --accent-subtle: #221620;
     --destructive: #EF4444;
     --destructive-foreground: #FFFFFF;
     --destructive-soft: #451A1A;
@@ -161,7 +161,7 @@
     --divider: #1E293B;
     --input: #334155;
     --input-bg: #0F172A;
-    --ring: #A78BFA;
+    --ring: #714B67;
 
     /* Semantic Status & Neon Accents - Dark (Neon Cyan #06B6D4, Mint #34D399) */
     --chart-cyan: #06B6D4;
