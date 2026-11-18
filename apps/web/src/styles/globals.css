@@ -62,7 +62,7 @@
 
 @layer base {
   :root {
-    /* LIGHT THEME (Odoo Corporate Purple #714B67 & Clean Slate #F8FAFC) */
+    /* LIGHT THEME (Vibrant Purple #9333EA & Clean Slate #F8FAFC) */
     --background: #F8FAFC;
     --background-secondary: #F1F5F9;
     --background-subtle: #FFFFFF;
@@ -79,22 +79,22 @@
     --surface-active: #E2E8F0;
     --popover: #FFFFFF;
     --popover-foreground: #1E293B;
-    --primary: #714B67;
+    --primary: #9333EA;
     --primary-foreground: #FFFFFF;
-    --primary-hover: #5D3D54;
-    --primary-active: #4B3144;
-    --primary-soft: #F5EEF3;
-    --primary-subtle: #FAF5F8;
+    --primary-hover: #7E22CE;
+    --primary-active: #6B21A8;
+    --primary-soft: #F3E8FF;
+    --primary-subtle: #FAF5FF;
     --secondary: #F1F5F9;
     --secondary-foreground: #1E293B;
     --muted: #F1F5F9;
     --muted-foreground: #64748B;
     --muted-text: #64748B;
     --disabled: #94A3B8;
-    --accent: #F5EEF3;
-    --accent-foreground: #714B67;
-    --accent-soft: #F5EEF3;
-    --accent-subtle: #FAF5F8;
+    --accent: #F3E8FF;
+    --accent-foreground: #9333EA;
+    --accent-soft: #F3E8FF;
+    --accent-subtle: #FAF5FF;
     --destructive: #991B1B;
     --destructive-foreground: #FFFFFF;
     --destructive-soft: #FEE2E2;
@@ -103,7 +103,7 @@
     --divider: #E2E8F0;
     --input: #E2E8F0;
     --input-bg: #FFFFFF;
-    --ring: #714B67;
+    --ring: #9333EA;
     --radius: 8px;
 
     /* Semantic Status Tokens - Light (Paid #10B981, Draft #64748B, Overdue #991B1B) */
@@ -120,7 +120,7 @@
   }
 
   .dark {
-    /* DARK THEME (Deep Slate Dark #0F172A & Unified Purple #714B67) */
+    /* DARK THEME (Deep Slate Dark #0F172A & Vibrant Purple #9333EA) */
     --background: #0F172A;
     --background-secondary: #0B1120;
     --background-subtle: #162032;
@@ -137,22 +137,22 @@
     --surface-active: #2E4059;
     --popover: #1E293B;
     --popover-foreground: #F8FAFC;
-    --primary: #714B67;
+    --primary: #9333EA;
     --primary-foreground: #FFFFFF;
-    --primary-hover: #865A7B;
-    --primary-active: #5D3D54;
-    --primary-soft: #2E1F2B;
-    --primary-subtle: #221620;
+    --primary-hover: #A855F7;
+    --primary-active: #7E22CE;
+    --primary-soft: #2E1065;
+    --primary-subtle: #1F0B38;
     --secondary: #1E293B;
     --secondary-foreground: #F8FAFC;
     --muted: #1E293B;
     --muted-foreground: #94A3B8;
     --muted-text: #64748B;
     --disabled: #475569;
-    --accent: #2E1F2B;
-    --accent-foreground: #D4B2CC;
-    --accent-soft: #2E1F2B;
-    --accent-subtle: #221620;
+    --accent: #2E1065;
+    --accent-foreground: #C084FC;
+    --accent-soft: #2E1065;
+    --accent-subtle: #1F0B38;
     --destructive: #EF4444;
     --destructive-foreground: #FFFFFF;
     --destructive-soft: #451A1A;
@@ -161,7 +161,7 @@
     --divider: #1E293B;
     --input: #334155;
     --input-bg: #0F172A;
-    --ring: #714B67;
+    --ring: #9333EA;
 
     /* Semantic Status & Neon Accents - Dark (Neon Cyan #06B6D4, Mint #34D399) */
     --chart-cyan: #06B6D4;

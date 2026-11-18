@@ -288,7 +288,7 @@ export class InvoicesService {
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #1e293b; margin: 40px; }
     .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
-    .title { font-size: 28px; font-weight: bold; color: #714B67; margin: 0; }
+    .title { font-size: 28px; font-weight: bold; color: #9333EA; margin: 0; }
     .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
     .badge-PAID { background: #dcfce7; color: #15803d; }
     .badge-CONFIRMED { background: #e0f2fe; color: #0369a1; }
@@ -299,7 +299,7 @@ export class InvoicesService {
     th { background: #f8fafc; padding: 10px; text-align: left; font-weight: 600; border-bottom: 2px solid #cbd5e1; }
     .summary { width: 300px; margin-left: auto; font-size: 14px; }
     .summary-row { display: flex; justify-content: space-between; padding: 6px 0; }
-    .summary-total { font-size: 18px; font-weight: bold; color: #714B67; border-top: 2px solid #cbd5e1; padding-top: 10px; }
+    .summary-total { font-size: 18px; font-weight: bold; color: #9333EA; border-top: 2px solid #cbd5e1; padding-top: 10px; }
     @media print {
       body { margin: 0; }
       .no-print { display: none; }
@@ -308,7 +308,7 @@ export class InvoicesService {
 </head>
 <body>
   <div class="no-print" style="margin-bottom: 20px;">
-    <button onclick="window.print()" style="padding: 8px 16px; background: #714B67; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Print Invoice</button>
+    <button onclick="window.print()" style="padding: 8px 16px; background: #9333EA; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Print Invoice</button>
   </div>
   <div class="header">
     <div>

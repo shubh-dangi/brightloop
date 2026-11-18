@@ -272,21 +272,21 @@ export function ProfilePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
             <div className="p-3 rounded-lg border border-border/70 bg-background/50 space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-[#714B67] border border-border/40" />
+                <span className="h-3 w-3 rounded-full bg-[#9333EA] border border-border/40" />
                 <span className="font-semibold text-[11px]">Light Palette</span>
               </div>
               <p className="text-[10px] text-muted-foreground leading-relaxed">
-                Background <code className="text-primary font-mono font-bold">#F8FAFC</code> (Clean Slate), Buttons <code className="text-primary font-mono font-bold">#714B67</code> (Odoo Purple), Sidebar <code className="text-primary font-mono font-bold">#1E293B</code>, Status Tags <span className="text-emerald-500 font-bold">#10B981</span>.
+                Background <code className="text-primary font-mono font-bold">#F8FAFC</code> (Clean Slate), Buttons <code className="text-primary font-mono font-bold">#9333EA</code> (Vibrant Purple), Sidebar <code className="text-primary font-mono font-bold">#1E293B</code>, Status Tags <span className="text-emerald-500 font-bold">#10B981</span>.
               </p>
             </div>
 
             <div className="p-3 rounded-lg border border-border/70 bg-background/50 space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-[#714B67] border border-border/40" />
+                <span className="h-3 w-3 rounded-full bg-[#9333EA] border border-border/40" />
                 <span className="font-semibold text-[11px]">Dark Palette</span>
               </div>
               <p className="text-[10px] text-muted-foreground leading-relaxed">
-                Background <code className="text-primary font-mono font-bold">#0F172A</code> (Deep Slate), Cards <code className="text-primary font-mono font-bold">#1E293B</code>, Highlights <code className="text-primary font-mono font-bold">#714B67</code>, Charts <span className="text-cyan-400 font-bold">#06B6D4</span> & <span className="text-emerald-400 font-bold">#34D399</span>.
+                Background <code className="text-primary font-mono font-bold">#0F172A</code> (Deep Slate), Cards <code className="text-primary font-mono font-bold">#1E293B</code>, Highlights <code className="text-primary font-mono font-bold">#9333EA</code>, Charts <span className="text-cyan-400 font-bold">#06B6D4</span> & <span className="text-emerald-400 font-bold">#34D399</span>.
               </p>
             </div>
           </div>
