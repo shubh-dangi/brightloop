@@ -160,8 +160,9 @@ export function Sidebar({ isMobile = false }: { isMobile?: boolean }) {
 
             {!collapsed && (
               <div className="flex flex-col overflow-hidden text-left min-w-0">
-                <span className="text-[15px] font-extrabold tracking-tight text-foreground truncate drop-shadow-xs">
-                  Brightloop
+                <span className="text-[15px] font-extrabold tracking-tight truncate drop-shadow-xs">
+                  <span className="text-foreground">Bright</span>
+                  <span className="text-primary font-black ml-0.5">loop</span>
                 </span>
                 <span className="text-[11px] font-semibold truncate pt-0.5 font-mono">
                   {isCustomer ? (
